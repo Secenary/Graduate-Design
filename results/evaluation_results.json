@@ -1,0 +1,276 @@
+{
+  "config": {
+    "total_patients": 5,
+    "methods": [
+      "direct",
+      "direct_generation"
+    ],
+    "model": "gpt-4o-mini",
+    "use_llm_judge": false,
+    "judge_model": null
+  },
+  "method_results": {
+    "direct": {
+      "accuracy": 1.0,
+      "correct": 5,
+      "total": 5,
+      "metrics_by_class": {
+        "STEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "NSTEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "UA": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "变异性心绞痛": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "其他": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "未知": {
+          "precision": 0,
+          "recall": 0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "macro_precision": 0.8333333333333334,
+      "macro_recall": 0.8333333333333334,
+      "macro_f1": 0.8333333333333334,
+      "confusion_matrix": {
+        "STEMI": {
+          "STEMI": 1
+        },
+        "变异性心绞痛": {
+          "变异性心绞痛": 1
+        },
+        "NSTEMI": {
+          "NSTEMI": 1
+        },
+        "UA": {
+          "UA": 1
+        },
+        "其他": {
+          "其他": 1
+        }
+      }
+    },
+    "direct_generation": {
+      "accuracy": 0.6,
+      "correct": 3,
+      "total": 5,
+      "metrics_by_class": {
+        "STEMI": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "NSTEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "UA": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "变异性心绞痛": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "其他": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0
+        },
+        "未知": {
+          "precision": 0.0,
+          "recall": 0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "macro_precision": 0.4166666666666667,
+      "macro_recall": 0.5,
+      "macro_f1": 0.4444444444444444,
+      "confusion_matrix": {
+        "STEMI": {
+          "未知": 1
+        },
+        "变异性心绞痛": {
+          "变异性心绞痛": 1
+        },
+        "NSTEMI": {
+          "NSTEMI": 1
+        },
+        "UA": {
+          "其他": 1
+        },
+        "其他": {
+          "其他": 1
+        }
+      }
+    }
+  },
+  "detailed_results": [
+    {
+      "method": "direct",
+      "results": [
+        {
+          "patient_id": "P001",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "诊断：STEMI（急性ST段抬高心肌梗死）",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P002",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "诊断：变异性心绞痛",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P003",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P004",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "诊断：UA（不稳定型心绞痛）",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P005",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "诊断：其他（非缺血性胸痛）",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "method": "direct_generation",
+      "results": [
+        {
+          "patient_id": "P001",
+          "ground_truth": "STEMI",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "根据患者的病历描述，最可能的诊断结果是**急性心肌梗死**（Acute Myocardial Infarction, AMI）。\n\n**诊断依据：**\n\n1. **临床表现**：\n   - 患者出现剧烈胸痛，持续超过30分钟，疼痛性质为压迫性，并放射至左臂和下颌，这些都是典型的心肌梗死症状。\n   - 患者伴有明显的濒死感、出汗增多及心悸，进一步支持心肌缺血的可能性。\n\n2. **心电图变化**：\n   - 心电图显示V3-V5导联ST段抬高0.25mV，并伴有病理性Q波，这些变化通常提示心肌缺血或心肌梗死。\n\n3. **心肌标志物**：\n   - 肌钙蛋白T（1.8 ng/mL）和CK-MB（92 U/L）均显著升高，表明心肌损伤，进一步支持急性心肌梗死的诊断。\n\n4. **既往病史和危险因素**：\n   - 患者有高血压病史，年龄偏大，且有体重指数偏高和缺乏运动等心血管疾病危险因素，这些都增加了心肌梗死的风险。\n\n综合以上信息，患者的症状、心电图表现和心肌标志物的升高均符合急性心肌梗死的诊断。建议尽快进行进一步的评估和治疗，包括可能的冠脉造影和介入治疗。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P002",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "根据患者的病历描述，最可能的诊断结果是**变异性心绞痛（Prinzmetal心绞痛）**。\n\n### 诊断依据：\n\n1. **症状特征**：\n   - 患者主诉“休息时胸痛发作，活动后反而缓解”，这与变异性心绞痛的典型表现相符。变异性心绞痛通常在静息状态下发生，常见于夜间或清晨，且在轻微活动后症状可缓解。\n\n2. **胸痛性质**：\n   - 胸痛呈压迫感，程度中等，伴有轻微气短，符合心绞痛的表现。\n\n3. **心电图表现**：\n   - 心电图显示II、III、aVF导联ST段一过性抬高，这种ST段抬高在变异性心绞痛中是常见的，通常在疼痛发作时出现，疼痛缓解后ST段恢复正常。\n\n4. **心肌标志物**：\n   - 心肌标志物（肌钙蛋白I和CK-MB）均在正常范围内，说明没有心肌坏死的证据，这进一步支持变异性心绞痛的诊断，因为在急性心肌梗死中，心肌标志物通常会升高。\n\n5. **无其他明显危险因素**：\n   - 患者既往健康，无心血管疾病史，且没有明显的心血管危险因素（如高血压、糖尿病、高脂血症等），这使得其他心血管疾病的可能性降低。\n\n### 进一步建议：\n建议进行24小时动态心电图监测（Holter监测），以观察是否存在更多的心电图变化，并考虑进行冠状动脉造影，以排除其他潜在的冠心病。同时，患者可能需要使用钙通道阻滞剂或硝酸酯类药物进行治疗，以缓解症状和预防发作。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P003",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "根据患者的病历记录，最可能的诊断结果是**不稳定型心绞痛**或**急性冠状动脉综合征（ACS）**，具体为**非ST段抬高心肌梗死（NSTEMI）**。\n\n### 诊断依据：\n\n1. **临床表现**：\n   - 患者主诉胸痛，伴随出汗，持续约40分钟，符合心绞痛的典型表现。\n   - 胸痛为钝痛，位于胸骨后，且在发作前无明显诱因，考虑为心肌缺血引起的症状。\n\n2. **心电图检查**：\n   - 心电图显示广泛导联ST段压低，尤其在V4-V6导联中表现明显，提示心肌缺血。\n   - ST段压低常见于不稳定型心绞痛或NSTEMI，而ST段抬高则更常见于STEMI。\n\n3. **心肌标志物**：\n   - 血液检查结果显示肌钙蛋白T和CK-MB均有升高，表明心肌损伤的存在。\n   - 肌钙蛋白T的升高尤其具有特异性，提示心肌细胞受到损伤。\n\n4. **危险因素**：\n   - 患者有吸烟史、饮食偏咸、缺乏运动、工作压力大等多种心血管疾病的危险因素。\n   - 家族史中父亲早发心脏病，增加了患者的心血管疾病风险。\n\n### 结论：\n综合考虑患者的临床表现、心电图及心肌标志物的检查结果，患者很可能处于急性冠状动脉综合征的状态，具体为非ST段抬高心肌梗死（NSTEMI）。建议尽快进行进一步的心血管评估，如冠状动脉造影等，以明确诊断并制定相应的治疗方案。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P004",
+          "ground_truth": "UA",
+          "prediction": "其他",
+          "correct": false,
+          "raw_response": "根据患者林丽的病历记录，最可能的诊断结果是**稳定型心绞痛**（或称为慢性心绞痛）加重。\n\n### 诊断依据：\n\n1. **症状表现**：\n   - 患者主诉心绞痛发作频率增加，且每次持续时间延长（由5分钟增加至15分钟），这表明心绞痛的严重程度有所加重。\n   - 胸痛伴有压迫感，且有放射至左肩及下颌的感觉，符合心绞痛的典型表现。\n   - 发作时伴有轻度气促，提示心脏供血不足的可能性。\n\n2. **诱因**：\n   - 胸痛在劳累或情绪激动时加重，休息后可缓解，符合稳定型心绞痛的特点。\n\n3. **既往病史**：\n   - 患者有高血压病史，且存在吸烟史和缺乏运动等心血管疾病的危险因素，这些都是心血管疾病的高危因素。\n\n4. **辅助检查**：\n   - 心电图显示V4-V6导联ST段水平压低0.1mV，提示心肌缺血的可能。\n   - 心肌标志物（肌钙蛋白I和CK-MB）正常，说明没有急性心肌损伤，进一步支持稳定型心绞痛的诊断。\n\n### 结论：\n患者的症状和检查结果符合稳定型心绞痛的特征，但由于症状的加重，建议进行进一步的评估，如冠状动脉造影，以排除冠状动脉狭窄或其他心血管疾病的可能性。同时，考虑调整治疗方案，可能需要增加抗心绞痛药物的使用或进行生活方式的干预。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P005",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "根据患者刘娟的病历描述，最可能的诊断结果是**急性胸膜炎**或**胸膜刺激**。\n\n### 诊断依据：\n1. **症状特征**：\n   - 患者主诉胸痛，性质为刺痛，位于胸骨后方，且在深呼吸时加重，这与胸膜炎或胸膜刺激的典型表现相符。\n   - 伴随轻度咳嗽和呼吸困难，且无咳痰，提示可能存在胸膜或肺部的炎症。\n\n2. **体格检查**：\n   - 胸部叩诊无异常，双侧呼吸音清晰，心音正常，无杂音，排除了明显的心脏病和肺部实质性病变。\n\n3. **辅助检查**：\n   - 心电图显示非特异性ST-T改变，未见明显缺血性改变，心肌标志物正常，进一步排除了心源性胸痛的可能性。\n   - 由于没有明显的感染症状（如发热、咳痰等），也排除了急性肺炎的可能性。\n\n4. **既往病史和家族史**：\n   - 患者既往健康，无心血管疾病史，且家族中无相关疾病，降低了遗传性心血管疾病的可能性。\n\n### 进一步建议：\n- 建议进行胸部影像学检查（如胸部X光或CT）以排除胸腔内其他病变（如胸腔积液、肺部病变等）。\n- 观察患者的症状变化，必要时进行进一步的实验室检查以排除其他可能的原因（如感染、结缔组织疾病等）。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        }
+      ]
+    }
+  ]
+}
