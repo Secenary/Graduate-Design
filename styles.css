@@ -1,0 +1,601 @@
+:root {
+  --bg: #f7f1e8;
+  --bg-accent: #efe2d1;
+  --surface: rgba(255, 252, 246, 0.88);
+  --surface-strong: #fffaf2;
+  --ink: #2f241d;
+  --muted: #6b5a4f;
+  --line: rgba(77, 54, 38, 0.16);
+  --primary: #9f2f22;
+  --primary-soft: rgba(159, 47, 34, 0.12);
+  --secondary: #1d5c63;
+  --good: #245c3f;
+  --warn: #8f4a16;
+  --shadow: 0 20px 60px rgba(67, 40, 21, 0.12);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Outfit", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(159, 47, 34, 0.15), transparent 28%),
+    radial-gradient(circle at top right, rgba(29, 92, 99, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8f2e8 0%, #efe4d3 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 44px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.hero-copy,
+.hero-panel-card,
+.card {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  border-radius: 36px;
+  padding: 36px;
+}
+
+.eyebrow,
+.section-kicker,
+.panel-label,
+.result-label {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: var(--secondary);
+}
+
+.hero h1,
+.card h2,
+.result-hero h3 {
+  font-family: "Noto Serif SC", serif;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.08;
+}
+
+.hero-text {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.hero-badges span,
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.hero-panel {
+  display: flex;
+}
+
+.hero-panel-card {
+  width: 100%;
+  border-radius: 30px;
+  padding: 28px;
+  background:
+    linear-gradient(145deg, rgba(29, 92, 99, 0.92), rgba(23, 40, 47, 0.9)),
+    var(--secondary);
+  color: #f7f5f0;
+}
+
+.hero-panel-card ol {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.9;
+}
+
+.layout {
+  display: grid;
+  gap: 24px;
+}
+
+.card {
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+
+.card-lg {
+  padding: 30px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.section-head h2,
+.subcard h3,
+.mapping-item h3 {
+  margin: 0;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.text-input,
+select,
+.text-like-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  color: var(--ink);
+}
+
+.text-input,
+select {
+  width: 100%;
+}
+
+.text-input {
+  padding: 18px;
+  line-height: 1.7;
+  resize: vertical;
+  min-height: 220px;
+}
+
+.grid-two,
+.explain-grid,
+.mapping-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-two,
+.explain-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.subcard,
+.mapping-item,
+.decision-pill,
+.method-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+}
+
+.subcard {
+  padding: 20px;
+}
+
+.accent-card {
+  background: linear-gradient(180deg, rgba(159, 47, 34, 0.08), rgba(255, 250, 242, 1));
+}
+
+.mini-note {
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.toggle-group {
+  display: grid;
+  gap: 16px;
+}
+
+.toggle-group label span {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+select {
+  padding: 12px 14px;
+}
+
+.text-like-input {
+  padding: 12px 14px;
+}
+
+.backend-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.backend-grid label span,
+.server-status-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.server-status-box {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(29, 92, 99, 0.06);
+  padding: 14px 16px;
+}
+
+.server-status-box strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--secondary);
+}
+
+.api-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.ghost-button:hover {
+  transform: translateY(-1px);
+}
+
+.primary-button {
+  background: var(--primary);
+  color: #fff8f4;
+}
+
+.secondary-button {
+  background: #eadbca;
+  color: var(--ink);
+}
+
+.ghost-button {
+  background: transparent;
+  color: var(--secondary);
+  border: 1px solid rgba(29, 92, 99, 0.2);
+}
+
+.result-card {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(250, 244, 236, 0.96)),
+    var(--surface);
+}
+
+.result-hero {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 20px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255, 247, 240, 1), rgba(241, 236, 228, 1));
+  border: 1px solid var(--line);
+}
+
+.result-hero h3 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.result-hero p:last-child {
+  margin-bottom: 0;
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.decision-pill {
+  padding: 18px;
+}
+
+.decision-pill span,
+.method-item span {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.decision-pill strong,
+.method-item strong {
+  font-size: 1.04rem;
+}
+
+.reason-list {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.8;
+}
+
+.method-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.method-item {
+  padding: 14px 16px;
+}
+
+.workflow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.knowledge-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.knowledge-graph {
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top left, rgba(159, 47, 34, 0.12), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(29, 92, 99, 0.12), transparent 22%),
+    linear-gradient(180deg, rgba(255, 250, 243, 1), rgba(248, 242, 233, 1));
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.knowledge-svg {
+  width: 100%;
+  min-width: 980px;
+  height: auto;
+  display: block;
+}
+
+.graph-edge {
+  stroke: rgba(77, 54, 38, 0.24);
+  stroke-width: 3;
+  fill: none;
+  transition: stroke 180ms ease, stroke-width 180ms ease, opacity 180ms ease;
+}
+
+.graph-edge.active {
+  stroke: var(--primary);
+  stroke-width: 6;
+}
+
+.graph-edge.dimmed {
+  opacity: 0.22;
+}
+
+.graph-node {
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.graph-node.dimmed {
+  opacity: 0.42;
+}
+
+.graph-node-card {
+  fill: rgba(255, 252, 246, 0.96);
+  stroke: rgba(77, 54, 38, 0.18);
+  stroke-width: 2;
+}
+
+.graph-node.active .graph-node-card {
+  fill: rgba(159, 47, 34, 0.12);
+  stroke: var(--primary);
+  stroke-width: 3;
+  filter: drop-shadow(0 12px 22px rgba(159, 47, 34, 0.18));
+}
+
+.graph-node.final-active .graph-node-card {
+  fill: rgba(29, 92, 99, 0.12);
+  stroke: var(--secondary);
+}
+
+.graph-node-label {
+  font-family: "Outfit", "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.graph-node-desc {
+  font-family: "Outfit", "Segoe UI", sans-serif;
+  font-size: 12px;
+  fill: var(--muted);
+}
+
+.graph-badge {
+  fill: rgba(29, 92, 99, 0.1);
+}
+
+.graph-badge-text {
+  font-family: "Outfit", "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  fill: var(--secondary);
+}
+
+.workflow-step {
+  position: relative;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.workflow-step::after {
+  content: "";
+  position: absolute;
+  inset: auto 18px 0 18px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(29, 92, 99, 0.12);
+}
+
+.workflow-step.active::after {
+  background: linear-gradient(90deg, var(--primary), #d17d48);
+}
+
+.workflow-step h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.workflow-step p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.mapping-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mapping-item {
+  padding: 20px;
+}
+
+.graph-builder-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 18px;
+}
+
+.mineru-textarea {
+  min-height: 220px;
+}
+
+.artifact-list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.artifact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+}
+
+.artifact-item span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.artifact-item a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.preview-frame {
+  border: 1px dashed rgba(29, 92, 99, 0.25);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 252, 246, 0.9), rgba(245, 237, 225, 0.9));
+  padding: 14px;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.graph-preview-image {
+  max-width: 100%;
+  max-height: 420px;
+  display: none;
+  border-radius: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .grid-two,
+  .explain-grid,
+  .grid-three,
+  .backend-grid,
+  .graph-builder-grid,
+  .workflow,
+  .mapping-grid,
+  .result-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .knowledge-svg {
+    min-width: 760px;
+  }
+
+  .page-shell {
+    width: min(100% - 20px, 1200px);
+  }
+
+  .hero-copy,
+  .card {
+    padding: 22px;
+  }
+}

@@ -9,6 +9,7 @@ import asyncio
 from pathlib import Path
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
+from prompts import GENERATE_PATIENT_PROMPT
 
 # 加载环境变量
 load_dotenv()
@@ -157,6 +158,79 @@ BIOMARKER_RESULTS = {
 }
 
 
+def build_full_description(initial_presentation: str, rounds: list) -> str:
+    """
+    将互动式病例拼接为完整文本，便于后续兼容旧评估逻辑。
+    """
+    parts = [f"初始信息：{initial_presentation}"]
+    for round_info in rounds:
+        parts.append(f"第{round_info['round']}轮医生提问：{round_info['doctor_question']}")
+        parts.append(f"第{round_info['round']}轮患者回答：{round_info['patient_answer']}")
+    return "\n".join(parts)
+
+
+def build_fallback_interactive_case(
+    diagnosis: str,
+    name: str,
+    age: int,
+    gender: str,
+    chest_pain: str,
+    ecg: str,
+    biomarker: str
+) -> dict:
+    """
+    当模型输出不符合 JSON 结构时，使用模板回退生成三轮互动式病例。
+    """
+    return {
+        "initial_presentation": f"患者{name}，{gender}，{age}岁，因{chest_pain}前来就诊。",
+        "rounds": [
+            {
+                "round": 1,
+                "focus": "症状与病史",
+                "doctor_question": "请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？",
+                "patient_answer": f"我是{name}，{age}岁，{gender}。这次主要是{chest_pain}。既往有心血管相关危险因素，症状经过符合当前诊断路径。"
+            },
+            {
+                "round": 2,
+                "focus": "心电图",
+                "doctor_question": "心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？",
+                "patient_answer": f"心电图结果提示：{ecg}。"
+            },
+            {
+                "round": 3,
+                "focus": "心肌标志物",
+                "doctor_question": "心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？",
+                "patient_answer": f"心肌标志物检查结果为：{biomarker}。"
+            }
+        ],
+        "final_diagnosis": diagnosis
+    }
+
+
+def normalize_interactive_case(case_data: dict, diagnosis: str) -> dict:
+    """
+    规范化模型返回的互动式病例结构。
+    """
+    rounds = case_data.get("rounds", [])[:3]
+    normalized_rounds = []
+    expected_focuses = ["症状与病史", "心电图", "心肌标志物"]
+
+    for i in range(3):
+        round_data = rounds[i] if i < len(rounds) else {}
+        normalized_rounds.append({
+            "round": i + 1,
+            "focus": round_data.get("focus") or expected_focuses[i],
+            "doctor_question": (round_data.get("doctor_question") or "").strip(),
+            "patient_answer": (round_data.get("patient_answer") or "").strip()
+        })
+
+    return {
+        "initial_presentation": (case_data.get("initial_presentation") or "").strip(),
+        "rounds": normalized_rounds,
+        "final_diagnosis": diagnosis
+    }
+
+
 def generate_patient_case(diagnosis: str, index: int) -> dict:
     """
     使用大语言模型生成患者病例（同步版本，已弃用）
@@ -188,33 +262,19 @@ def generate_patient_case(diagnosis: str, index: int) -> dict:
     ecg = random.choice(ECG_FINDINGS[diagnosis])
     biomarker = random.choice(BIOMARKER_RESULTS[diagnosis])
 
-    # 构建提示词
-    prompt = f"""请根据以下临床信息，生成一个详细的患者病历描述。
-
-诊断类型：{diagnosis}
-临床路径：{path_info['description']}
-
-患者基本信息：
-- 姓名：{name}
-- 年龄：{age}岁
-- 性别：{gender}
-
-关键临床特征：
-- 主诉症状：{chest_pain}
-- 心电图表现：{ecg}
-- 心肌标志物：{biomarker}
-
-要求：
-1. 生成完整的病历格式，包括主诉、现病史、既往史、家族史、危险因素
-2. 症状描述要真实可信，符合该诊断的典型表现
-3. 不要在病历中直接写出最终诊断结果
-4. 病历要包含足够的临床信息，使医生能够做出正确诊断
-5. 用专业医学术语描述
-
-请直接输出病历内容，不要有任何额外说明。"""
+    prompt = GENERATE_PATIENT_PROMPT.format(
+        diagnosis=diagnosis,
+        path_description=path_info["description"],
+        name=name,
+        age=age,
+        gender=gender,
+        chest_pain=chest_pain,
+        ecg=ecg,
+        biomarker=biomarker
+    )
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="Pro/MiniMaxAI/MiniMax-M2.5",
         messages=[
             {"role": "system", "content": "你是一位经验丰富的临床医生，擅长撰写规范的病历记录。"},
             {"role": "user", "content": prompt}
@@ -223,11 +283,34 @@ def generate_patient_case(diagnosis: str, index: int) -> dict:
         max_tokens=1500
     )
 
-    description = response.choices[0].message.content
+    raw_content = response.choices[0].message.content
+    try:
+        case_data = json.loads(raw_content)
+        interactive_case = normalize_interactive_case(case_data, diagnosis)
+        if (
+            not interactive_case["initial_presentation"]
+            or any(not round_info["doctor_question"] or not round_info["patient_answer"] for round_info in interactive_case["rounds"])
+        ):
+            raise ValueError("模型返回的互动式病例字段不完整")
+    except Exception:
+        interactive_case = build_fallback_interactive_case(
+            diagnosis=diagnosis,
+            name=name,
+            age=age,
+            gender=gender,
+            chest_pain=chest_pain,
+            ecg=ecg,
+            biomarker=biomarker
+        )
+
+    description = interactive_case["initial_presentation"]
+    full_description = build_full_description(description, interactive_case["rounds"])
 
     return {
         "patient_id": f"P{index:03d}",
         "description": description,
+        "full_description": full_description,
+        "interactive_case": interactive_case,
         "result_state": diagnosis,
         "path": path_info["path"]
     }
@@ -269,36 +352,22 @@ async def generate_patient_case_async(
     ecg = random.choice(ECG_FINDINGS[diagnosis])
     biomarker = random.choice(BIOMARKER_RESULTS[diagnosis])
 
-    # 构建提示词
-    prompt = f"""请根据以下临床信息，生成一个详细的患者病历描述。
-
-诊断类型：{diagnosis}
-临床路径：{path_info['description']}
-
-患者基本信息：
-- 姓名：{name}
-- 年龄：{age}岁
-- 性别：{gender}
-
-关键临床特征：
-- 主诉症状：{chest_pain}
-- 心电图表现：{ecg}
-- 心肌标志物：{biomarker}
-
-要求：
-1. 生成完整的病历格式，包括主诉、现病史、既往史、家族史、危险因素
-2. 症状描述要真实可信，符合该诊断的典型表现
-3. 不要在病历中直接写出最终诊断结果
-4. 病历要包含足够的临床信息，使医生能够做出正确诊断
-5. 用专业医学术语描述
-
-请直接输出病历内容，不要有任何额外说明。"""
+    prompt = GENERATE_PATIENT_PROMPT.format(
+        diagnosis=diagnosis,
+        path_description=path_info["description"],
+        name=name,
+        age=age,
+        gender=gender,
+        chest_pain=chest_pain,
+        ecg=ecg,
+        biomarker=biomarker
+    )
 
     async def _call_api():
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="Pro/MiniMaxAI/MiniMax-M2.5",
             messages=[
-                {"role": "system", "content": "你是一位经验丰富的临床医生，擅长撰写规范的病历记录。"},
+                {"role": "system", "content": "你是一位经验丰富的临床医生，擅长设计严谨的互动式问诊病例。"},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.8,
@@ -309,13 +378,37 @@ async def generate_patient_case_async(
     # 如果提供了信号量，则使用它来限制并发
     if semaphore:
         async with semaphore:
-            description = await _call_api()
+            raw_content = await _call_api()
     else:
-        description = await _call_api()
+        raw_content = await _call_api()
+
+    try:
+        case_data = json.loads(raw_content)
+        interactive_case = normalize_interactive_case(case_data, diagnosis)
+        if (
+            not interactive_case["initial_presentation"]
+            or any(not round_info["doctor_question"] or not round_info["patient_answer"] for round_info in interactive_case["rounds"])
+        ):
+            raise ValueError("模型返回的互动式病例字段不完整")
+    except Exception:
+        interactive_case = build_fallback_interactive_case(
+            diagnosis=diagnosis,
+            name=name,
+            age=age,
+            gender=gender,
+            chest_pain=chest_pain,
+            ecg=ecg,
+            biomarker=biomarker
+        )
+
+    description = interactive_case["initial_presentation"]
+    full_description = build_full_description(description, interactive_case["rounds"])
 
     return {
         "patient_id": f"P{index:03d}",
         "description": description,
+        "full_description": full_description,
+        "interactive_case": interactive_case,
         "result_state": diagnosis,
         "path": path_info["path"]
     }

@@ -16,8 +16,7 @@ from methods import (
     intermediate_state_diagnosis,
     full_workflow_diagnosis,
     step_by_step_diagnosis,
-    llm_judge_evaluate,
-    parse_diagnosis
+    llm_judge_evaluate
 )
 
 # 并发限制信号量（限制同时进行的API请求数量）
@@ -54,7 +53,7 @@ def evaluate_method(predictions: List[str], ground_truths: List[str]) -> Dict[st
         评估指标字典
     """
     # 所有诊断类型
-    diagnoses = ["STEMI", "NSTEMI", "UA", "变异性心绞痛", "其他", "未知"]
+    diagnoses = ["STEMI", "NSTEMI", "UA", "变异性心绞痛", "其他", "待补充症状学信息", "待补充心电图检查", "待补充心肌标志物检查", "未知"]
 
     # 计算总体准确率
     correct = sum(p == g for p, g in zip(predictions, ground_truths))
@@ -105,10 +104,10 @@ def evaluate_method(predictions: List[str], ground_truths: List[str]) -> Dict[st
 async def run_evaluation(
     patients: List[Dict[str, Any]],
     methods: List[str] = None,
-    model: str = "gpt-4o-mini",
+    model: str = "Pro/MiniMaxAI/MiniMax-M2.5",
     sample_size: int = None,
-    use_llm_judge: bool = False,
-    judge_model: str = "gpt-4o-mini",
+    use_llm_judge: bool = True,
+    judge_model: str = "Pro/moonshotai/Kimi-K2.5",
     output_path: str = "results/evaluation_results.json",
     max_concurrent: int = MAX_CONCURRENT_REQUESTS
 ) -> Dict[str, Any]:
@@ -176,15 +175,16 @@ async def run_evaluation(
             async with semaphore:
                 try:
                     # 调用对应的方法
-                    result = await method_functions[method_name](patient["description"], model)
+                    result = await method_functions[method_name](patient, model)
 
                     prediction = result["diagnosis"]
                     ground_truth = patient["result_state"]
+                    patient_context = patient.get("full_description") or patient.get("description", "")
 
                     # 使用LLM-as-Judge或传统方式判断正确性
                     if use_llm_judge:
                         judge_result = await llm_judge_evaluate(
-                            patient_description=patient["description"],
+                            patient_description=patient_context,
                             ground_truth=ground_truth,
                             model_prediction=result.get("raw_response", prediction),
                             judge_model=judge_model
@@ -201,6 +201,7 @@ async def run_evaluation(
                         "prediction": prediction,
                         "correct": is_correct,
                         "raw_response": result.get("raw_response", ""),
+                        "interaction_trace": result.get("interaction_trace", ""),
                         "intermediate_states": result.get("intermediate_states", {}),
                         "judge_result": judge_result_data,
                         "error": None
@@ -213,6 +214,7 @@ async def run_evaluation(
                         "prediction": "未知",
                         "correct": False,
                         "raw_response": "",
+                        "interaction_trace": "",
                         "intermediate_states": {},
                         "judge_result": None,
                         "error": str(e)
@@ -311,10 +313,10 @@ def print_summary(results: Dict[str, Any]):
 
         for method_name, evaluation in results["method_results"].items():
             print(f"{method_name:<25} "
-                  f"{evaluation['accuracy']:<12.2%} "
-                  f"{evaluation['macro_precision']:<12.2%} "
-                  f"{evaluation['macro_recall']:<12.2%} "
-                  f"{evaluation['macro_f1']:<12.2%}")
+                f"{evaluation['accuracy']:<12.2%} "
+                f"{evaluation['macro_precision']:<12.2%} "
+                f"{evaluation['macro_recall']:<12.2%} "
+                f"{evaluation['macro_f1']:<12.2%}")
 
     # 只在非LLM Judge模式下打印详细指标和混淆矩阵
     if not use_llm_judge:
@@ -329,8 +331,8 @@ def print_summary(results: Dict[str, Any]):
                 if metrics["tp"] + metrics["fp"] + metrics["fn"] > 0:  # 只显示有数据的类别
                     print(f"  {diagnosis}:")
                     print(f"    精确率: {metrics['precision']:.2%}, "
-                          f"召回率: {metrics['recall']:.2%}, "
-                          f"F1: {metrics['f1']:.2%}")
+                        f"召回率: {metrics['recall']:.2%}, "
+                        f"F1: {metrics['f1']:.2%}")
 
         # 打印混淆矩阵
         print("\n" + "-"*60)
@@ -363,7 +365,7 @@ if __name__ == "__main__":
     parser.add_argument('--sample', type=int, default=None, help='采样数量，默认使用全部数据')
     parser.add_argument('--methods', type=str, default=None, help='评估方法，用逗号分隔，如：direct,direct_generation,intermediate_state,step_by_step,full_workflow')
     parser.add_argument('--judge', action='store_true', help='使用LLM-as-Judge评估方式')
-    parser.add_argument('--judge-model', type=str, default='gpt-4o-mini', help='LLM-as-Judge使用的模型')
+    parser.add_argument('--judge-model', type=str, default='Pro/moonshotai/Kimi-K2.5', help='LLM-as-Judge使用的模型')
     parser.add_argument('--concurrent', type=int, default=MAX_CONCURRENT_REQUESTS, help='最大并发数')
     args = parser.parse_args()
 

@@ -1,25 +1,28 @@
 {
   "config": {
-    "total_patients": 5,
+    "total_patients": 20,
     "methods": [
       "direct",
-      "direct_generation"
+      "direct_generation",
+      "intermediate_state",
+      "step_by_step",
+      "full_workflow"
     ],
-    "model": "gpt-4o-mini",
+    "model": "Pro/MiniMaxAI/MiniMax-M2.5",
     "use_llm_judge": false,
     "judge_model": null
   },
   "method_results": {
     "direct": {
       "accuracy": 1.0,
-      "correct": 5,
-      "total": 5,
+      "correct": 20,
+      "total": 20,
       "metrics_by_class": {
         "STEMI": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
@@ -27,7 +30,7 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
@@ -35,7 +38,7 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
@@ -43,7 +46,7 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
@@ -51,7 +54,7 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
@@ -69,48 +72,48 @@
       "macro_f1": 0.8333333333333334,
       "confusion_matrix": {
         "STEMI": {
-          "STEMI": 1
+          "STEMI": 4
         },
         "变异性心绞痛": {
-          "变异性心绞痛": 1
+          "变异性心绞痛": 4
         },
         "NSTEMI": {
-          "NSTEMI": 1
+          "NSTEMI": 4
         },
         "UA": {
-          "UA": 1
+          "UA": 4
         },
         "其他": {
-          "其他": 1
+          "其他": 4
         }
       }
     },
     "direct_generation": {
-      "accuracy": 0.6,
-      "correct": 3,
-      "total": 5,
+      "accuracy": 0.75,
+      "correct": 15,
+      "total": 20,
       "metrics_by_class": {
         "STEMI": {
-          "precision": 0,
-          "recall": 0.0,
-          "f1": 0,
-          "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.888888888888889,
+          "tp": 4,
+          "fp": 1,
+          "fn": 0
         },
         "NSTEMI": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
         "UA": {
-          "precision": 0,
-          "recall": 0.0,
-          "f1": 0,
-          "tp": 0,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "tp": 3,
           "fp": 0,
           "fn": 1
         },
@@ -118,16 +121,92 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "tp": 1,
+          "tp": 4,
           "fp": 0,
           "fn": 0
         },
         "其他": {
-          "precision": 0.5,
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4
+        },
+        "未知": {
+          "precision": 0.0,
+          "recall": 0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        }
+      },
+      "macro_precision": 0.6333333333333333,
+      "macro_recall": 0.625,
+      "macro_f1": 0.6243386243386243,
+      "confusion_matrix": {
+        "STEMI": {
+          "STEMI": 4
+        },
+        "变异性心绞痛": {
+          "变异性心绞痛": 4
+        },
+        "NSTEMI": {
+          "NSTEMI": 4
+        },
+        "UA": {
+          "UA": 3,
+          "STEMI": 1
+        },
+        "其他": {
+          "未知": 4
+        }
+      }
+    },
+    "intermediate_state": {
+      "accuracy": 0.85,
+      "correct": 17,
+      "total": 20,
+      "metrics_by_class": {
+        "STEMI": {
+          "precision": 1.0,
           "recall": 1.0,
-          "f1": 0.6666666666666666,
-          "tp": 1,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "NSTEMI": {
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.888888888888889,
+          "tp": 4,
           "fp": 1,
+          "fn": 0
+        },
+        "UA": {
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4,
+          "tp": 1,
+          "fp": 0,
+          "fn": 3
+        },
+        "变异性心绞痛": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "其他": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
           "fn": 0
         },
         "未知": {
@@ -135,28 +214,184 @@
           "recall": 0,
           "f1": 0,
           "tp": 0,
-          "fp": 1,
+          "fp": 2,
           "fn": 0
         }
       },
-      "macro_precision": 0.4166666666666667,
-      "macro_recall": 0.5,
-      "macro_f1": 0.4444444444444444,
+      "macro_precision": 0.7999999999999999,
+      "macro_recall": 0.7083333333333334,
+      "macro_f1": 0.7148148148148148,
       "confusion_matrix": {
         "STEMI": {
-          "未知": 1
+          "STEMI": 4
         },
         "变异性心绞痛": {
-          "变异性心绞痛": 1
+          "变异性心绞痛": 4
         },
         "NSTEMI": {
-          "NSTEMI": 1
+          "NSTEMI": 4
         },
         "UA": {
-          "其他": 1
+          "NSTEMI": 1,
+          "UA": 1,
+          "未知": 2
         },
         "其他": {
+          "其他": 4
+        }
+      }
+    },
+    "step_by_step": {
+      "accuracy": 0.85,
+      "correct": 17,
+      "total": 20,
+      "metrics_by_class": {
+        "STEMI": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "tp": 3,
+          "fp": 0,
+          "fn": 1
+        },
+        "NSTEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "UA": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "tp": 3,
+          "fp": 0,
+          "fn": 1
+        },
+        "变异性心绞痛": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "tp": 3,
+          "fp": 0,
+          "fn": 1
+        },
+        "其他": {
+          "precision": 0.5714285714285714,
+          "recall": 1.0,
+          "f1": 0.7272727272727273,
+          "tp": 4,
+          "fp": 3,
+          "fn": 0
+        },
+        "未知": {
+          "precision": 0,
+          "recall": 0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "macro_precision": 0.7619047619047619,
+      "macro_recall": 0.7083333333333334,
+      "macro_f1": 0.7164502164502164,
+      "confusion_matrix": {
+        "STEMI": {
+          "其他": 1,
+          "STEMI": 3
+        },
+        "变异性心绞痛": {
+          "变异性心绞痛": 3,
           "其他": 1
+        },
+        "NSTEMI": {
+          "NSTEMI": 4
+        },
+        "UA": {
+          "其他": 1,
+          "UA": 3
+        },
+        "其他": {
+          "其他": 4
+        }
+      }
+    },
+    "full_workflow": {
+      "accuracy": 0.9,
+      "correct": 18,
+      "total": 20,
+      "metrics_by_class": {
+        "STEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "NSTEMI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "UA": {
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8,
+          "tp": 4,
+          "fp": 2,
+          "fn": 0
+        },
+        "变异性心绞痛": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "其他": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 2,
+          "fp": 0,
+          "fn": 2
+        },
+        "未知": {
+          "precision": 0,
+          "recall": 0,
+          "f1": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "macro_precision": 0.7777777777777778,
+      "macro_recall": 0.75,
+      "macro_f1": 0.7444444444444445,
+      "confusion_matrix": {
+        "STEMI": {
+          "STEMI": 4
+        },
+        "变异性心绞痛": {
+          "变异性心绞痛": 4
+        },
+        "NSTEMI": {
+          "NSTEMI": 4
+        },
+        "UA": {
+          "UA": 4
+        },
+        "其他": {
+          "其他": 2,
+          "UA": 2
         }
       }
     }
@@ -170,47 +405,217 @@
           "ground_truth": "STEMI",
           "prediction": "STEMI",
           "correct": true,
-          "raw_response": "诊断：STEMI（急性ST段抬高心肌梗死）",
+          "raw_response": "\n\n诊断：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P002",
-          "ground_truth": "变异性心绞痛",
-          "prediction": "变异性心绞痛",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
           "correct": true,
-          "raw_response": "诊断：变异性心绞痛",
+          "raw_response": "\n\n诊断：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P003",
-          "ground_truth": "NSTEMI",
-          "prediction": "NSTEMI",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
           "correct": true,
-          "raw_response": "诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "raw_response": "\n\n诊断：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P004",
-          "ground_truth": "UA",
-          "prediction": "UA",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
           "correct": true,
-          "raw_response": "诊断：UA（不稳定型心绞痛）",
+          "raw_response": "\n\n诊断：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P005",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P006",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P007",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P008",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P009",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P010",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P011",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P012",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P013",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P014",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P015",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P016",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P017",
           "ground_truth": "其他",
           "prediction": "其他",
           "correct": true,
-          "raw_response": "诊断：其他（非缺血性胸痛）",
+          "raw_response": "\n\n诊断：其他（非缺血性胸痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P018",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n诊断：其他（非缺血性胸痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P019",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n诊断：其他（非缺血性胸痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P020",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n诊断：其他（非缺血性胸痛）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
@@ -223,49 +628,946 @@
         {
           "patient_id": "P001",
           "ground_truth": "STEMI",
-          "prediction": "未知",
-          "correct": false,
-          "raw_response": "根据患者的病历描述，最可能的诊断结果是**急性心肌梗死**（Acute Myocardial Infarction, AMI）。\n\n**诊断依据：**\n\n1. **临床表现**：\n   - 患者出现剧烈胸痛，持续超过30分钟，疼痛性质为压迫性，并放射至左臂和下颌，这些都是典型的心肌梗死症状。\n   - 患者伴有明显的濒死感、出汗增多及心悸，进一步支持心肌缺血的可能性。\n\n2. **心电图变化**：\n   - 心电图显示V3-V5导联ST段抬高0.25mV，并伴有病理性Q波，这些变化通常提示心肌缺血或心肌梗死。\n\n3. **心肌标志物**：\n   - 肌钙蛋白T（1.8 ng/mL）和CK-MB（92 U/L）均显著升高，表明心肌损伤，进一步支持急性心肌梗死的诊断。\n\n4. **既往病史和危险因素**：\n   - 患者有高血压病史，年龄偏大，且有体重指数偏高和缺乏运动等心血管疾病危险因素，这些都增加了心肌梗死的风险。\n\n综合以上信息，患者的症状、心电图表现和心肌标志物的升高均符合急性心肌梗死的诊断。建议尽快进行进一步的评估和治疗，包括可能的冠脉造影和介入治疗。",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果是：**急性ST段抬高型心肌梗死（STEMI），具体为前壁心肌梗死**\n\n## 诊断依据：\n\n### 1. 临床表现符合急性心肌梗死特征\n- **典型症状**：突发胸痛，持续1小时不缓解，性质为撕裂样/压榨样，伴大汗、面色苍白\n- **胸痛特点**：心前区疼痛，向后背放射，休息不缓解，活动后加重\n- **高危因素**：高血压、糖尿病、长期吸烟史\n\n### 2. 心电图特征性改变\n- **ST段抬高**：V1-V4导联ST段弓背向上抬高约0.3 mV\n- **对应导联改变**：其他导联ST段压低\n- **定位诊断**：ST段抬高出现在V1-V4导联，提示前壁心肌梗死（累及前间壁）\n\n### 3. 心肌损伤标志物显著升高\n- **肌钙蛋白T（cTnT）**：1.8 ng/mL（正常<0.1 ng/mL），升高超过18倍\n- **CK-MB**：92 U/L（正常<24 U/L），升高约4倍\n- 这两项指标都是心肌坏死的特异性标志物，显著升高提示心肌细胞发生坏死\n\n## 临床建议：\n\n这是典型的急性ST段抬高型心肌梗死（STEMI），属于心血管急症，需要**立即启动再灌注治疗**（如急诊PCI或溶栓治疗），以开通闭塞的冠状动脉，挽救濒死的心肌，改善患者预后。\n\n同时需要：\n- 绝对卧床休息\n- 持续心电监护\n- 抗血小板聚集治疗（阿司匹林、氯吡格雷等）\n- 抗凝治疗\n- 硝酸酯类药物缓解胸痛\n- 密切监测生命体征和心功能\n\n建议立即收入冠心病监护病房（CCU）进行系统治疗。",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P002",
-          "ground_truth": "变异性心绞痛",
-          "prediction": "变异性心绞痛",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
           "correct": true,
-          "raw_response": "根据患者的病历描述，最可能的诊断结果是**变异性心绞痛（Prinzmetal心绞痛）**。\n\n### 诊断依据：\n\n1. **症状特征**：\n   - 患者主诉“休息时胸痛发作，活动后反而缓解”，这与变异性心绞痛的典型表现相符。变异性心绞痛通常在静息状态下发生，常见于夜间或清晨，且在轻微活动后症状可缓解。\n\n2. **胸痛性质**：\n   - 胸痛呈压迫感，程度中等，伴有轻微气短，符合心绞痛的表现。\n\n3. **心电图表现**：\n   - 心电图显示II、III、aVF导联ST段一过性抬高，这种ST段抬高在变异性心绞痛中是常见的，通常在疼痛发作时出现，疼痛缓解后ST段恢复正常。\n\n4. **心肌标志物**：\n   - 心肌标志物（肌钙蛋白I和CK-MB）均在正常范围内，说明没有心肌坏死的证据，这进一步支持变异性心绞痛的诊断，因为在急性心肌梗死中，心肌标志物通常会升高。\n\n5. **无其他明显危险因素**：\n   - 患者既往健康，无心血管疾病史，且没有明显的心血管危险因素（如高血压、糖尿病、高脂血症等），这使得其他心血管疾病的可能性降低。\n\n### 进一步建议：\n建议进行24小时动态心电图监测（Holter监测），以观察是否存在更多的心电图变化，并考虑进行冠状动脉造影，以排除其他潜在的冠心病。同时，患者可能需要使用钙通道阻滞剂或硝酸酯类药物进行治疗，以缓解症状和预防发作。",
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**诊断：急性ST段抬高型心肌梗死（STEMI）——前壁心肌梗死**\n\n**诊断依据：**\n\n1. **临床表现典型**：患者突发剧烈胸痛，伴濒死感，持续时间超过30分钟，这是急性心肌梗死的典型表现。\n\n2. **心电图特征性改变**：V1-V4导联ST段弓背向上抬高0.3mV，这是急性前壁心肌梗死的典型心电图表现，提示前降支供血区域心肌急性缺血坏死。\n\n3. **心肌标志物显著升高**：肌钙蛋白T 2.1 ng/mL（正常<0.1 ng/mL）和CK-MB 105 U/L（正常<25 U/L）均明显升高，提示心肌细胞坏死。\n\n4. **流行病学特点**：患者为66岁男性，属于急性心肌梗死的高发年龄段。\n\n**建议：**\n这是心血管内科的急危重症，需要立即启动再灌注治疗（急诊PCI或溶栓），同时给予抗血小板、抗凝、扩张冠状动脉等综合治疗。建议立即收治入院，争分夺秒挽救心肌。",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P003",
-          "ground_truth": "NSTEMI",
-          "prediction": "NSTEMI",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
           "correct": true,
-          "raw_response": "根据患者的病历记录，最可能的诊断结果是**不稳定型心绞痛**或**急性冠状动脉综合征（ACS）**，具体为**非ST段抬高心肌梗死（NSTEMI）**。\n\n### 诊断依据：\n\n1. **临床表现**：\n   - 患者主诉胸痛，伴随出汗，持续约40分钟，符合心绞痛的典型表现。\n   - 胸痛为钝痛，位于胸骨后，且在发作前无明显诱因，考虑为心肌缺血引起的症状。\n\n2. **心电图检查**：\n   - 心电图显示广泛导联ST段压低，尤其在V4-V6导联中表现明显，提示心肌缺血。\n   - ST段压低常见于不稳定型心绞痛或NSTEMI，而ST段抬高则更常见于STEMI。\n\n3. **心肌标志物**：\n   - 血液检查结果显示肌钙蛋白T和CK-MB均有升高，表明心肌损伤的存在。\n   - 肌钙蛋白T的升高尤其具有特异性，提示心肌细胞受到损伤。\n\n4. **危险因素**：\n   - 患者有吸烟史、饮食偏咸、缺乏运动、工作压力大等多种心血管疾病的危险因素。\n   - 家族史中父亲早发心脏病，增加了患者的心血管疾病风险。\n\n### 结论：\n综合考虑患者的临床表现、心电图及心肌标志物的检查结果，患者很可能处于急性冠状动脉综合征的状态，具体为非ST段抬高心肌梗死（NSTEMI）。建议尽快进行进一步的心血管评估，如冠状动脉造影等，以明确诊断并制定相应的治疗方案。",
+          "raw_response": "\n\n## 诊断结果\n\n**急性前壁ST段抬高型心肌梗死（STEMI）**\n\n---\n\n## 诊断依据\n\n### 1. 临床症状\n- 胸骨后持续压榨感，向左肩背部放射 → 典型的心绞痛症状\n\n### 2. 心电图特征\n- **V3-V5导联ST段抬高0.25mV** → 前壁导联ST段抬高，提示前壁心肌梗死\n- **病理性Q波** → 提示心肌已发生透壁性坏死\n\n### 3. 心肌标志物\n- **肌钙蛋白I：2.5 ng/mL**（正常<0.04）→ 升高约62倍\n- **CK-MB：85 U/L**（正常<25）→ 升高约3.4倍\n\n→ 心肌坏死标志物显著升高，确诊心肌梗死\n\n---\n\n## 治疗建议\n\n该患者为典型的**ST段抬高型心肌梗死（STEMI）**，属于急危重症，需要：\n\n1. **立即启动再灌注治疗**（急诊PCI或溶栓）\n2. 绝对卧床休息\n3. 吸氧、心电监护\n4. 抗血小板聚集（阿司匹林+氯吡格雷/替格瑞洛）\n5. 抗凝治疗\n6. 硝酸酯类药物缓解胸痛\n7. 密切监测生命体征及心功能\n\n**时间就是心肌，时间就是生命**，需尽快开通闭塞冠状动脉，挽救濒死心肌。",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P004",
-          "ground_truth": "UA",
-          "prediction": "其他",
-          "correct": false,
-          "raw_response": "根据患者林丽的病历记录，最可能的诊断结果是**稳定型心绞痛**（或称为慢性心绞痛）加重。\n\n### 诊断依据：\n\n1. **症状表现**：\n   - 患者主诉心绞痛发作频率增加，且每次持续时间延长（由5分钟增加至15分钟），这表明心绞痛的严重程度有所加重。\n   - 胸痛伴有压迫感，且有放射至左肩及下颌的感觉，符合心绞痛的典型表现。\n   - 发作时伴有轻度气促，提示心脏供血不足的可能性。\n\n2. **诱因**：\n   - 胸痛在劳累或情绪激动时加重，休息后可缓解，符合稳定型心绞痛的特点。\n\n3. **既往病史**：\n   - 患者有高血压病史，且存在吸烟史和缺乏运动等心血管疾病的危险因素，这些都是心血管疾病的高危因素。\n\n4. **辅助检查**：\n   - 心电图显示V4-V6导联ST段水平压低0.1mV，提示心肌缺血的可能。\n   - 心肌标志物（肌钙蛋白I和CK-MB）正常，说明没有急性心肌损伤，进一步支持稳定型心绞痛的诊断。\n\n### 结论：\n患者的症状和检查结果符合稳定型心绞痛的特征，但由于症状的加重，建议进行进一步的评估，如冠状动脉造影，以排除冠状动脉狭窄或其他心血管疾病的可能性。同时，考虑调整治疗方案，可能需要增加抗心绞痛药物的使用或进行生活方式的干预。",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n## 诊断结果\n\n**急性ST段抬高型心肌梗死（STEMI）**\n- 部位：下壁心肌梗死（II、III、aVF导联受累）\n- 类型：ST段抬高型心肌梗死\n\n---\n\n## 诊断依据\n\n### 1. 临床表现（典型的心肌梗死症状）\n- **胸痛特点**：胸骨后压榨样、紧缩感剧痛，持续不缓解，符合心肌梗死疼痛的典型表现\n- **放射痛**：疼痛向后背和左上肢放射，是心肌梗死疼痛的典型放射部位\n- **伴随症状**：全身大汗、恶心，都是急性心肌梗死的常见伴随症状\n- **持续时间**：疼痛持续2小时不缓解，符合急性心肌梗死的临床特点\n\n### 2. 心电图特征性改变\n- **II、III、aVF导联ST段抬高**：这是急性下壁心肌梗死的心电图典型表现\n- **ST段抬高约0.2mV**：达到ST段抬高型心肌梗死的诊断标准（≥0.1mV，下壁导联≥0.2mV）\n\n### 3. 心肌损伤标志物明显升高\n- **肌钙蛋白T：2.1 ng/mL**：显著升高，是心肌梗死最特异性的标志物\n- **CK-MB：105 U/L**：明显升高，也是心肌损伤的重要标志物\n\n### 4. 高危因素\n- 高血压病史10余年\n- 糖尿病病史8年\n- 长期大量吸烟史（30余年，每天约1包）\n\n---\n\n## 临床建议\n\n这是典型的急性ST段抬高型心肌梗死（STEMI），病情危重，需要立即启动再灌注治疗（溶栓或急诊PCI），以开通闭塞的冠状动脉，挽救濒死心肌，改善患者预后。\n\n建议立即启动胸痛绿色通道，进行急诊冠脉造影明确病变血管，必要时行急诊介入治疗。",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
         },
         {
           "patient_id": "P005",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**最可能的诊断：变异型心绞痛（Prinzmetal心绞痛）**\n\n**诊断依据：**\n\n1. **典型症状表现**：患者为52岁女性，夜间阵发性胸痛伴出汗，这是变异型心绞痛的典型表现。变异型心绞痛常在夜间或休息时发作，与冠状动脉痉挛有关。\n\n2. **特征性心电图改变**：发作时前壁导联ST段抬高，缓解后恢复正常。这是变异型心绞痛的特征性心电图表现，提示冠状动脉痉挛导致暂时性心肌缺血。\n\n3. **心肌标志物正常**：肌钙蛋白T和CK-MB均在正常范围内，说明发作时未发生心肌细胞坏死，这与心绞痛而非心肌梗死的诊断一致。\n\n4. **危险因素**：患者既往有心血管相关危险因素，增加了冠脉痉挛的风险。\n\n**建议进一步检查：**\n- 冠脉CTA或冠脉造影检查，明确冠状动脉是否存在狭窄或痉挛\n- 动态心电图监测，观察发作时心电图变化\n- 建议避免诱因，如戒烟、避免寒冷刺激等\n\n**治疗建议：**\n- 钙通道阻滞剂（如地尔硫卓）是治疗变异型心绞痛的首选药物\n- 硝酸酯类药物可缓解痉挛\n- 避免使用β受体阻滞剂，因其可能加重冠脉痉挛\n\n以上诊断仅为基于现有信息的临床判断，具体治疗方案需结合患者实际情况制定。建议患者尽快进行进一步检查以明确诊断。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P006",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n根据患者的临床表现和辅助检查结果，最可能的诊断是**变异型心绞痛（冠状动脉痉挛性心绞痛）**。\n\n**诊断依据：**\n1. **典型症状**：胸痛呈压榨性、紧缩感，伴有胸闷和濒死感，与典型心绞痛一致。\n2. **发作特点**：胸痛常在夜间睡眠或清晨起床时突然发生，持续时间短（5-10分钟），可自行缓解，无明显体力活动诱因，符合变异型心绞痛的静息发作特征。\n3. **心电图动态变化**：急诊心电图显示II、III、aVF导联ST段弓背向上抬高（0.1-0.2 mV），15分钟后复查ST段恢复正常，提示一过性心肌缺血，符合冠脉痉挛导致的心电图改变。\n4. **心肌损伤标志物**：肌钙蛋白T和CK-MB均在正常范围内，表明无持续性心肌坏死，支持短暂性缺血。\n5. **危险因素**：患者有高血压、长期吸烟及冠心病家族史，这些都是冠状动脉粥样硬化的危险因素，但患者年龄较轻（45岁），症状更符合冠脉痉挛而非固定狭窄。\n\n**总结**：变异型心绞痛通常由冠状动脉痉挛引起，多在静息状态下发作，心电图表现为一过性ST段抬高，心肌酶学正常。该患者症状典型，心电图动态变化符合，建议进一步行冠脉CTA或冠脉造影明确诊断，并避免吸烟等危险因素，遵医嘱使用钙通道阻滞剂等药物治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P007",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，最可能的诊断结果是：**变异型心绞痛（冠状动脉痉挛性心绞痛）**\n\n**诊断依据：**\n\n1. **典型临床表现**：患者休息时胸痛发作，活动后反而缓解，这是变异型心绞痛的典型特征。变异型心绞痛多在休息时发作，尤其常见于夜间或清晨，而活动或运动后冠状动脉痉挛可自行缓解，症状随之消失。\n\n2. **心电图动态变化**：发作时前壁导联ST段抬高，缓解后恢复正常，提示存在一过性心肌缺血改变，这是变异型心绞痛的心电图典型表现。\n\n3. **心肌标志物正常**：肌钙蛋白I和CK-MB均在正常范围内，说明虽然存在心肌缺血但未发生心肌坏死，可与急性心肌梗死相鉴别。\n\n4. **危险因素**：患者为59岁女性，既往有心血管危险因素，符合冠心病发病特点。\n\n**建议**：变异型心绞痛的治疗以缓解冠状动脉痉挛为主，常用钙通道阻滞剂和硝酸酯类药物。建议患者避免诱发因素（如吸烟、饮酒、寒冷刺激等），并定期随访复查。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P008",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n## 诊断结果\n\n**最可能的诊断：变异型心绞痛（Prinzmetal心绞痛）**\n\n---\n\n## 诊断依据\n\n### 1. 临床表现特点\n- **发作时间**：静息状态下突发胸痛，多在夜间或清晨发作——这是变异型心绞痛的典型特征\n- **发作情境**：不同于劳力性心绞痛，该患者在静息状态下发病\n\n### 2. 心电图表现\n- **II、III、aVF导联ST段一过性抬高**：提示下壁心肌缺血/损伤\n- **一过性**：ST段抬高后迅速恢复，符合冠状动脉痉挛的动态变化特点\n\n### 3. 心肌标志物\n- **肌钙蛋白I和CK-MB均正常**：这是变异型心绞痛的重要特点\n- **机制**：冠状动脉痉挛导致短暂心肌缺血，但未发生心肌细胞坏死，因此心肌标志物不升高\n\n### 4. 危险因素\n- 患者既往有心血管危险因素（具体未详述，但提示存在）\n- 59岁女性，处于冠心病好发年龄\n\n---\n\n## 总结\n\n该患者表现为典型的**变异型心绞痛**：静息状态下发作、夜间/清晨多见、心电图一过性ST段抬高（下壁导联）、心肌标志物正常。这些特点高度符合冠状动脉痉挛导致的短暂心肌缺血，建议进一步完善冠状动脉造影或激发试验以明确诊断，同时考虑钙通道阻滞剂等针对性治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P009",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**最可能的诊断：急性冠脉综合征（ACS）——非ST段抬高型心肌梗死（NSTEMI）**\n\n**诊断依据：**\n\n1. **临床表现**：患者为68岁男性，存在心血管危险因素，主诉心前区压迫感持续20-30分钟，符合典型的心绞痛症状。\n\n2. **心电图表现**：前壁导联T波深倒置伴ST段压低，这是心肌缺血的特征性表现，提示左前降支供血区域存在心肌缺血。\n\n3. **心肌标志物升高**：肌钙蛋白T 0.9 ng/mL和CK-MB 42 U/L均明显升高，提示存在心肌细胞坏死，这是急性心肌梗死的关键诊断依据。\n\n**总结**：患者表现为典型的心肌缺血症状，心电图显示前壁导联缺血性改变，心肌坏死标志物显著升高，符合NSTEMI的诊断标准。这是一种紧急情况，需要立即住院治疗，包括抗血小板、抗凝、硝酸酯类药物等综合治疗，并可能需要冠脉介入检查评估冠脉病变情况。\n\n**建议**：请立即将患者收治入院，进行进一步评估和治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P010",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**最可能的诊断：非ST段抬高型心肌梗死（NSTEMI）**\n\n**诊断依据：**\n\n1.  **临床表现**：患者为中老年女性，存在心血管危险因素，表现为胸痛伴出汗，症状符合急性冠脉综合征的典型表现，但程度较轻。\n2.  **心电图**：心电图显示 **II、III、aVF导联（对应心脏下壁）ST段呈下斜型压低达0.1mV**。ST段压低是心肌缺血的典型表现，提示存在心内膜下心肌损伤。\n3.  **心肌损伤标志物**：**肌钙蛋白T（cTnT）升高至0.5 ng/mL**，**CK-MB升高至38 U/L**。肌钙蛋白是心肌细胞坏死的特异性标志物，其升高结合CK-MB的升高，明确提示存在心肌细胞坏死。\n\n**总结：**\n患者同时具备**胸痛症状、心电图缺血性改变（ST段压低）以及心肌坏死证据（肌钙蛋白和CK-MB升高）**，符合NSTEMI的诊断标准。这是急性冠脉综合征（ACS）的一种重要类型，与不稳定型心绞痛（UA）的主要区别在于是否有心肌坏死。\n\n**建议：**\nNSTEMI是急危重症，需要立即住院监护和治疗，包括抗血小板、抗凝、扩张冠状动脉、降低心肌耗氧等综合措施，具体方案需结合患者整体情况制定。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P011",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，最可能的诊断是：**急性冠脉综合征（ACS）——非ST段抬高型心肌梗死（NSTEMI），累及下壁**。\n\n**诊断依据：**\n\n1. **临床表现**：患者为56岁女性，存在胸闷、气短伴左上肢麻木的症状。虽然胸痛描述不典型，但胸闷伴左上肢放射麻木是心肌缺血的常见表现，尤其在女性和老年患者中，不典型症状更为多见。\n\n2. **心电图表现**：心电图显示 **II、III、aVF导联ST段下斜型压低0.1mV**。下壁导联（II、III、aVF）的ST段压低提示下壁心肌存在缺血或损伤。\n\n3. **心肌标志物升高**：\n   - **肌钙蛋白T：0.5 ng/mL**（显著升高，提示心肌坏死）\n   - **CK-MB：38 U/L**（升高，进一步证实心肌损伤）\n\n   心肌坏死标志物的动态升高是诊断心肌梗死的关键依据。\n\n4. **危险因素**：患者为中年女性，既往存在心血管危险因素（如高血压、糖尿病、吸烟等，未在本次描述中明确，但病历提及），这是动脉粥样硬化和冠心病的重要基础。\n\n**总结：**\n患者胸闷气短伴左上肢麻木，心电图提示下壁导联ST段压低，心肌坏死标志物（肌钙蛋白、CK-MB）显著升高，符合 **NSTEMI** 的诊断标准。这是一种紧急情况，需要立即住院治疗，包括抗血小板、抗凝、扩冠、改善心肌缺血等治疗，并可能需要行冠脉造影明确血管病变情况。\n\n**建议**：请立即将患者收治入院，进行进一步评估和治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P012",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**最可能的诊断：非ST段抬高型心肌梗死（NSTEMI）**\n\n**诊断依据：**\n\n1. **临床表现**：患者为63岁男性，具有胸骨后闷痛伴心悸气短的症状，这是典型的心肌缺血表现。\n\n2. **心电图特征**：心电图显示广泛导联ST段压低，以V4-V6为著，这是心肌缺血的典型表现，提示存在冠脉动脉供血不足。\n\n3. **心肌标志物升高**：肌钙蛋白I升高（0.6 ng/mL）和CK-MB升高（52 U/L），是心肌细胞坏死的特异性标志物，表明已发生心肌梗死。\n\n4. **综合判断**：结合ST段压低的心电图表现和心肌标志物升高，符合非ST段抬高型心肌梗死（NSTEMI）的诊断标准。\n\n**建议**：该患者需要立即住院治疗，包括抗血小板聚集、抗凝、硝酸酯类药物扩张冠状动脉、β受体阻滞剂控制心率等治疗，同时需要进一步完善冠脉造影检查，明确冠状动脉病变情况，必要时行介入治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P013",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，最可能的诊断是：**冠心病，不稳定型心绞痛（急性冠脉综合征）**。\n\n**诊断依据：**\n\n1. **临床表现**：患者为53岁女性，属于冠心病好发年龄。新发胸痛，程度较轻但逐渐加重，提示可能为不稳定性心绞痛（疼痛模式从稳定向不稳定转变）。\n2. **心电图结果**：II、III、aVF导联ST段压低0.08mV，提示下壁心肌缺血，这是冠心病心肌缺血的典型心电图表现。\n3. **心肌标志物**：肌钙蛋白T和CK-MB均在正常范围内，说明目前尚未发生心肌细胞坏死，即未发展为心肌梗死，符合不稳定型心绞痛的特点。\n4. **危险因素**：患者既往有心血管相关危险因素（如高血压、糖尿病、吸烟等，具体未详述），增加了冠心病的可能性。\n\n**总结**：患者新发胸痛伴心电图下壁导联ST段压低，但心肌标志物正常，符合不稳定型心绞痛的临床特点。建议立即进行冠脉造影检查以明确冠状动脉病变情况，并给予抗血小板、抗凝、硝酸酯类等药物治疗，同时控制危险因素。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P014",
+          "ground_truth": "UA",
+          "prediction": "STEMI",
+          "correct": false,
+          "raw_response": "\n\n根据您提供的病历信息，最可能的诊断是**不稳定型心绞痛（Unstable Angina, UA）**，属于急性冠脉综合征（ACS）的一种，但尚未发展为急性心肌梗死。\n\n## 诊断依据：\n\n1. **症状特点**：患者有明确的冠心病史，近期胸痛发作频率和持续时间明显加重（从原来每月几次到现在每天好几次，持续时间从几分钟延长到十几分钟），符合不稳定型心绞痛\"症状进行性加重\"的典型表现。\n\n2. **疼痛性质**：胸骨后压榨样闷痛，放射至左肩左上肢，休息或含服硝酸甘油可部分缓解，这些均符合心绞痛的临床特点。\n\n3. **伴随症状**：胸闷、出冷汗提示可能存在心肌缺血加重。\n\n4. **心电图表现**：V1-V4导联T波低平倒置，提示心肌缺血可能，但ST段无明显抬高或压低，暂不支持急性ST段抬高型心肌梗死。\n\n5. **心肌损伤标志物**：肌钙蛋白T和CK-MB均在正常范围内，可基本排除急性心肌梗死。\n\n## 建议：\n\n不稳定型心绞痛是心血管急症，建议尽快住院治疗，包括：\n- 卧床休息，心电监护\n- 抗血小板聚集（如阿司匹林、氯吡格雷）\n- 抗凝治疗（如低分子肝素）\n- 硝酸酯类药物缓解症状\n- 必要时行冠脉造影评估血管情况\n\n请务必遵循主治医生的治疗方案，祝早日康复！",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P015",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断意见如下：\n\n**最可能的诊断：不稳定性心绞痛（初发型）**\n\n**诊断依据：**\n\n1. **典型症状**：患者表现为劳力性心绞痛（轻微活动即出现胸痛），这是心肌缺血的典型表现。\n\n2. **心电图改变**：前壁导联T波低平或倒置，这是心肌缺血的特异性心电图表现，提示前壁心肌供血不足。\n\n3. **心肌标志物正常**：肌钙蛋白I和CK-MB均在正常范围内，说明尚未发生心肌细胞坏死，可与急性心肌梗死鉴别。\n\n4. **危险因素**：患者为59岁男性，既往存在心血管危险因素（具体未详述），属于冠心病高危人群。\n\n**说明**：不稳定性心绞痛是急性冠脉综合征的一种类型，介于稳定性心绞痛和急性心肌梗死之间，需要积极干预治疗。建议尽快完善冠脉CTA或冠脉造影检查，明确冠状动脉病变情况，同时启动抗血小板聚集、抗凝、缓解心肌缺血等治疗措施。\n\n**重要提示**：以上仅为基于有限信息的初步诊断意见，具体诊断和治疗方案需结合患者实际情况，由接诊医生综合评估后确定。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P016",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n根据提供的病例信息，我的诊断意见如下：\n\n**最可能的诊断：不稳定性心绞痛（UA）**\n\n**诊断依据：**\n\n1. **临床特征**：患者为74岁老年男性，存在心血管危险因素，静息时出现胸痛发作。静息时胸痛是不稳定性心绞痛的重要特征，提示冠状动脉粥样硬化斑块不稳定，可能存在部分闭塞或痉挛。\n\n2. **心电图表现**：心电图提示\"大致正常或轻度ST-T改变\"。这种不典型的ST-T改变可能反映了心肌供血不足，但尚未达到典型急性冠脉综合征的改变程度。\n\n3. **心肌标志物**：肌钙蛋白T和CK-MB均正常。心肌标志物正常是排除急性心肌梗死（AMI）的重要依据，但需要注意的是，不稳定性心绞痛患者的心肌标志物通常也是正常的，这是与急性心肌梗死的重要区别点。\n\n4. **诊断考虑**：综合患者的年龄、静息胸痛发作、心血管危险因素以及心电图和心肌标志物结果，不稳定性心绞痛（UA）的诊断可以成立。\n\n**建议**：建议进一步完善冠脉造影或冠脉CTA检查以明确冠状动脉病变情况，同时进行规范的药物治疗，包括抗血小板聚集（阿司匹林、氯吡格雷）、降脂（他汀类）、改善心肌供血（硝酸酯类）等治疗，并密切随访。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P017",
+          "ground_truth": "其他",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n## 诊断结果\n\n**最可能的诊断：心脏神经官能症（心脏神经症）**\n\n## 诊断依据\n\n### 1. 症状特点不支持冠心病\n- **胸痛性质**：患者描述为\"胸部刺痛，位置不固定，持续时间短暂\"，这与典型心绞痛的压榨性、闷痛、持续1-15分钟、放射至左肩左臂的特点不符\n- **疼痛规律**：心绞痛通常与活动、情绪激动相关，休息或含服硝酸甘油可缓解，而本例未提及这些特点\n\n### 2. 辅助检查结果\n- **心电图**：仅提示偶发房性早搏，无ST段改变、T波倒置等心肌缺血表现\n- **心肌标志物**：肌钙蛋白I和CK-MB均正常，可基本排除急性心肌梗死\n\n### 3. 患者特点\n- 39岁女性，属于冠心病低发年龄段\n- 虽有心血管危险因素，但胸痛特点不典型\n\n## 建议\n\n1. 进一步完善动态心电图检查，排除间歇性心肌缺血\n2. 建议进行运动负荷试验评估\n3. 关注患者情绪状态，排除焦虑、抑郁等心理因素\n4. 如胸痛频繁或加重，应及时复诊\n\n（注：仅凭现有信息无法完全排除冠心病，建议定期随访）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P018",
+          "ground_truth": "其他",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n**最可能的诊断：急性肺栓塞（PE）**\n\n**诊断依据**\n\n1. **症状特点**  \n   - 胸痛为**胸膜性**（pleuritic）疼痛，咳嗽、深呼吸时明显加重。  \n   - 伴有咳嗽，提示肺血管或肺实质受刺激。  \n   - 无典型的心绞痛性胸痛（如压迫感、放射至左臂等），且疼痛与体位变化无关。\n\n2. **心血管危险因素**  \n   - 患者为44岁男性，既往有心血管相关危险因素（未具体列出，但提示存在），这是肺栓塞的常见危险因素（年龄、性别、吸烟、高血压、糖尿病等均可增加风险）。\n\n3. **辅助检查**  \n   - **心电图**：呈非特异性ST‑T改变，可见于肺栓塞（窦性心动过速、S1Q3T3、右束支传导阻滞等），但也可仅为轻度ST‑T变化。  \n   - **心肌标志物**：肌钙蛋白T（<0.01 ng/mL）和CK‑MB（15 U/L）均正常，提示无明显心肌坏死，排除急性冠脉综合征。正常的心肌酶在中小规模肺栓塞中常见，只有大面积栓塞时才可能出现肌钙蛋白升高。\n\n4. **临床路径**  \n   - 症状符合“胸痛＋呼吸系统症状（咳嗽、呼吸困难）＋心血管危险因素”三联征，首先需要排除危及生命的肺栓塞。  \n   - 心电图和心肌标志物均不支持急性冠脉综合征或心肌炎，而肺栓塞的典型表现正是胸膜性胸痛伴咳嗽、心电图非特异性改变、心肌酶正常。\n\n**进一步检查建议**\n\n- **D‑二聚体**：若升高则提示需要进一步影像学检查。  \n- **CT肺动脉造影（CTPA）**：确诊肺栓塞的金标准。  \n- **下肢深静脉彩超**：寻找深静脉血栓来源。  \n- **血气分析**：评估低氧血症和肺泡-动脉氧分压差。  \n\n**结论**  \n结合患者的胸痛特点、咳嗽、心血管危险因素以及心电图和心肌标志物的结果，急性肺栓塞是最符合临床表现的诊断。建议尽快完成上述检查以明确诊断并及时启动抗凝或再灌注治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P019",
+          "ground_truth": "其他",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n根据您的病历描述和检查结果，我的诊断是：**胃食管反流病（GERD）**\n\n## 诊断依据：\n\n**1. 症状特征高度符合胃食管反流病：**\n- 胸骨后烧灼样疼痛（烧心），向上放射至咽部\n- 饭后特别是卧位时加重\n- 弯腰或进食碱性食物（如苏打饼干）可缓解\n- 伴随反酸、嗳气、口酸等典型消化道症状\n\n**2. 排除心血管疾病的依据：**\n- 心电图仅显示窦性心动过速（可能与疼痛刺激有关），无ST-T改变等心肌缺血表现\n- 心肌损伤标志物（肌钙蛋白T、CK-MB）均在正常范围，无心肌坏死证据\n- 患者年轻（27岁），无心血管危险因素（高血压、糖尿病、吸烟饮酒史）\n- 疼痛特点不符合心绞痛（应为压榨性闷痛，休息或硝酸甘油可缓解，与饮食关系不密切）\n\n**3. 诊疗建议：**\n- 建议进一步行胃镜或24小时食管pH监测明确诊断\n- 可尝试质子泵抑制剂（如奥美拉唑）诊断性治疗\n- 建议少食多餐，避免饭后立即卧床，抬高床头\n\n胃食管反流病是胸痛的常见非心源性原因之一，您的症状非常典型，建议到消化内科进一步诊治。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P020",
+          "ground_truth": "其他",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n根据您提供的病历信息，我的诊断结果如下：\n\n**最可能的诊断：胃食管反流病（GERD）**\n\n**诊断依据：**\n\n1. **症状特点**：患者表现为胸骨后烧灼感，且与进食相关，这是胃食管反流病的典型表现。食管位于胸骨后，与心脏位置相邻，患者描述的\"胸骨后烧灼感\"实际上是烧心症状。\n\n2. **心脏疾病排除**：\n   - 心电图正常，不支持急性冠脉综合征（如心绞痛、心肌梗死）\n   - 心肌标志物（肌钙蛋白I、CK-MB）正常，进一步排除了急性心肌损伤\n\n3. **临床路径符合**：虽然患者存在心血管危险因素，但辅助检查结果不支持心脏疾病导致的胸痛，而症状特点高度提示食管胃源性胸痛。\n\n**建议**：\n- 建议进一步行胃镜检查或24小时食管pH监测以明确诊断\n- 可尝试质子泵抑制剂诊断性治疗\n- 建议消化内科就诊，行进一步评估和治疗\n\n需要注意的是，虽然目前不支持心脏疾病，但鉴于患者有心血管危险因素，仍需定期监测心血管健康。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "method": "intermediate_state",
+      "results": [
+        {
+          "patient_id": "P001",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n根据患者病历信息，逐项评估如下：\n\n### 评估节点结果\n\n**缺血性胸痛评估：是**\n- 依据：患者胸痛突然发生，位于心前区，呈撕裂样/紧缩感，向后背放射，持续不缓解，休息不缓解，活动加重，伴大汗、面色苍白。有高血压、糖尿病、吸烟等冠心病危险因素。符合缺血性胸痛的典型特点。\n\n**ST段抬高：是**\n- 依据：心电图显示V1-V4导联ST段弓背向上抬高，抬高幅度约0.3 mV，提示急性ST段抬高型心肌梗死。\n\n**心肌损伤标志物升高：是**\n- 依据：肌钙蛋白T（cTnT）1.8 ng/mL（正常<0.1 ng/mL），明显升高；CK-MB 92 U/L（正常<24 U/L），显著升高。两者均超过正常值上限，提示心肌细胞坏死。\n\n---\n\n### 最终诊断结果\n\n**诊断：急性ST段抬高型心肌梗死（前壁）**\n\n**诊断依据：**\n1. 典型缺血性胸痛症状\n2. 心电图V1-V4导联ST段弓背向上抬高\n3. 心肌损伤标志物（cTnT、CK-MB）显著升高\n4. 存在高血压、糖尿病、长期吸烟等冠心病危险因素",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P002",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n缺血性胸痛：是  \nST段抬高：是  \n心肌标志物升高：是  \n诊断：急性前壁ST段抬高型心肌梗死（STEMI）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P003",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n缺血性胸痛：是  \nST段抬高：是  \n心肌标志物升高：是  \n\n诊断：ST段抬高型心肌梗死（STEMI），前壁心肌梗死（V3‑V5导联）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P004",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 依据：胸骨后压榨样、紧缩感剧痛，持续2小时不缓解，向后背和左上肢放射，伴有大汗、恶心\n\n**ST段抬高：是**\n- 依据：心电图显示II、III、aVF导联ST段抬高0.2mV，提示下壁心肌梗死\n\n**心肌标志物升高：是**\n- 依据：肌钙蛋白T 2.1 ng/mL（明显升高），CK-MB 105 U/L（升高）\n\n---\n\n### 最终诊断结果：\n\n**诊断：ST段抬高型心肌梗死（STEMI）- 下壁心肌梗死**\n\n**诊断依据：**\n1. 典型缺血性胸痛症状（胸骨后压榨样疼痛，放射至后背和左上肢，伴大汗、恶心）\n2. 心电图II、III、aVF导联ST段抬高\n3. 心肌损伤标志物（肌钙蛋白T、CK-MB）明显升高\n4. 危险因素：高血压、糖尿病、长期吸烟\n\n**临床建议：** 这是一个典型的ST段抬高型心肌梗死（STEMI）病例，需要立即启动再灌注治疗（溶栓或急诊PCI），同时给予抗血小板、抗凝、硝酸酯类药物等综合治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P005",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n缺血性胸痛：是  \nST段抬高：是  \n心肌标志物升高：否  \n\n诊断：变异型心绞痛（冠状动脉痉挛性心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P006",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n根据患者病历信息，逐项评估如下：\n\n### 评估节点结果\n\n**缺血性胸痛：是**\n- 理由：患者胸痛性质为压榨性、紧缩感，伴有胸闷和濒死感，符合典型缺血性胸痛特征\n- 发作特点：夜间睡眠或清晨起床时发作，休息后自行缓解（5-10分钟）\n- 危险因素：高血压病史、长期吸烟史、冠心病家族史\n\n**ST段抬高：是**\n- 理由：心电图显示II、III、aVF导联ST段呈弓背向上抬高0.1-0.2 mV\n- 动态变化：15分钟后复查ST段恢复正常，呈一过性ST段抬高\n\n**心肌损伤标志物升高：否**\n- 肌钙蛋白T：0.02 ng/mL（正常<0.03 ng/mL）\n- CK-MB：16 U/L（正常<25 U/L）\n- 两者均在正常参考值范围内\n\n---\n\n### 最终诊断结果\n\n**诊断：变异型心绞痛（变异性心绞痛）**\n\n**诊断依据：**\n1. 典型缺血性胸痛症状（压榨性、紧缩感、濒死感）\n2. 胸痛发作具有明显时间规律（夜间或清晨休息时发作）\n3. 心电图有一过性ST段抬高（下壁导联），且可自行恢复\n4. 心肌损伤标志物（肌钙蛋白、CK-MB）正常\n5. 存在冠心病危险因素（高血压、吸烟、家族史）\n\n**临床意义：** 变异型心绞痛是由于冠状动脉痉挛导致的心肌缺血，典型表现为安静状态下胸痛伴ST段抬高，心肌标志物通常不升高。本例患者符合该诊断。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P007",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n根据患者的病历信息，我来逐项分析评估节点：\n\n## 评估节点分析\n\n**1. 缺血性胸痛评估：是**\n- 患者表现为胸痛症状\n- 典型特点：休息时胸痛发作，活动后反而缓解\n- 这是变异型心绞痛的典型临床表现，属于缺血性胸痛\n\n**2. ST段抬高：是**\n- 心电图结果提示：发作时前壁导联ST段抬高\n- 缓解后ST段恢复正常\n- 符合变异型心绞痛的心电图表现\n\n**3. 心肌损伤标志物升高：否**\n- 肌钙蛋白I：0.02 ng/mL（正常范围）\n- CK-MB：18 U/L（正常范围）\n- 标志物未升高，提示无心肌坏死\n\n---\n\n## 输出结果\n\n```\n缺血性胸痛：是\nST段抬高：是\n心肌标志物升高：否\n```\n\n## 最终诊断\n\n**诊断：变异型心绞痛（Prinzmetal心绞痛/冠状动脉痉挛性心绞痛）**\n\n**诊断依据：**\n1. 典型临床表现：休息时胸痛发作，活动后缓解\n2. 心电图特征：发作时ST段抬高，缓解后恢复\n3. 心肌标志物正常：提示无心肌坏死，属于一过性心肌缺血\n\n**临床意义：** 变异型心绞痛是由于冠状动脉痉挛导致心肌供血不足引起的，治疗上需使用钙通道阻滞剂或硝酸酯类药物预防冠状动脉痉挛。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P008",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n根据患者病历信息，逐项评估如下：\n\n### 评估节点结果\n\n**缺血性胸痛评估：是**\n- 理由：患者表现为静息状态下突发胸痛，夜间或清晨发作，既往有心血管危险因素，符合缺血性胸痛的临床特征\n\n**ST段抬高：是**\n- 理由：心电图结果显示II、III、aVF导联ST段一过性抬高，提示下壁心肌缺血\n\n**心肌损伤标志物升高：否**\n- 理由：肌钙蛋白I：0.02 ng/mL（正常），CK-MB：18 U/L（正常），两项指标均在正常参考值范围内\n\n---\n\n### 最终诊断\n\n**诊断：变异型心绞痛（Prinzmetal心绞痛）**\n\n**诊断依据：**\n1. 静息状态下突发胸痛，多在夜间或清晨发作\n2. 心电图显示下壁导联（II、III、aVF）ST段一过性抬高\n3. 心肌损伤标志物（肌钙蛋白、CK-MB）正常\n4. 既往有心血管危险因素\n\n**临床意义：** 变异型心绞痛是由于冠状动脉痉挛导致的暂时性心肌缺血，心肌标志物通常不升高，ST段抬高呈一过性，常在静息状态下发作。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P009",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 患者表现为心前区压迫感，持续20-30分钟，属于典型的缺血性胸痛症状\n\n**ST段抬高：否**\n- 心电图显示：前壁导联T波深倒置，伴ST段压低\n- 提示为ST段压低型改变，非ST段抬高\n\n**心肌损伤标志物升高：是**\n- 肌钙蛋白T：0.9 ng/mL（升高）\n- CK-MB：42 U/L（升高）\n- 两者均明显超过正常参考值\n\n---\n\n### 最终诊断结果：\n\n**诊断：非ST段抬高型心肌梗死（NSTEMI）**\n\n**诊断依据：**\n1. 典型缺血性胸痛症状（心前区压迫感，持续20-30分钟）\n2. 心电图显示前壁导联ST段压低及T波倒置（符合NSTEMI的心电图表现）\n3. 心肌损伤标志物（肌钙蛋白T和CK-MB）显著升高，提示心肌细胞坏死\n\n**临床意义：** 该患者属于高危急性冠脉综合征，需立即启动规范治疗，包括抗血小板聚集、抗凝、硝酸酯类药物及他汀类药物治疗，同时评估是否需要介入干预。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P010",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n根据患者的病历描述和临床评估流程，分析如下：\n\n- **缺血性胸痛评估**：患者因胸痛伴出汗就诊，症状符合缺血性胸痛特征，既往有心血管危险因素，因此评估为**是**。\n- **ST段抬高**：心电图显示II、III、aVF导联ST段下斜型压低0.1mV，无ST段抬高，因此评估为**否**。\n- **心肌损伤标志物升高**：肌钙蛋白T和CK-MB均升高，提示心肌损伤，因此评估为**是**。\n\n基于以上状态，最终诊断为非ST段抬高型心肌梗死（NSTEMI）。\n\n输出格式：\n缺血性胸痛：是\nST段抬高：否\n心肌标志物升高：是\n诊断：非ST段抬高型心肌梗死（NSTEMI）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P011",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n缺血性胸痛：是  \nST段抬高：否  \n心肌标志物升高：是  \n诊断：非ST段抬高型心肌梗死（NSTEMI）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P012",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n缺血性胸痛：是  \nST段抬高：否  \n心肌标志物升高：是  \n\n诊断：非ST段抬高型心肌梗死（NSTEMI）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P013",
+          "ground_truth": "UA",
+          "prediction": "NSTEMI",
+          "correct": false,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 患者为新发胸痛，且逐渐加重\n- 存在心血管危险因素\n- 心电图显示II、III、aVF导联ST段压低（缺血性改变）\n\n**ST段抬高：否**\n- 心电图显示II、III、aVF导联ST段**压低**0.08mV，而非抬高\n\n**心肌标志物升高：否**\n- 肌钙蛋白T：<0.01 ng/mL（正常）\n- CK-MB：20 U/L（正常）\n\n---\n\n### 最终诊断：\n\n**诊断：不稳定性心绞痛（Unstable Angina, UA）**\n\n**诊断依据：**\n1. 新发胸痛（初发劳力性心绞痛）或恶化性心绞痛\n2. 心电图显示ST段压低（心肌缺血证据）\n3. 心肌损伤标志物正常（可排除NSTEMI）\n4. 存在心血管危险因素\n\n**临床建议：**\n- 该患者属于高危胸痛患者\n- 需要立即住院治疗\n- 建议进行动态心电监护\n- 必要时复查心肌标志物（6-12小时后）\n- 启动抗血小板、抗凝、硝酸酯类等药物治疗\n- 评估是否需要介入治疗",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P014",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 依据：胸骨后压榨样闷痛，放射至左肩左上肢，硝酸甘油可缓解，既往冠心病史，危险因素（高血压、吸烟），症状近期加重\n\n**ST段抬高：否**\n- 依据：心电图显示V1-V4导联T波低平倒置，ST段无明显抬高或压低\n\n**心肌损伤标志物升高：否**\n- 依据：肌钙蛋白T 0.02 ng/mL（正常<0.03），CK-MB 15 U/L（正常<25），均在正常范围\n\n---\n\n### 最终诊断：\n\n**诊断：不稳定型心绞痛**\n\n**诊断依据：**\n1. 患者原有稳定型心绞痛病史\n2. 近3天症状明显加重：发作频率从每月几次增至每天好几次，持续时间从几分钟延长至十几分钟\n3. 缺血性胸痛特征明显：胸骨后压榨性疼痛，放射性，硝酸甘油可缓解\n4. 心电图提示心肌缺血（T波改变）\n5. 心肌标志物正常，可排除急性心肌梗死\n\n**临床意义：** 不稳定型心绞痛是急性冠脉综合征的一种，需要积极治疗以防止进展为心肌梗死。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P015",
+          "ground_truth": "UA",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 理由：患者在轻微活动后出现胸痛，这是典型的劳力性心绞痛表现，属于缺血性胸痛的典型特征\n\n**ST段抬高：否**\n- 理由：心电图显示前壁导联T波低平或倒置，这是心肌缺血的表现，但并未出现ST段抬高\n\n**心肌标志物升高：否**\n- 理由：肌钙蛋白I（0.01 ng/mL）和CK-MB（22 U/L）均在正常参考值范围内，提示无心肌细胞坏死\n\n---\n\n### 最终诊断：\n\n**诊断：稳定性心绞痛（劳力性心绞痛）**\n\n**诊断依据：**\n1. 典型症状：轻微活动即诱发胸痛\n2. 心电图改变：前壁导联T波低平/倒置，提示心肌缺血\n3. 心肌标志物正常：排除急性心肌梗死\n4. 危险因素：患者存在心血管危险因素\n\n**临床意义：**\n该患者为典型的稳定性心绞痛发作，冠状动脉存在一定程度的狭窄或痉挛，导致心肌供血不足。建议进一步完善冠脉影像学检查（如冠脉CTA或冠脉造影），并启动抗心肌缺血治疗。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P016",
+          "ground_truth": "UA",
+          "prediction": "未知",
+          "correct": false,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：是**\n- 患者有静息时胸痛发作\n- 既往有心血管相关危险因素\n- 症状符合缺血性胸痛的临床特点\n\n**ST段抬高：否**\n- 心电图结果提示：大致正常或轻度ST-T改变\n- 无ST段抬高表现\n\n**心肌损伤标志物升高：否**\n- 肌钙蛋白T：<0.01 ng/mL（正常范围）\n- CK-MB：20 U/L（正常范围）\n\n---\n\n### 最终诊断：\n\n**诊断：稳定性冠心病（稳定性心绞痛）**\n\n**诊断依据：**\n1. 老年男性，存在心血管危险因素\n2. 静息时胸痛发作，提示冠心病可能\n3. 心电图大致正常或轻度ST-T改变，符合稳定性冠心病表现\n4. 心肌损伤标志物正常，排除急性心肌梗死\n\n**建议：**\n- 进一步行冠脉CTA或冠脉造影明确冠状动脉病变情况\n- 规范冠心病二级预防治疗\n- 密切随访，注意胸痛发作频率和性质变化",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P017",
           "ground_truth": "其他",
           "prediction": "其他",
           "correct": true,
-          "raw_response": "根据患者刘娟的病历描述，最可能的诊断结果是**急性胸膜炎**或**胸膜刺激**。\n\n### 诊断依据：\n1. **症状特征**：\n   - 患者主诉胸痛，性质为刺痛，位于胸骨后方，且在深呼吸时加重，这与胸膜炎或胸膜刺激的典型表现相符。\n   - 伴随轻度咳嗽和呼吸困难，且无咳痰，提示可能存在胸膜或肺部的炎症。\n\n2. **体格检查**：\n   - 胸部叩诊无异常，双侧呼吸音清晰，心音正常，无杂音，排除了明显的心脏病和肺部实质性病变。\n\n3. **辅助检查**：\n   - 心电图显示非特异性ST-T改变，未见明显缺血性改变，心肌标志物正常，进一步排除了心源性胸痛的可能性。\n   - 由于没有明显的感染症状（如发热、咳痰等），也排除了急性肺炎的可能性。\n\n4. **既往病史和家族史**：\n   - 患者既往健康，无心血管疾病史，且家族中无相关疾病，降低了遗传性心血管疾病的可能性。\n\n### 进一步建议：\n- 建议进行胸部影像学检查（如胸部X光或CT）以排除胸腔内其他病变（如胸腔积液、肺部病变等）。\n- 观察患者的症状变化，必要时进行进一步的实验室检查以排除其他可能的原因（如感染、结缔组织疾病等）。",
+          "raw_response": "\n\n根据患者的病历描述和临床评估流程，分析如下：\n\n- **缺血性胸痛评估**：患者症状为胸部刺痛，位置不固定，持续时间短暂，不符合典型缺血性胸痛（如压榨性、闷痛或放射痛）。结合心电图无ST段改变及心肌标志物正常，可排除缺血性胸痛。\n- **ST段抬高**：心电图提示偶发房性早搏，未见ST段抬高。\n- **心肌损伤标志物升高**：肌钙蛋白I和CK-MB均在正常范围，未升高。\n\n由于缺血性胸痛评估为“否”，后续ST段抬高和心肌标志物升高评估不适用。\n\n**最终诊断**：排除缺血性胸痛，考虑非特异性胸痛（如肋间神经痛、肌肉性疼痛或焦虑相关），偶发房性早搏可能为良性心律失常，建议进一步评估胸痛其他原因。\n\n输出格式：\n缺血性胸痛：[否]\nST段抬高：[不适用]\n心肌标志物升高：[不适用]\n\n诊断：[非缺血性胸痛]",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P018",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛评估：否**\n- 分析：患者胸痛特点为“伴咳嗽，深呼吸时加重”，这种胸痛更符合胸膜性疼痛或肺部疾病相关疼痛，而非典型缺血性胸痛（缺血性胸痛通常为压榨性、紧缩性，休息或硝酸甘油可缓解，不随呼吸加重）。\n\n**ST段抬高：否**\n- 分析：心电图提示“非特异性ST-T改变”，不属于ST段抬高。\n\n**心肌损伤标志物升高：否**\n- 分析：肌钙蛋白T正常（<0.01 ng/mL），CK-MB正常（15 U/L），提示无心肌损伤。\n\n---\n\n### 最终诊断：\n\n**诊断：胸痛待查（考虑胸膜炎或肺部疾病可能）**\n\n**分析说明：**\n患者胸痛特点（与呼吸、咳嗽相关）提示非心源性胸痛可能性大，建议进一步排查胸膜、肺部疾病（如胸膜炎、肺炎、肺栓塞等），而非急性冠脉综合征。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P019",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 关键信息分析\n\n**胸痛特征分析：**\n- 烧灼样感觉（burning pain）\n- 胸骨后位置，往上放射至咽部\n- 饭后/躺下时加重\n- 弯腰/吃苏打饼干可缓解\n- 伴随反酸、嗳气、口中酸酸的感觉\n\n这些特征非常符合**胃食管反流病（GERD）**的典型表现，而非缺血性胸痛。缺血性胸痛通常是压榨性、紧缩性疼痛，放射至左臂或下巴，与运动相关，休息或硝酸甘油可缓解。\n\n**检查结果分析：**\n- 心电图：窦性心动过速，无ST段抬高\n- 心肌标志物：肌钙蛋白T和CK-MB均在正常范围内\n\n---\n\n### 评估节点结果\n\n```\n缺血性胸痛：[否]\nST段抬高：[不适用]\n心肌标志物升高：[不适用]\n```\n\n---\n\n### 最终诊断\n\n**诊断：[胃食管反流病（GERD）]**\n\n**诊断依据：**\n1. 典型的烧心样胸痛，与体位和进食相关\n2. 伴有反酸、嗳气等消化道症状\n3. 碱性食物（苏打饼干）和体位变化（弯腰）可缓解\n4. 心电图和心肌标志物检查排除急性冠脉综合征\n5. 患者为年轻女性，无心血管危险因素",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P020",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n## 临床评估分析\n\n### 评估节点结果：\n\n**缺血性胸痛：否**\n- 分析：患者症状为胸骨后烧灼感，且与进食相关，这是胃食管反流病的典型表现，而非缺血性胸痛的典型特征。缺血性胸痛通常表现为压迫感、紧缩感或濒死感，常与体力活动相关，与进食无关。\n\n**ST段抬高：不适用**\n- 分析：因患者并非缺血性胸痛，心电图检查在此评估路径中不适用。\n\n**心肌标志物升高：不适用**\n- 分析：因患者并非缺血性胸痛，心肌损伤标志物检测在此评估路径中不适用。\n\n---\n\n### 最终诊断：\n\n**诊断：胃食管反流病（GERD）**\n\n**诊断依据：**\n1. 症状特点：胸骨后烧灼感，与进食相关\n2. 心电图正常，排除急性冠脉综合征\n3. 心肌标志物正常，排除急性心肌梗死\n4. 症状符合胃食管反流病的典型表现\n\n**建议：**\n建议患者进一步行胃镜检查或24小时食管pH监测以明确诊断，并可考虑使用质子泵抑制剂进行诊断性治疗。同时需注意饮食调节，避免辛辣、油腻食物，餐后避免立即平卧。",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "method": "step_by_step",
+      "results": [
+        {
+          "patient_id": "P001",
+          "ground_truth": "STEMI",
+          "prediction": "其他",
+          "correct": false,
+          "raw_response": "\n\n分析：患者胸痛表现为突发持续1小时不缓解，部位在心前区，性质为撕裂样（而非典型的压榨性、紧缩感），并向后背放射，休息不缓解，活动加重，伴有全身大汗、面色苍白。虽然患者有高血压、糖尿病、长期吸烟等冠心病危险因素，但其胸痛特点与典型缺血性胸痛不符：疼痛性质为撕裂样而非压榨性，放射至后背而非左肩臂，无明确诱因，休息不缓解且持续时间达1小时（典型缺血性胸痛通常数分钟至十余分钟）。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者因突发胸痛伴大汗1小时急诊就诊\n第1轮医生提问：请详细描述一下您这次胸痛的具体特点：疼痛的部位、性质、持续时间、有无放射、诱发或缓解因素？同时请告诉我您以前有没有高血压、糖尿病、高血脂、吸烟或者冠心病家族史？\n第1轮患者回答：胸痛是突然发生的，就在心前区这个位置，疼得很厉害，是一种撕裂样的感觉，像是被什么东西紧紧攥住一样。疼痛向后背放射，持续不缓解，已经疼了1个小时了。没有明显诱因，休息也不缓解，动一动疼痛就加重。疼得全身冒冷汗，脸色都白了。我有高血压病史10多年，血压最高180/100 mmHg，目前在吃降压药但控制得不太好。还有糖尿病5年，吸烟40年，每天1包半。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P002",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为66岁男性，表现为剧烈胸痛伴濒死感，持续超过30分钟，既往有心血管危险因素。从疼痛性质看，剧烈程度伴濒死感符合缺血性胸痛的压榨性、紧缩感特点；持续时间超过30分钟符合缺血性胸痛的持续时间特征；老年男性且有心血管危险因素增加了缺血性胸痛的可能性。患者未描述刺痛、锐痛或与呼吸体位相关的疼痛，不支持非缺血性胸痛特点。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示V1-V4导联ST段弓背向上抬高0.3mV。V1-V4为胸前导联，ST段抬高幅度达0.3mV，超过了胸前导联的诊断标准（V2-V3≥0.2mV，其他胸前导联≥0.1mV）。且V1-V4为连续4个相邻导联，符合“至少两个相邻导联ST段抬高”的标准，形态为典型的弓背向上抬高。\n\n判断：是\n\n步骤3: \n\n**分析：** 患者心肌损伤标志物检测结果显示：肌钙蛋白T为2.1 ng/mL，CK-MB为105 U/L。肌钙蛋白T正常参考值通常<0.1 ng/mL，CK-MB正常参考值通常<25 U/L。两项指标均明显超过正常参考值上限，提示存在严重的心肌细胞坏死和损伤。\n\n**判断：** 是",
+          "interaction_trace": "患者初始主诉：患者吴杰，男，66岁，因剧烈胸痛伴濒死感，持续超过30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是吴杰，66岁，男。这次主要是剧烈胸痛伴濒死感，持续超过30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者吴杰，男，66岁，因剧烈胸痛伴濒死感，持续超过30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是吴杰，66岁，男。这次主要是剧烈胸痛伴濒死感，持续超过30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：V1-V4导联ST段弓背向上抬高0.3mV。\n\n患者初始主诉：患者吴杰，男，66岁，因剧烈胸痛伴濒死感，持续超过30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是吴杰，66岁，男。这次主要是剧烈胸痛伴濒死感，持续超过30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：V1-V4导联ST段弓背向上抬高0.3mV。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：2.1 ng/mL（升高），CK-MB：105 U/L（升高）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P003",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者胸痛特点为胸骨后压榨感，向左肩背部放射。胸骨后压榨性疼痛并放射至左肩背部是典型缺血性胸痛的部位和性质特点。患者为54岁女性，具有心血管危险因素。不具备非缺血性胸痛的特征（如刺痛、锐痛、随呼吸体位改变、短暂或过长持续时间等）。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示V3-V5导联ST段抬高0.25mV，伴病理性Q波。V3-V5为三个相邻的胸前导联，ST段抬高幅度0.25mV ≥ 0.2mV（胸前导联诊断标准），且伴有病理性Q波，这是ST段抬高型心肌梗死的典型心电图表现。\n\n判断：是\n\n步骤3: \n\n**分析：** 肌钙蛋白I正常值<0.04 ng/mL，患者结果为2.5 ng/mL，明显升高，约为正常上限的62.5倍；CK-MB正常值<25 U/L，患者结果为85 U/L，约为正常上限的3.4倍。两种心肌损伤标志物均显著超过正常参考值上限，提示存在明确的心肌损伤。\n\n**判断：** 是",
+          "interaction_trace": "患者初始主诉：患者郭明，女，54岁，因胸骨后持续压榨感，向左肩背部放射前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是郭明，54岁，女。这次主要是胸骨后持续压榨感，向左肩背部放射。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者郭明，女，54岁，因胸骨后持续压榨感，向左肩背部放射前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是郭明，54岁，女。这次主要是胸骨后持续压榨感，向左肩背部放射。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：V3-V5导联ST段抬高0.25mV，伴病理性Q波。\n\n患者初始主诉：患者郭明，女，54岁，因胸骨后持续压榨感，向左肩背部放射前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是郭明，54岁，女。这次主要是胸骨后持续压榨感，向左肩背部放射。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：V3-V5导联ST段抬高0.25mV，伴病理性Q波。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白I：2.5 ng/mL（升高，正常值<0.04 ng/mL），CK-MB：85 U/L（升高，正常值<25 U/L）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P004",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者胸痛表现为胸骨后压榨样、紧缩感剧痛，向后背和左上肢放射，持续2小时不缓解，伴有全身大汗、恶心症状。这些特点完全符合典型缺血性胸痛的表现：部位在胸骨后并有放射，性质为压榨紧缩感，持续时间较长（可能已发生急性心肌梗死），伴随大汗等交感激活症状。同时患者具有高血压、糖尿病、长期吸烟等冠心病危险因素。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示II、III、aVF导联ST段明显抬高，抬高幅度约0.2mV。这三个导联是相邻的下壁导联，符合\"至少两个相邻导联ST段抬高\"的诊断标准。抬高幅度0.2mV满足肢体导联≥0.1mV的诊断标准。其他导联未见明显ST-T改变。\n\n判断：是\n\n步骤3: \n\n分析：患者肌钙蛋白T为2.1纳克/毫升，CK-MB为105单位/升。肌钙蛋白是心肌损伤最敏感、最特异的标志物，正常参考值通常低于0.1纳克/毫升；CK-MB正常参考值通常为0-25单位/升左右。患者这两项指标均明显超过正常参考值上限，提示存在心肌细胞坏死和心肌损伤。\n\n判断：是",
+          "interaction_trace": "患者初始主诉：患者因胸骨后剧烈疼痛来诊，疼痛持续不缓解，伴有全身大汗。\n第1轮医生提问：请详细描述您胸痛的特点：疼痛具体在什么位置？持续多长时间了？疼痛时有什么其他感觉或伴随症状吗？平时有什么疾病史或者在吃什么药吗？有什么不良生活习惯吗？\n第1轮患者回答：胸痛是胸骨后面的一种压榨样、紧缩感的剧痛，感觉像有重物压在胸口，疼痛向后背和左上肢放射。疼痛大约2小时前开始，一直不缓解，疼得厉害时还出了好多汗，感觉恶心但没吐出来。我有高血压病史10多年，糖尿病也8年了，还抽了30多年的烟，每天大约一包。最近几天没有感冒发热，也没有吃什么特别的东西。\n\n患者初始主诉：患者因胸骨后剧烈疼痛来诊，疼痛持续不缓解，伴有全身大汗。\n第1轮医生提问：请详细描述您胸痛的特点：疼痛具体在什么位置？持续多长时间了？疼痛时有什么其他感觉或伴随症状吗？平时有什么疾病史或者在吃什么药吗？有什么不良生活习惯吗？\n第1轮患者回答：胸痛是胸骨后面的一种压榨样、紧缩感的剧痛，感觉像有重物压在胸口，疼痛向后背和左上肢放射。疼痛大约2小时前开始，一直不缓解，疼得厉害时还出了好多汗，感觉恶心但没吐出来。我有高血压病史10多年，糖尿病也8年了，还抽了30多年的烟，每天大约一包。最近几天没有感冒发热，也没有吃什么特别的东西。\n第2轮医生提问：我们刚给您做了心电图，请告诉我心电图的结果是什么样的？\n第2轮患者回答：心电图显示II、III、aVF导联的ST段明显抬高，抬高大约0.2毫伏，其他导联还没有看到明显的ST-T改变。\n\n患者初始主诉：患者因胸骨后剧烈疼痛来诊，疼痛持续不缓解，伴有全身大汗。\n第1轮医生提问：请详细描述您胸痛的特点：疼痛具体在什么位置？持续多长时间了？疼痛时有什么其他感觉或伴随症状吗？平时有什么疾病史或者在吃什么药吗？有什么不良生活习惯吗？\n第1轮患者回答：胸痛是胸骨后面的一种压榨样、紧缩感的剧痛，感觉像有重物压在胸口，疼痛向后背和左上肢放射。疼痛大约2小时前开始，一直不缓解，疼得厉害时还出了好多汗，感觉恶心但没吐出来。我有高血压病史10多年，糖尿病也8年了，还抽了30多年的烟，每天大约一包。最近几天没有感冒发热，也没有吃什么特别的东西。\n第2轮医生提问：我们刚给您做了心电图，请告诉我心电图的结果是什么样的？\n第2轮患者回答：心电图显示II、III、aVF导联的ST段明显抬高，抬高大约0.2毫伏，其他导联还没有看到明显的ST-T改变。\n第3轮医生提问：心肌酶谱和肌钙蛋白的结果出来了吗？请告诉我具体数值。\n第3轮患者回答：刚才抽血化验的结果出来了：肌钙蛋白T是2.1纳克/毫升，明显升高；CK-MB是105单位/升，也升高了，都超过正常范围。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P005",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为52岁女性，夜间阵发性胸痛伴出汗。夜间阵发性胸痛是缺血性胸痛的典型表现之一，出汗也是缺血性胸痛常见的伴随症状。虽然患者未详细描述胸痛的具体部位、性质、持续时间及放射痛等细节，但从“夜间阵发性”和“伴出汗”这两个关键特征来看，符合缺血性胸痛的临床特点。结合患者既往有心血管危险因素，该胸痛高度考虑为缺血性胸痛。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示发作时前壁导联ST段抬高，缓解后恢复。前壁导联属于胸前导联，符合ST段抬高的心电图特征。该表现为发作时一过性ST段抬高，缓解后恢复，符合变异性心绞痛或STEMI的动态心电图变化特点。\n\n判断：是\n\n步骤3: \n\n分析：患者心肌标志物检测结果显示：肌钙蛋白T为<0.01 ng/mL，CK-MB为15 U/L，两者均在正常参考值范围内。虽然患者心电图提示发作时前壁导联ST段抬高（提示急性心肌缺血），但心肌损伤标志物目前均未超过正常参考值上限，尚未检测到明确的心肌坏死证据。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者孙敏，女，52岁，因夜间阵发性胸痛，伴出汗前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙敏，52岁，女。这次主要是夜间阵发性胸痛，伴出汗。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者孙敏，女，52岁，因夜间阵发性胸痛，伴出汗前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙敏，52岁，女。这次主要是夜间阵发性胸痛，伴出汗。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：发作时前壁导联ST段抬高，缓解后恢复。\n\n患者初始主诉：患者孙敏，女，52岁，因夜间阵发性胸痛，伴出汗前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙敏，52岁，女。这次主要是夜间阵发性胸痛，伴出汗。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：发作时前壁导联ST段抬高，缓解后恢复。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：<0.01 ng/mL（正常），CK-MB：15 U/L（正常）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P006",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者胸痛表现为压榨性、紧缩感，伴有胸闷和濒死感，性质上符合缺血性胸痛的典型特征（压榨性、紧缩感）。持续时间约5-10分钟，可自行缓解，符合缺血性胸痛\"数分钟至十余分钟\"的特点。发作时间在夜间睡眠或清晨起床时，虽无明显体力活动诱因，但清晨时段是心肌缺血的好发时间，与交感神经兴奋性增高相关。患者为45岁男性，具有高血压、长期吸烟（20年×20支/日）及冠心病家族史等多项心血管危险因素。综合分析，患者胸痛特点高度符合缺血性胸痛的临床表现。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示II、III、aVF导联（下壁导联）ST段呈弓背向上抬高，幅度为0.1-0.2 mV，符合肢体导联ST段抬高≥0.1mV的诊断标准。且为相邻导联（II、III、aVF三个导联）同时出现抬高。值得注意的是，该ST段抬高呈一过性，持续约15分钟后复查心电图ST段已恢复正常，呈现动态变化特点。这种一过性ST段抬高高度提示变异性心绞痛（Prinzmetal心绞痛）而非STEMI。\n\n判断：是\n\n步骤3: \n\n分析：患者肌钙蛋白T为0.02 ng/mL，低于正常参考值上限（<0.03 ng/mL），在正常范围内；CK-MB为16 U/L，低于正常参考值上限（<25 U/L），也在正常范围内。虽然患者有一过性ST段抬高，提示可能存在冠脉痉挛或变异性心绞痛，但目前检测的心肌损伤标志物均未超过正常参考值上限。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者吴强，45岁男性，因突发胸痛就诊。\n第1轮医生提问：请问您胸痛具体是什么性质的？每次持续多长时间？在什么情况下会发作或加重？近期有没有类似的发作？\n第1轮患者回答：患者胸痛呈压榨性、紧缩感，程度较剧烈，伴有胸闷和濒死感。胸痛通常在夜间睡眠或清晨起床时突然发生，持续约5-10分钟后可自行缓解。无明显体力活动诱因。患者有高血压病史5年，吸烟史20年，每日约20支，无糖尿病病史。母亲曾患有冠心病。\n\n患者初始主诉：患者吴强，45岁男性，因突发胸痛就诊。\n第1轮医生提问：请问您胸痛具体是什么性质的？每次持续多长时间？在什么情况下会发作或加重？近期有没有类似的发作？\n第1轮患者回答：患者胸痛呈压榨性、紧缩感，程度较剧烈，伴有胸闷和濒死感。胸痛通常在夜间睡眠或清晨起床时突然发生，持续约5-10分钟后可自行缓解。无明显体力活动诱因。患者有高血压病史5年，吸烟史20年，每日约20支，无糖尿病病史。母亲曾患有冠心病。\n第2轮医生提问：您刚才做的心电图结果方便告诉我吗？\n第2轮患者回答：急诊心电图显示II、III、aVF导联ST段呈弓背向上抬高约0.1-0.2 mV，持续约15分钟后复查心电图ST段恢复正常。患者心电图呈现一过性ST段抬高的动态变化。\n\n患者初始主诉：患者吴强，45岁男性，因突发胸痛就诊。\n第1轮医生提问：请问您胸痛具体是什么性质的？每次持续多长时间？在什么情况下会发作或加重？近期有没有类似的发作？\n第1轮患者回答：患者胸痛呈压榨性、紧缩感，程度较剧烈，伴有胸闷和濒死感。胸痛通常在夜间睡眠或清晨起床时突然发生，持续约5-10分钟后可自行缓解。无明显体力活动诱因。患者有高血压病史5年，吸烟史20年，每日约20支，无糖尿病病史。母亲曾患有冠心病。\n第2轮医生提问：您刚才做的心电图结果方便告诉我吗？\n第2轮患者回答：急诊心电图显示II、III、aVF导联ST段呈弓背向上抬高约0.1-0.2 mV，持续约15分钟后复查心电图ST段恢复正常。患者心电图呈现一过性ST段抬高的动态变化。\n第3轮医生提问：您的心肌损伤标志物结果出来了吗？\n第3轮患者回答：肌钙蛋白T：0.02 ng/mL（正常参考值<0.03 ng/mL），CK-MB：16 U/L（正常参考值<25 U/L），均在正常范围内。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P007",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "其他",
+          "correct": false,
+          "raw_response": "\n\n分析：患者为59岁女性，存在心血管危险因素。但其胸痛特点为休息时发作、活动后缓解，这与典型缺血性胸痛的诱因特点（劳力或情绪激动诱发，休息或含服硝酸甘油缓解）正好相反。典型缺血性胸痛应在活动或劳累时诱发，休息后缓解，而该患者表现为静息性胸痛且活动后症状减轻，不符合典型缺血性胸痛的临床特征。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者胡明，女，59岁，因休息时胸痛发作，活动后反而缓解前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是胡明，59岁，女。这次主要是休息时胸痛发作，活动后反而缓解。既往有心血管相关危险因素，症状经过符合当前诊断路径。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P008",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为59岁女性，静息状态下突发胸痛，夜间或清晨发作，既往有心血管危险因素。虽然患者未详细描述胸痛的具体部位、性质、持续时间及放射痛等细节，但患者提供的关键信息（静息状态下突发、夜间/清晨发作、危险因素）符合变异型心绞痛或不稳定性心绞痛的特点。变异型心绞痛常在安静状态下发作，夜间和清晨多见，由冠状动脉痉挛引起，属于缺血性胸痛的范畴。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示II、III、aVF导联ST段一过性抬高。这三个导联属于下壁导联，且相互相邻，符合\"至少两个相邻导联ST段抬高\"的诊断标准。虽然具体抬高数值未给出，但心电图明确提示存在ST段抬高，常见于STEMI或变异性心绞痛。\n\n判断：是\n\n步骤3: \n\n**分析：** 患者心肌标志物检测结果显示：肌钙蛋白I为0.02 ng/mL，CK-MB为18 U/L。肌钙蛋白I的正常参考值通常为<0.04 ng/mL，CK-MB的正常参考值通常为<24 U/L，两项指标均在正常参考值范围内，未超过正常上限。\n\n**判断：** 否",
+          "interaction_trace": "患者初始主诉：患者陈娟，女，59岁，因静息状态下突发胸痛，多在夜间或清晨发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是陈娟，59岁，女。这次主要是静息状态下突发胸痛，多在夜间或清晨发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者陈娟，女，59岁，因静息状态下突发胸痛，多在夜间或清晨发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是陈娟，59岁，女。这次主要是静息状态下突发胸痛，多在夜间或清晨发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段一过性抬高。\n\n患者初始主诉：患者陈娟，女，59岁，因静息状态下突发胸痛，多在夜间或清晨发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是陈娟，59岁，女。这次主要是静息状态下突发胸痛，多在夜间或清晨发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段一过性抬高。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白I：0.02 ng/mL（正常），CK-MB：18 U/L（正常）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": true,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P009",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为68岁男性，主诉心前区压迫感，持续20-30分钟。从描述来看，疼痛部位位于心前区（相当于胸骨后区域），性质为压迫感，符合缺血性胸痛的压榨性、紧缩感特点。持续时间20-30分钟在缺血性胸痛的典型时间范围内（数分钟至十余分钟）。患者为老年男性，既往有心血管危险因素。综合以上特点，该胸痛符合缺血性胸痛的典型表现。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示前壁导联T波深倒置，伴ST段压低。根据ST段抬高的诊断标准，需要至少两个相邻导联ST段抬高≥0.1mV（肢体导联）或≥0.2mV（胸前导联V2-V3)。该患者心电图表现为ST段压低而非抬高，属于非ST段抬高型心肌梗死（NSTEMI）或不稳定型心绞痛的心电图表现。\n\n判断：否\n\n步骤3: \n\n分析：患者肌钙蛋白T为0.9 ng/mL，CK-MB为42 U/L，两项指标均超过正常参考值上限，提示存在心肌损伤。结合患者胸痛症状和心电图改变（ST段压低、T波深倒置），符合急性冠脉综合征的表现。\n\n判断：是",
+          "interaction_trace": "患者初始主诉：患者高伟，男，68岁，因心前区压迫感，持续20-30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是高伟，68岁，男。这次主要是心前区压迫感，持续20-30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者高伟，男，68岁，因心前区压迫感，持续20-30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是高伟，68岁，男。这次主要是心前区压迫感，持续20-30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：前壁导联T波深倒置，伴ST段压低。\n\n患者初始主诉：患者高伟，男，68岁，因心前区压迫感，持续20-30分钟前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是高伟，68岁，男。这次主要是心前区压迫感，持续20-30分钟。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：前壁导联T波深倒置，伴ST段压低。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：0.9 ng/mL（升高），CK-MB：42 U/L（升高）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P010",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为59岁女性，胸痛伴出汗，既往有心血管危险因素，症状程度较STEMI轻。出汗是缺血性胸痛的常见伴随症状。虽然患者未详细描述胸痛的具体部位、性质、持续时间等细节，但患者明确表示“症状经过符合当前诊断路径”，且提示“程度较STEMI轻”，这通常提示可能为不稳定性心绞痛或非ST段抬高型心肌梗死（NSTEMI），属于缺血性胸痛的范畴。结合患者为中年女性、存在心血管危险因素以及伴随出汗这些缺血性胸痛的高危特征，判断为缺血性胸痛的可能性较大。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示II、III、aVF导联ST段呈**下斜型压低**，压低幅度为0.1mV。ST段压低是心肌缺血的典型表现，常见于非ST段抬高型急性冠脉综合征（NSTE-ACS），包括不稳定型心绞痛或非ST段抬高型心肌梗死（NSTEMI）。下壁导联（II、III、aVF）ST段压低提示下壁心肌缺血。\n\n判断：**否**\n\n步骤3: \n\n分析：患者肌钙蛋白T为0.5 ng/mL，CK-MB为38 U/L。根据心肌损伤标志物的判断标准，超过正常参考值上限即为升高。肌钙蛋白T正常参考值通常在0.0-0.1 ng/mL，0.5 ng/mL明显升高；CK-MB正常参考值通常在0-25 U/L，38 U/L也明显升高。两项心肌损伤标志物均升高，提示患者存在心肌损伤。结合患者胸痛伴出汗的症状及心电图ST段改变（II、III、aVF导联ST段下斜型压低），符合急性冠脉综合征的表现。\n\n判断：是",
+          "interaction_trace": "患者初始主诉：患者孙强，女，59岁，因胸痛伴出汗，程度较STEMI轻前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙强，59岁，女。这次主要是胸痛伴出汗，程度较STEMI轻。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者孙强，女，59岁，因胸痛伴出汗，程度较STEMI轻前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙强，59岁，女。这次主要是胸痛伴出汗，程度较STEMI轻。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段下斜型压低0.1mV。\n\n患者初始主诉：患者孙强，女，59岁，因胸痛伴出汗，程度较STEMI轻前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是孙强，59岁，女。这次主要是胸痛伴出汗，程度较STEMI轻。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段下斜型压低0.1mV。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：0.5 ng/mL（升高），CK-MB：38 U/L（升高）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P011",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为56岁女性，处于冠心病高发年龄。主诉为胸闷气短伴左上肢麻木，其中“胸闷”符合缺血性胸痛的紧缩感、窒息感性质，“左上肢麻木”是典型的放射痛表现，指向胸骨后疼痛放射至左臂。虽然患者未明确描述诱因、缓解方式和持续时间，但症状特点与缺血性胸痛相符，且患者自述既往有心血管危险因素，符合当前诊断路径。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示II、III、aVF导联ST段呈下斜型压低0.1mV。这是下壁导联的ST段改变，但值得注意的是，该改变为\"压低\"而非\"抬高\"。ST段压低通常提示心内膜下心肌缺血，常见于非ST段抬高型急性冠脉综合征（NSTE-ACS），包括不稳定型心绞痛或非ST段抬高型心肌梗死（NSTEMI）。\n\n判断：否\n\n步骤3: \n\n分析：患者肌钙蛋白T为0.5 ng/mL，CK-MB为38 U/L。根据心肌损伤标志物的判断标准，两项指标均超过正常参考值上限。肌钙蛋白是心肌损伤最敏感、最特异的标志物，其升高提示存在心肌细胞坏死；CK-MB作为辅助诊断指标也同时升高，进一步支持心肌损伤的诊断。结合患者胸闷气短伴左上肢麻木的临床表现以及心电图ST段压低的表现，符合急性冠脉综合征的诊断。\n\n判断：是",
+          "interaction_trace": "患者初始主诉：患者赵秀兰，女，56岁，因胸闷气短，伴左上肢麻木前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是赵秀兰，56岁，女。这次主要是胸闷气短，伴左上肢麻木。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者赵秀兰，女，56岁，因胸闷气短，伴左上肢麻木前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是赵秀兰，56岁，女。这次主要是胸闷气短，伴左上肢麻木。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段下斜型压低0.1mV。\n\n患者初始主诉：患者赵秀兰，女，56岁，因胸闷气短，伴左上肢麻木前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是赵秀兰，56岁，女。这次主要是胸闷气短，伴左上肢麻木。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：II、III、aVF导联ST段下斜型压低0.1mV。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：0.5 ng/mL（升高），CK-MB：38 U/L（升高）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P012",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者主诉胸骨后闷痛，部位符合缺血性胸痛的典型部位（胸骨后）。性质为“闷痛”，接近缺血性胸痛的压榨性、紧缩感。伴随心悸气短，符合缺血性胸痛可能伴随的放射痛或心功能不全表现。既往有心血管危险因素，符合缺血性胸痛的高危人群特征。虽然患者未提供具体的持续时间、诱因及缓解方式等细节，但从现有描述的部位和性质来看，符合缺血性胸痛的特点。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图结果显示广泛导联ST段压低，以V4-V6为著。ST段压低是心肌缺血的典型表现，提示非ST段抬高型急性冠脉综合征（如NSTEMI或不稳定型心绞痛），但不属于ST段抬高型心肌梗死（STEMI）的表现。\n\n判断：否\n\n步骤3: \n\n分析：患者肌钙蛋白I为0.6 ng/mL（超过正常参考值上限），CK-MB为52 U/L（超过正常参考值上限）。肌钙蛋白是心肌损伤最敏感、最特异的标志物，其升高表明存在心肌细胞坏死；CK-MB作为辅助诊断指标也同时升高，进一步支持心肌损伤的诊断。结合患者胸骨后闷痛伴心悸气短的症状以及心电图广泛导联ST段压低的表现，符合急性冠脉综合征的诊断。\n\n判断：是",
+          "interaction_trace": "患者初始主诉：患者黄磊，男，63岁，因胸骨后闷痛，伴有心悸气短前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是黄磊，63岁，男。这次主要是胸骨后闷痛，伴有心悸气短。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者黄磊，男，63岁，因胸骨后闷痛，伴有心悸气短前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是黄磊，63岁，男。这次主要是胸骨后闷痛，伴有心悸气短。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：广泛导联ST段压低，以V4-V6为著。\n\n患者初始主诉：患者黄磊，男，63岁，因胸骨后闷痛，伴有心悸气短前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是黄磊，63岁，男。这次主要是胸骨后闷痛，伴有心悸气短。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：广泛导联ST段压低，以V4-V6为著。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白I：0.6 ng/mL（升高），CK-MB：52 U/L（升高）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": true
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P013",
+          "ground_truth": "UA",
+          "prediction": "其他",
+          "correct": false,
+          "raw_response": "\n\n分析：患者仅提供了有限信息，述“新发胸痛，程度较轻但逐渐加重”，既往有心血管危险因素。但患者未明确描述胸痛的具体部位（如胸骨后？）、性质（压榨性？刺痛？）、持续时间、放射部位、诱发因素、缓解方式及伴随症状（大汗、恶心等）。根据现有信息，无法确定胸痛是否符合缺血性胸痛的典型特点。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者林娟，女，53岁，因新发胸痛，程度较轻但逐渐加重前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是林娟，53岁，女。这次主要是新发胸痛，程度较轻但逐渐加重。既往有心血管相关危险因素，症状经过符合当前诊断路径。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P014",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者胸痛位于胸骨后，放射至左肩和左上肢，性质为压榨样闷痛，持续时间约5-10分钟，休息或含服硝酸甘油后可缓解。这些特点完全符合典型缺血性胸痛的诊断标准。患者有明确的冠心病史（3年前确诊稳定型心绞痛），且近期发作频率和持续时间明显加重（从原来每月几次到现在每天数次，从几分钟延长到十几分钟），同时伴有胸闷、出冷汗，这些都提示病情可能从稳定型心绞痛向不稳定型心绞痛甚至急性冠脉综合征演变。此外，患者有高血压和吸烟等心血管危险因素。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示V1-V4导联T波呈低平倒置改变，ST段没有明显抬高或压低，心率约85次/分，心律整齐。根据ST段抬高的诊断标准，需要至少两个相邻导联ST段抬高，且幅度≥0.1mV（肢体导联）或≥0.2mV（胸前导联）。该患者ST段无明显抬高或压低，仅存在T波改变，属于非ST段抬高表现。\n\n判断：否\n\n步骤3: \n\n分析：患者的心肌损伤标志物检测结果显示：肌钙蛋白T为0.02 ng/mL，低于参考值上限0.03 ng/mL，属于正常范围；CK-MB为15 U/L，低于参考值上限25 U/L，也属于正常范围。两个关键的心肌损伤标志物均未超过正常参考值上限。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者3天前开始出现胸痛，反复发作，无明显诱因\n第1轮医生提问：请详细描述一下您这次胸痛的特点：疼痛的部位、性质、持续时间、是否有放射痛？近期胸痛发作的频率和持续时间与以前相比有什么变化？您以前有冠心病或心绞痛病史吗？有什么心血管疾病的危险因素吗？\n第1轮患者回答：胸痛位于胸骨后，呈压榨样闷痛，有时会放射到左肩和左上肢，持续时间约5-10分钟，休息或含服硝酸甘油后能稍微缓解。我以前有冠心病，3年前确诊为稳定型心绞痛，但最近3天发作明显频繁了，原来一个月发几次，现在每天都要发好几次，而且持续时间也长了，原来休息几分钟就好了，现在要十几分钟才能慢慢停下来。除了胸痛，还有点胸闷、出冷汗。另外，我有高血压病史10年，吸烟20多年，每天半包烟。\n\n患者初始主诉：患者3天前开始出现胸痛，反复发作，无明显诱因\n第1轮医生提问：请详细描述一下您这次胸痛的特点：疼痛的部位、性质、持续时间、是否有放射痛？近期胸痛发作的频率和持续时间与以前相比有什么变化？您以前有冠心病或心绞痛病史吗？有什么心血管疾病的危险因素吗？\n第1轮患者回答：胸痛位于胸骨后，呈压榨样闷痛，有时会放射到左肩和左上肢，持续时间约5-10分钟，休息或含服硝酸甘油后能稍微缓解。我以前有冠心病，3年前确诊为稳定型心绞痛，但最近3天发作明显频繁了，原来一个月发几次，现在每天都要发好几次，而且持续时间也长了，原来休息几分钟就好了，现在要十几分钟才能慢慢停下来。除了胸痛，还有点胸闷、出冷汗。另外，我有高血压病史10年，吸烟20多年，每天半包烟。\n第2轮医生提问：您刚才描述的症状确实符合冠心病的表现。为了进一步评估，我需要了解心电图检查结果。请问心电图有什么异常吗？\n第2轮患者回答：今天门诊做了心电图，结果显示：V1-V4导联T波呈低平倒置改变，ST段没有明显抬高或压低，心率约85次/分，心律整齐。\n\n患者初始主诉：患者3天前开始出现胸痛，反复发作，无明显诱因\n第1轮医生提问：请详细描述一下您这次胸痛的特点：疼痛的部位、性质、持续时间、是否有放射痛？近期胸痛发作的频率和持续时间与以前相比有什么变化？您以前有冠心病或心绞痛病史吗？有什么心血管疾病的危险因素吗？\n第1轮患者回答：胸痛位于胸骨后，呈压榨样闷痛，有时会放射到左肩和左上肢，持续时间约5-10分钟，休息或含服硝酸甘油后能稍微缓解。我以前有冠心病，3年前确诊为稳定型心绞痛，但最近3天发作明显频繁了，原来一个月发几次，现在每天都要发好几次，而且持续时间也长了，原来休息几分钟就好了，现在要十几分钟才能慢慢停下来。除了胸痛，还有点胸闷、出冷汗。另外，我有高血压病史10年，吸烟20多年，每天半包烟。\n第2轮医生提问：您刚才描述的症状确实符合冠心病的表现。为了进一步评估，我需要了解心电图检查结果。请问心电图有什么异常吗？\n第2轮患者回答：今天门诊做了心电图，结果显示：V1-V4导联T波呈低平倒置改变，ST段没有明显抬高或压低，心率约85次/分，心律整齐。\n第3轮医生提问：根据您目前的症状和心电图表现，需要进一步排除急性心肌梗死。请问心肌损伤标志物检查结果如何？\n第3轮患者回答：刚才抽血查了心肌标志物，肌钙蛋白T结果是0.02 ng/mL（参考值<0.03 ng/mL），CK-MB是15 U/L（参考值<25 U/L），都在正常范围内。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P015",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为59岁男性，存在心血管危险因素，胸痛由\"轻微活动\"诱发，这符合缺血性胸痛\"常由劳力诱发\"的特点。虽然患者未详细描述胸痛的具体部位、性质、持续时间等细节，但\"轻微活动即出现胸痛\"这一特征高度提示缺血性胸痛的可能，且患者自述\"症状经过符合当前诊断路径\"也暗示其症状符合缺血性胸痛的临床特点。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图显示前壁导联T波低平或倒置，这是T波改变的表現，属于心肌缺血的非ST段抬高型心电图表现。T波改变提示心肌供血不足，但不符合ST段抬高的诊断标准（需要≥0.1mV肢体导联或≥0.2mV胸前导联的ST段抬高）。\n\n判断：否\n\n步骤3: \n\n分析：患者的心肌标志物检测结果显示：肌钙蛋白I为0.01 ng/mL（正常），CK-MB为22 U/L（正常）。根据心肌损伤标志物的判断标准，肌钙蛋白和CK-MB均处于正常参考值范围内，未超过正常参考值上限，提示目前不存在心肌损伤。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者林军，男，59岁，因轻微活动即出现胸痛前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是林军，59岁，男。这次主要是轻微活动即出现胸痛。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者林军，男，59岁，因轻微活动即出现胸痛前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是林军，59岁，男。这次主要是轻微活动即出现胸痛。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：前壁导联T波低平或倒置。\n\n患者初始主诉：患者林军，男，59岁，因轻微活动即出现胸痛前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是林军，59岁，男。这次主要是轻微活动即出现胸痛。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：前壁导联T波低平或倒置。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白I：0.01 ng/mL（正常），CK-MB：22 U/L（正常）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P016",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "步骤1: \n\n分析：患者为74岁老年男性，存在心血管危险因素。胸痛在静息时发作（非劳力或情绪激动诱发），但患者主诉“症状经过符合当前诊断路径”提示其胸痛特点符合缺血性胸痛的临床路径表现。老年患者静息时胸痛需警惕不稳定性心绞痛或急性冠脉综合征的可能，后者可表现为静息状态下发作的胸痛。\n\n判断：是\n\n步骤2: \n\n分析：患者心电图结果提示“大致正常或轻度ST-T改变”，这意味着心电图没有显示明显的ST段抬高。轻度ST-T改变属于非特异性改变，可能是轻度的ST段压低或T波改变，但不符合ST段抬高需要至少两个相邻导联ST段抬高且幅度达到≥0.1mV（肢体导联）或≥0.2mV（胸前导联）的诊断标准。\n\n判断：否\n\n步骤3: \n\n分析：患者的心肌损伤标志物检测结果显示：肌钙蛋白T为<0.01 ng/mL（正常参考值范围内），CK-MB为20 U/L（正常参考值范围内）。肌钙蛋白是心肌损伤最敏感、最特异的标志物，CK-MB是辅助诊断指标。两种标志物均未超过正常参考值上限，提示目前不存在心肌损伤。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者周强，男，74岁，因静息时偶有胸痛发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是周强，74岁，男。这次主要是静息时偶有胸痛发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n\n患者初始主诉：患者周强，男，74岁，因静息时偶有胸痛发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是周强，74岁，男。这次主要是静息时偶有胸痛发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：心电图大致正常或轻度ST-T改变。\n\n患者初始主诉：患者周强，男，74岁，因静息时偶有胸痛发作前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是周强，74岁，男。这次主要是静息时偶有胸痛发作。既往有心血管相关危险因素，症状经过符合当前诊断路径。\n第2轮医生提问：心电图检查结果怎么样？是否存在 ST 段抬高、压低或 T 波改变？\n第2轮患者回答：心电图结果提示：心电图大致正常或轻度ST-T改变。\n第3轮医生提问：心肌标志物结果如何？肌钙蛋白或 CK-MB 是否升高？\n第3轮患者回答：心肌标志物检查结果为：肌钙蛋白T：<0.01 ng/mL（正常），CK-MB：20 U/L（正常）。",
+          "intermediate_states": {
+            "ischemic_chest_pain": true,
+            "st_elevation": false,
+            "biomarker_elevated": false
+          },
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P017",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n分析：患者胸痛特点为胸部刺痛、位置不固定、持续时间短暂。根据缺血性胸痛诊断标准，典型缺血性胸痛应为胸骨后压榨性、紧缩感疼痛，常由劳力诱发，持续数分钟至十余分钟，可放射至左肩、左臂等部位。而该患者疼痛为刺痛性质，位置不固定，持续时间短暂，无明显诱因，这些特点更符合非缺血性胸痛（如神经性胸痛、功能性胸痛或肌肉骨骼源性胸痛）的表现。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者胡强，女，39岁，因胸部刺痛，位置不固定，持续时间短暂前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是胡强，39岁，女。这次主要是胸部刺痛，位置不固定，持续时间短暂。既往有心血管相关危险因素，症状经过符合当前诊断路径。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P018",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n分析：患者胸痛伴有咳嗽，且深呼吸时加重，提示胸膜性疼痛特点，不符合典型缺血性胸痛表现。缺血性胸痛通常为胸骨后压榨性、紧缩感，常由劳力诱发，休息或含服硝酸甘油可缓解。该患者胸痛特点更符合胸膜刺激征，伴有咳嗽症状，提示可能为呼吸系统疾病相关胸痛，如胸膜炎、肺炎或肺栓塞等。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者赵静，男，44岁，因胸痛伴咳嗽，深呼吸时加重前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是赵静，44岁，男。这次主要是胸痛伴咳嗽，深呼吸时加重。既往有心血管相关危险因素，症状经过符合当前诊断路径。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P019",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n分析：患者胸痛表现为烧灼样感觉，位于胸骨后并向咽部放射，诱发因素为饭后特别是卧位时加重，缓解方式为弯腰或进食苏打饼干，伴随反酸、嗳气、口腔酸涩感。这些特点均不符合缺血性胸痛的压榨性、紧缩感性质，无劳力或情绪激动诱因，也无硝酸甘油可缓解的特征。相反，患者的胸痛与进食相关，具有烧灼感、返酸、嗳气等典型胃食管反流症状，弯腰或碱性食物可缓解，符合非缺血性胸痛的特点。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者马洋，女，27岁，因胸痛就诊\n第1轮医生提问：请描述一下您的胸痛是什么样的疼痛？疼痛具体在哪个部位？有没有什么诱发因素或缓解方式？疼痛发作时还有其他不舒服吗？\n第1轮患者回答：胸痛是那种烧灼样的感觉，主要在胸骨后面，有时候会往上烧到嗓子眼儿。一般在吃完饭后特别是晚上躺下休息的时候会更明显，弯腰或者吃点苏打饼干什么的会稍微好一点。最近这段时间经常觉得反酸、嗳气，嘴巴里酸酸的。之前没有得过什么心脏病，血压血糖都正常，也不抽烟喝酒。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P020",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n分析：患者胸痛特点为胸骨后烧灼感，与进食相关。首先，胸骨后部位符合缺血性胸痛的常见部位，但烧灼感的性质不符合缺血性胸痛的压榨性、紧缩感或窒息感特点。更关键的是，与进食相关的诱因是胃食管反流等食管源性胸痛的典型表现，而非缺血性胸痛的典型诱因（劳力或情绪激动）。因此，该患者的胸痛特点更符合非缺血性胸痛。\n\n判断：否",
+          "interaction_trace": "患者初始主诉：患者胡丽，女，44岁，因胸骨后烧灼感，与进食相关前来就诊。\n第1轮医生提问：请详细描述胸痛的部位、性质、持续时间，以及是否伴有放射痛、大汗、恶心等症状？既往有无高血压、糖尿病、吸烟等危险因素？\n第1轮患者回答：我是胡丽，44岁，女。这次主要是胸骨后烧灼感，与进食相关。既往有心血管相关危险因素，症状经过符合当前诊断路径。",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "method": "full_workflow",
+      "results": [
+        {
+          "patient_id": "P001",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者表现为突发胸痛1小时，疼痛位于心前区，性质为撕裂样、紧缩感，向后背放射，持续不缓解，伴大汗、面色苍白。既往有高血压、糖尿病、吸烟等危险因素。这些表现符合缺血性胸痛的特征，进入缺血性评估路径。\n\n2. 心电图检查：V1-V4导联ST段弓背向上抬高0.3mV，其他导联ST段轻度压低，属于ST段抬高型心电图。\n\n3. 心肌损伤标志物：cTnT 1.8 ng/mL（明显升高），CK-MB 92 U/L（显著升高），均超过正常值上限。\n\n根据流程：ST段抬高 + 心肌损伤标志物升高 = STEMI\n\n诊断结果：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P002",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 根据初始临床评估，患者表现为剧烈胸痛伴濒死感，持续超过30分钟，既往有心血管危险因素，符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查显示V1-V4导联ST段弓背向上抬高0.3mV，属于ST段抬高型心电图，符合路径2.1（ST段抬高）。\n\n3. 心肌损伤标志物检测结果显示：肌钙蛋白T 2.1 ng/mL（升高），CK-MB 105 U/L（升高），提示存在心肌坏死。\n\n4. 根据诊断流程：路径2.1（ST段抬高）+ 心肌损伤标志物升高 = STEMI（急性ST段抬高心肌梗死）。\n\n诊断结果：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P003",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：根据患者的症状描述（胸骨后持续压榨感，向左肩背部放射），符合缺血性胸痛的特征，因此进入缺血性评估路径。心电图检查显示V3-V5导联ST段抬高0.25mV伴病理性Q波，属于ST段抬高型心肌梗死的心电图表现。心肌损伤标志物检测结果显示肌钙蛋白I（2.5 ng/mL）和CK-MB（85 U/L）均明显升高，提示存在心肌坏死。根据诊断流程，ST段抬高合并心肌损伤标志物升高，应诊断为急性ST段抬高心肌梗死（STEMI）。\n\n诊断结果：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P004",
+          "ground_truth": "STEMI",
+          "prediction": "STEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者表现为胸骨后压榨样、紧缩感剧痛，持续2小时不缓解，伴大汗、恶心，向后背和左上肢放射。有高血压、糖尿病、吸烟等危险因素。符合缺血性胸痛特点 → 进入缺血性评估路径。\n\n2. 心电图检查：II、III、aVF导联ST段明显抬高0.2mV，属于ST段抬高 → 路径2.1。\n\n3. 心肌损伤标志物：肌钙蛋白T 2.1 ng/mL（明显升高），CK-MB 105 U/L（升高）→ 标志物升高。\n\n根据流程：路径2.1（ST段抬高）+ 标志物升高 = STEMI\n\n诊断结果：STEMI（急性ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P005",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 根据初始临床评估，患者表现为夜间阵发性胸痛伴出汗，既往有心血管危险因素，符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查显示：发作时前壁导联ST段抬高，缓解后恢复。根据流程，属于路径2.1（ST段抬高）。\n\n3. 心肌损伤标志物检测结果：肌钙蛋白T正常（<0.01 ng/mL），CK-MB正常（15 U/L），提示心肌标志物未升高。\n\n4. 根据诊断流程：路径2.1（ST段抬高）+ 标志物未升高 = 变异性心绞痛。变异性心绞痛的特点是休息时发作伴ST段抬高，但心肌酶学正常，无心肌坏死。\n\n诊断结果：4. 变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P006",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者胸痛呈压榨性、紧缩感，伴胸闷和濒死感，夜间/清晨发作，持续5-10分钟可自行缓解，符合缺血性胸痛特征。结合高血压、吸烟史及冠心病家族史，判定为缺血性胸痛，进入下一步。\n\n2. 心电图检查：患者心电图显示II、III、aVF导联ST段弓背向上抬高0.1-0.2mV，且呈一过性（15分钟后恢复正常），属于ST段抬高型。\n\n3. 标志物检测：肌钙蛋白T（0.02 ng/mL）和CK-MB（16 U/L）均在正常范围内，提示心肌损伤标志物未升高。\n\n根据流程：ST段抬高 + 标志物未升高 = 变异性心绞痛。\n\n诊断结果：4. 变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P007",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始评估：患者休息时胸痛发作，活动后反而缓解，既往有心血管危险因素，符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查：患者发作时前壁导联ST段抬高，缓解后恢复，属于ST段抬高型心电图改变，路径为2.1（ST段抬高）。\n\n3. 标志物检测：肌钙蛋白I（0.02 ng/mL）和CK-MB（18 U/L）均在正常范围内，心肌损伤标志物未升高。\n\n4. 综合判断：根据流程，ST段抬高 + 标志物未升高 = 变异性心绞痛。该患者临床表现（休息时胸痛、活动后缓解）也符合变异性心绞痛（冠状动脉痉挛）的典型特征。\n\n诊断结果：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P008",
+          "ground_truth": "变异性心绞痛",
+          "prediction": "变异性心绞痛",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：根据患者的临床特点（静息状态下突发胸痛，夜间或清晨发作），符合缺血性胸痛的临床特征。心电图检查显示II、III、aVF导联ST段一过性抬高，提示存在冠状动脉痉挛。但心肌标志物检测结果（肌钙蛋白I：0.02 ng/mL正常，CK-MB：18 U/L正常）显示心肌损伤标志物未升高。根据流程路径2.1（ST段抬高）+ 标志物未升高的组合，最终诊断为变异性心绞痛。\n\n诊断结果：变异性心绞痛",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P009",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始评估：患者表现为心前区压迫感，持续20-30分钟，符合缺血性胸痛特征，进入缺血性评估路径。\n2. 心电图检查：结果显示前壁导联T波深倒置，伴ST段压低，属于\"非ST段抬高\"类型。\n3. 心肌标志物：肌钙蛋白T 0.9 ng/mL（升高）和CK-MB 42 U/L（升高），提示存在心肌损伤。\n4. 根据流程：非ST段抬高 + 心肌标志物升高 = NSTEMI\n\n诊断结果：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P010",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：患者因胸痛伴出汗就诊，既往有心血管危险因素，临床上符合缺血性胸痛的特征。心电图显示Ⅱ、Ⅲ、aVF 导联 ST 段下斜型压低 0.1 mV，属于非 ST 段抬高。随后心肌损伤标志物检测提示肌钙蛋白 T 0.5 ng/mL（升高）且 CK‑MB 38 U/L（升高），表明存在心肌细胞坏死。根据急性胸痛诊疗流程，非 ST 段抬高且心肌标志物升高应诊断为急性非 ST 段抬高心肌梗死（NSTEMI）。\n\n诊断结果：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P011",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者表现为胸闷气短伴左上肢麻木，既往有心血管危险因素，症状符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查：II、III、aVF导联ST段下斜型压低0.1mV，属于\"非ST段抬高\"表现（ST段压低）。\n\n3. 心肌损伤标志物：肌钙蛋白T 0.5 ng/mL（升高）和CK-MB 38 U/L（升高），提示心肌损伤。\n\n根据流程路径2.2（非ST段抬高）+ 心肌损伤标志物升高 = NSTEMI\n\n诊断结果：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P012",
+          "ground_truth": "NSTEMI",
+          "prediction": "NSTEMI",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 根据初始临床评估，患者表现为胸骨后闷痛伴心悸气短，既往有心血管危险因素，符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查显示：广泛导联ST段压低，以V4-V6为著，属于\"非ST段抬高\"类型（路径2.2）。\n\n3. 心肌损伤标志物检测结果：肌钙蛋白I 0.6 ng/mL（升高），CK-MB 52 U/L（升高），提示存在心肌坏死。\n\n4. 根据诊断流程：非ST段抬高 + 心肌损伤标志物升高 = NSTEMI（急性非ST段抬高心肌梗死）。\n\n诊断结果：NSTEMI（急性非ST段抬高心肌梗死）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P013",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者为53岁女性，新发胸痛，程度较轻但逐渐加重，既往有心血管危险因素，符合缺血性胸痛特征，进入缺血性评估路径。\n\n2. 心电图检查：II、III、aVF导联ST段压低0.08mV，属于\"非ST段抬高\"表现（路径2.2）。\n\n3. 心肌损伤标志物：肌钙蛋白T正常（<0.01 ng/mL），CK-MB正常（20 U/L），标志物未升高。\n\n根据诊断流程：非ST段抬高 + 标志物未升高 = UA（不稳定型心绞痛）\n\n诊断结果：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P014",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：根据患者的症状特点（胸骨后压榨样闷痛、放射痛、硝酸甘油可缓解）和病史（冠心病稳定型心绞痛病史，近期发作频率和持续时间明显加重，伴有胸闷、出冷汗），符合缺血性胸痛的临床特征。心电图检查显示V1-V4导联T波低平倒置，ST段无明显抬高或压低，属于非ST段抬高型心电图。心肌损伤标志物检测显示肌钙蛋白T（0.02 ng/mL）和CK-MB（15 U/L）均在正常范围内。根据诊断流程，非ST段抬高且心肌标志物正常的情况下，诊断为不稳定型心绞痛。\n\n诊断结果：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P015",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 根据初始临床评估，患者因轻微活动即出现胸痛，既往有心血管危险因素，症状符合缺血性胸痛特征，进入缺血性评估路径。\n2. 心电图检查显示前壁导联T波低平或倒置，属于非ST段抬高（路径2.2）。\n3. 心肌损伤标志物检测：肌钙蛋白I 0.01 ng/mL（正常），CK-MB 22 U/L（正常），标志物未升高。\n4. 根据诊断流程：非ST段抬高 + 标志物未升高 = UA（不稳定型心绞痛）。\n\n诊断结果：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P016",
+          "ground_truth": "UA",
+          "prediction": "UA",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：根据流程，首先进行初始临床评估，患者为74岁男性，静息时胸痛发作，既往有心血管危险因素，症状符合缺血性胸痛特征，进入缺血性评估路径。心电图检查显示大致正常或轻度ST-T改变，属于非ST段抬高（路径2.2）。心肌损伤标志物检测结果：肌钙蛋白T正常（<0.01 ng/mL），CK-MB正常（20 U/L），标志物未升高。根据路径2.2（非ST段抬高）+ 标志物未升高的组合，最终诊断为不稳定型心绞痛。\n\n诊断结果：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P017",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：\n1. 初始临床评估：患者表现为胸部刺痛，位置不固定，持续时间短暂，这种疼痛特点不符合典型缺血性胸痛（缺血性胸痛通常为压榨性、位于胸骨后、可放射至左臂内侧、持续时间较长）。\n\n2. 心电图检查：结果提示偶发房性早搏，既不属于ST段抬高，也不属于ST段压低或T波改变。\n\n3. 心肌损伤标志物：肌钙蛋白I和CK-MB均在正常范围。\n\n4. 综合判断：患者胸痛特点不符合缺血性胸痛，心电图无ST段改变，心肌标志物正常。根据流程，分支A判断为\"非缺血性胸痛\"，需退出缺血性评估路径，诊断归为【其他】。\n\n诊断结果：其他（非缺血性胸痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P018",
+          "ground_truth": "其他",
+          "prediction": "UA",
+          "correct": false,
+          "raw_response": "\n\n## 诊断分析\n\n**1. 初始临床评估：**\n- 患者为44岁男性，急性胸痛伴咳嗽，深呼吸时加重\n- 患者自述既往有心血管相关危险因素，症状符合当前诊断路径\n- 判定为\"缺血性胸痛\"，进入下一步心电图检查\n\n**2. 心电图检查：**\n- 心电图结果提示：非特异性ST-T改变\n- 属于\"非ST段抬高\"类别（非特异性ST-T改变不属于ST段抬高）\n\n**3. 心肌损伤标志物：**\n- 肌钙蛋白T：<0.01 ng/mL（正常）\n- CK-MB：15 U/L（正常）\n- 标志物未升高\n\n**4. 诊断路径：**\n- 路径2.2（非ST段抬高）+ 心肌标志物未升高 = UA（不稳定型心绞痛）\n\n---\n\n## 诊断结果\n\n**UA（不稳定型心绞痛）**",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P019",
+          "ground_truth": "其他",
+          "prediction": "其他",
+          "correct": true,
+          "raw_response": "\n\n诊断分析：根据患者症状特点（烧灼样胸骨后疼痛、向咽部放射、与体位和进食相关、弯腰或吃苏打饼干可缓解、伴随反酸嗳气），这是典型的胃食管反流病表现，属于非缺血性胸痛。心电图显示窦性心动过速（110次/分），为非ST段抬高。心肌损伤标志物（肌钙蛋白T和CK-MB）均在正常范围内，提示无心肌损伤。结合临床特征，患者胸痛由胃食管反流引起，不符合缺血性胸痛的诊断标准。\n\n诊断结果：其他（非缺血性胸痛）",
+          "interaction_trace": "",
+          "intermediate_states": {},
+          "judge_result": null,
+          "error": null
+        },
+        {
+          "patient_id": "P020",
+          "ground_truth": "其他",
+          "prediction": "UA",
+          "correct": false,
+          "raw_response": "\n\n诊断分析：\n1. 根据初始临床评估，患者表现为胸骨后烧灼感，与进食相关。虽然症状不典型，但患者提示\"症状经过符合当前诊断路径\"，故按缺血性胸痛流程进行评估。\n\n2. 心电图检查结果提示\"心电图正常\"，不属于ST段抬高，应归类为\"非ST段抬高\"路径。\n\n3. 心肌损伤标志物检测结果：肌钙蛋白I正常，CK-MB正常，均未升高。\n\n根据诊断流程：非ST段抬高路径 + 心肌标志物未升高 = UA（不稳定型心绞痛）\n\n诊断结果：UA（不稳定型心绞痛）",
+          "interaction_trace": "",
           "intermediate_states": {},
           "judge_result": null,
           "error": null
