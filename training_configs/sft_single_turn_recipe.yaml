@@ -1,0 +1,22 @@
+experiment_name: chestpain_sft_single_turn
+stage: sft
+objective: train_next_question_policy
+input_file: training_data/sft_single_turn_questioning.jsonl
+recommended_auxiliary_files:
+  - training_data/sft_fact_extraction.jsonl
+  - training_data/sft_stepwise_diagnosis.jsonl
+base_model: Qwen2.5-7B-Instruct
+target_capability:
+  - strict_stepwise_questioning
+  - single_turn_reasoning
+  - note_driven_preprocessing
+suggested_hyperparameters:
+  learning_rate: 2.0e-5
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  max_seq_length: 2048
+output_dir: checkpoints/sft_single_turn
+notes:
+  - Use this recipe as the first-stage training objective.
+  - For the paper, compare base model vs SFT model on question quality, step compliance, and final diagnosis accuracy.

@@ -1,0 +1,12 @@
+{
+  "patients": 20,
+  "doctor_reviews": 0,
+  "sft_fact_extraction": 20,
+  "sft_single_turn_questioning": 60,
+  "sft_multi_turn_dialogue": 20,
+  "sft_stepwise_diagnosis": 20,
+  "dpo_question_preference": 100,
+  "reward_question_scoring": 160,
+  "rl_question_policy": 60,
+  "diagnosis_review_preference": 0
+}

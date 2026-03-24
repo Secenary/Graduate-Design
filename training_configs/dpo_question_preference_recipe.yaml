@@ -1,0 +1,21 @@
+experiment_name: chestpain_dpo_question_preference
+stage: preference_optimization
+objective: prefer_high_value_non_jump_questions
+input_file: training_data/dpo_question_preference.jsonl
+optional_review_file: training_data/diagnosis_review_preference.jsonl
+base_model: checkpoints/sft_single_turn
+target_capability:
+  - reduce_jump_step_questions
+  - improve_question_information_gain
+  - align_with_doctor_preferences
+suggested_hyperparameters:
+  learning_rate: 5.0e-6
+  num_train_epochs: 2
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  beta: 0.1
+output_dir: checkpoints/dpo_question_preference
+notes:
+  - The chosen response is a higher-value question.
+  - The rejected response is either a jump-step question or a low-gain question.
+  - In the paper, report preference win-rate and downstream trajectory quality.

@@ -1,0 +1,37 @@
+{
+  "datasets": {
+    "sft_fact_extraction": {
+      "file": "sft_fact_extraction.jsonl",
+      "count": 20
+    },
+    "sft_single_turn_questioning": {
+      "file": "sft_single_turn_questioning.jsonl",
+      "count": 60
+    },
+    "sft_multi_turn_dialogue": {
+      "file": "sft_multi_turn_dialogue.jsonl",
+      "count": 20
+    },
+    "sft_stepwise_diagnosis": {
+      "file": "sft_stepwise_diagnosis.jsonl",
+      "count": 20
+    },
+    "dpo_question_preference": {
+      "file": "dpo_question_preference.jsonl",
+      "count": 100
+    },
+    "reward_question_scoring": {
+      "file": "reward_question_scoring.jsonl",
+      "count": 160
+    },
+    "rl_question_policy": {
+      "file": "rl_question_policy.jsonl",
+      "count": 60
+    },
+    "diagnosis_review_preference": {
+      "file": "diagnosis_review_preference.jsonl",
+      "count": 0
+    }
+  },
+  "output_dir": "/mnt/f/fuwai/training_data"
+}

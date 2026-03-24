@@ -1,0 +1,30 @@
+experiment_name: chestpain_rl_siglite_policy
+stage: rl_or_grpo_style
+objective: maximize_sig_lite_reward
+input_file: training_data/rl_question_policy.jsonl
+reward_reference_file: training_data/reward_question_scoring.jsonl
+base_model: checkpoints/dpo_question_preference
+target_capability:
+  - proactive_question_selection
+  - sig_lite_reward_optimization
+  - trajectory_level_improvement
+suggested_hyperparameters:
+  learning_rate: 1.0e-6
+  max_steps: 500
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  num_generations: 4
+  kl_penalty: 0.02
+output_dir: checkpoints/rl_siglite_policy
+reward_design:
+  positive_terms:
+    - new_fact_gain
+    - step_alignment
+    - critical_fact_weight
+  negative_terms:
+    - jump_step_penalty
+    - redundancy_penalty
+    - generic_question_penalty
+notes:
+  - This is a GRPO/RL-style experiment template rather than a fixed framework-specific config.
+  - Use it in the paper to describe how SIG-lite reward can support proactive medical questioning.

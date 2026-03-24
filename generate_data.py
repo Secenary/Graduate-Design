@@ -9,7 +9,9 @@ import asyncio
 from pathlib import Path
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
+from clinical_reasoning_enhancer import build_reasoning_enhancement_bundle
 from prompts import GENERATE_PATIENT_PROMPT
+from backend.patient_case_processor import build_raw_case_from_processed_record, process_raw_case_records, write_jsonl
 
 # 加载环境变量
 load_dotenv()
@@ -231,6 +233,27 @@ def normalize_interactive_case(case_data: dict, diagnosis: str) -> dict:
     }
 
 
+def build_reasoning_metadata(description: str, full_description: str, interactive_case: dict, diagnosis: str) -> dict:
+    patient_case = {
+        "initial_presentation": description,
+        "rounds": interactive_case.get("rounds", []),
+        "full_description": full_description,
+    }
+    bundle = build_reasoning_enhancement_bundle(
+        patient_case=patient_case,
+        diagnosis=diagnosis,
+        steps=[],
+        halt_step=None,
+    )
+    return {
+        "preprocessed_case": bundle["preprocessed_case"],
+        "question_gain_analysis": bundle["question_gain_analysis"],
+        "trajectory_quality": bundle["trajectory_quality"],
+        "next_question_recommendations": bundle["next_question_recommendations"],
+        "single_turn_reasoning_samples": bundle["single_turn_reasoning_samples"],
+    }
+
+
 def generate_patient_case(diagnosis: str, index: int) -> dict:
     """
     使用大语言模型生成患者病例（同步版本，已弃用）
@@ -305,6 +328,7 @@ def generate_patient_case(diagnosis: str, index: int) -> dict:
 
     description = interactive_case["initial_presentation"]
     full_description = build_full_description(description, interactive_case["rounds"])
+    reasoning_metadata = build_reasoning_metadata(description, full_description, interactive_case, diagnosis)
 
     return {
         "patient_id": f"P{index:03d}",
@@ -312,7 +336,8 @@ def generate_patient_case(diagnosis: str, index: int) -> dict:
         "full_description": full_description,
         "interactive_case": interactive_case,
         "result_state": diagnosis,
-        "path": path_info["path"]
+        "path": path_info["path"],
+        **reasoning_metadata,
     }
 
 
@@ -403,6 +428,7 @@ async def generate_patient_case_async(
 
     description = interactive_case["initial_presentation"]
     full_description = build_full_description(description, interactive_case["rounds"])
+    reasoning_metadata = build_reasoning_metadata(description, full_description, interactive_case, diagnosis)
 
     return {
         "patient_id": f"P{index:03d}",
@@ -410,13 +436,15 @@ async def generate_patient_case_async(
         "full_description": full_description,
         "interactive_case": interactive_case,
         "result_state": diagnosis,
-        "path": path_info["path"]
+        "path": path_info["path"],
+        **reasoning_metadata,
     }
 
 
 async def generate_all_patients_async(
     total_count: int = 100,
     output_path: str = "generated_data/patients.jsonl",
+    raw_output_path: str = "generated_data/patients_before_process.jsonl",
     max_concurrent: int = MAX_CONCURRENT_REQUESTS
 ) -> list:
     """
@@ -432,7 +460,9 @@ async def generate_all_patients_async(
     """
     # 确保输出目录存在
     output_file = Path(output_path)
+    raw_output_file = Path(raw_output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
+    raw_output_file.parent.mkdir(parents=True, exist_ok=True)
 
     # 每种诊断类型的数量（平均分配）
     diagnoses = list(DIAGNOSIS_PATHS.keys())
@@ -482,27 +512,31 @@ async def generate_all_patients_async(
     patients.sort(key=lambda x: x["patient_id"])
 
     # 保存为jsonl格式
-    with open(output_file, 'w', encoding='utf-8') as f:
-        for patient in patients:
-            f.write(json.dumps(patient, ensure_ascii=False) + '\n')
+    raw_records = [build_raw_case_from_processed_record(patient) for patient in patients]
+    processed_patients = process_raw_case_records(raw_records)
+    write_jsonl(raw_output_file, raw_records)
+    write_jsonl(output_file, processed_patients)
 
-    print(f"\n\n数据生成完成！共生成 {len(patients)} 条患者数据")
-    print(f"保存位置: {output_file}")
+    print(f"\n\n?????????? {len(processed_patients)} ?????")
+    print(f"????????: {raw_output_file}")
+    print(f"?????????: {output_file}")
 
-    # 统计各类型数量
     diagnosis_counts = {}
-    for patient in patients:
+    for patient in processed_patients:
         d = patient["result_state"]
         diagnosis_counts[d] = diagnosis_counts.get(d, 0) + 1
 
-    print("\n各诊断类型数量:")
     for d, c in sorted(diagnosis_counts.items()):
         print(f"  {d}: {c}")
 
-    return patients
+    return processed_patients
 
 
-def generate_all_patients(total_count: int = 100, output_path: str = "generated_data/patients.jsonl"):
+def generate_all_patients(
+    total_count: int = 100,
+    output_path: str = "generated_data/patients.jsonl",
+    raw_output_path: str = "generated_data/patients_before_process.jsonl",
+):
     """
     生成所有患者数据（同步包装器）
 
@@ -512,7 +546,8 @@ def generate_all_patients(total_count: int = 100, output_path: str = "generated_
     """
     return asyncio.run(generate_all_patients_async(
         total_count=total_count,
-        output_path=output_path
+        output_path=output_path,
+        raw_output_path=raw_output_path
     ))
 
 
@@ -521,10 +556,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='生成患者数据')
     parser.add_argument('--count', type=int, default=100, help='生成患者数量')
     parser.add_argument('--concurrent', type=int, default=MAX_CONCURRENT_REQUESTS, help='最大并发数')
+    parser.add_argument('--raw-output', type=str, default='generated_data/patients_before_process.jsonl', help='??????????')
     args = parser.parse_args()
 
     # 使用异步版本
     asyncio.run(generate_all_patients_async(
         total_count=args.count,
+        raw_output_path=args.raw_output,
         max_concurrent=args.concurrent
     ))

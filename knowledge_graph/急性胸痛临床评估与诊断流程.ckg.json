@@ -6,7 +6,14 @@
   "metadata": {
     "domain": "clinical_diagnosis",
     "supports_incremental_update": true,
-    "supports_multi_disease_extension": true
+    "supports_multi_disease_extension": true,
+    "graph_schema_version": "1.0",
+    "graph_version": "v1",
+    "graph_version_number": 1,
+    "updated_at": "2026-03-24T18:16:30+08:00",
+    "content_fingerprint": "adf7f86886162a6b5c1eaa2cbdcdf24f01a792af5f3b5fe561a7cf8449c77e37",
+    "latest_update_type": "base_build",
+    "latest_source_title": "transitions.json"
   },
   "documents": [],
   "entities": [
