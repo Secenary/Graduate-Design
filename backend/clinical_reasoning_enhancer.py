@@ -167,6 +167,149 @@ QUESTION_LIBRARY = {
 }
 
 
+# ---------------------------------------------------------------------------
+# ProMed 风格：Shapley 交互权重 —— 事实对之间的协同效应
+# ---------------------------------------------------------------------------
+
+FACT_INTERACTIONS: dict[tuple[str, str], float] = {
+    # ST 段抬高 + 标志物升高 → 强诊断 STEMI
+    ("st_elevation", "biomarker_elevated"): 2.0,
+    ("st_elevation", "troponin_value"): 1.8,
+    # 典型缺血症状组合
+    ("pain_quality", "radiation"): 1.5,
+    ("pain_quality", "autonomic_symptoms"): 1.3,
+    ("pain_site", "pain_quality"): 1.2,
+    # 心电图要素联合
+    ("ecg_present", "st_elevation"): 1.4,
+    ("ecg_present", "st_depression_or_twave"): 1.3,
+    ("ecg_leads", "st_elevation"): 1.3,
+    # 标志物内部组合
+    ("troponin_value", "ckmb_value"): 1.2,
+    ("troponin_value", "biomarker_elevated"): 1.4,
+    # 危险因素 + 症状 → 提高缺血性胸痛可信度
+    ("risk_factors", "pain_quality"): 1.1,
+    ("risk_factors", "pain_duration"): 1.1,
+}
+
+
+def compute_shapley_interaction_bonus(
+    new_fact_ids: set[str],
+    existing_fact_ids: set[str],
+) -> float:
+    """
+    计算新事实与已有事实之间的 Shapley 交互奖励。
+
+    当新获取的事实与已有事实形成诊断性组合时，给予额外奖励。
+    """
+    bonus = 0.0
+    for (fact_a, fact_b), weight in FACT_INTERACTIONS.items():
+        if fact_a in new_fact_ids and fact_b in existing_fact_ids:
+            bonus += weight
+        elif fact_b in new_fact_ids and fact_a in existing_fact_ids:
+            bonus += weight
+    return round(bonus, 3)
+
+
+def compute_dynamic_importance(
+    fact_id: str,
+    current_step: int,
+    existing_fact_ids: set[str],
+) -> float:
+    """
+    动态重要性评分：根据当前步骤和已有事实动态调整事实权重。
+
+    - 当前步骤相关事实权重 ×1.5
+    - 填补某步最后空缺的事实获得完成奖励 ×1.3
+    """
+    definition = next((d for d in FACT_DEFINITIONS if d["id"] == fact_id), None)
+    if definition is None:
+        return 1.0
+
+    base_weight = definition["weight"]
+    step_multiplier = 1.5 if definition["stage"] == current_step else 0.8
+
+    # 完成奖励：该阶段只差这一个事实
+    same_stage_facts = [d for d in FACT_DEFINITIONS if d["stage"] == definition["stage"]]
+    same_stage_existing = [d for d in same_stage_facts if d["id"] in existing_fact_ids]
+    completion_multiplier = 1.3 if len(same_stage_existing) == len(same_stage_facts) - 1 else 1.0
+
+    return round(base_weight * step_multiplier * completion_multiplier, 3)
+
+
+def compute_combined_reward(
+    new_facts: list[dict[str, Any]],
+    existing_fact_ids: set[str],
+    current_step: int,
+    question_stage: int,
+    turn_number: int = 0,
+    max_turns: int = 6,
+    is_correct: bool | None = None,
+    repeated_fact_count: int = 0,
+    is_repeated_question: bool = False,
+) -> dict[str, Any]:
+    """
+    组合奖励公式，融合 ProMed SIG 与 Note2Chat 效率奖励。
+
+    R = alpha * correctness + beta * SIG_enhanced + gamma * efficiency
+
+    SIG_enhanced = novelty*0.3 + criticality_dynamic*0.3
+                   + alignment*0.2 + interaction_bonus*0.2
+                   - redundancy
+    """
+    new_fact_ids = {f["id"] for f in new_facts}
+
+    # --- SIG 增强各分量 ---
+    novelty = min(len(new_facts) / 3, 1.0)
+
+    criticality_dynamic = 0.0
+    if new_facts:
+        criticality_dynamic = min(
+            sum(compute_dynamic_importance(f["id"], current_step, existing_fact_ids) for f in new_facts) / 4,
+            1.0,
+        )
+
+    alignment = 1.0 if question_stage == current_step else 0.45
+
+    interaction_bonus = min(
+        compute_shapley_interaction_bonus(new_fact_ids, existing_fact_ids) / 3,
+        1.0,
+    )
+
+    redundancy = min(repeated_fact_count * 0.18 + (0.2 if is_repeated_question else 0.0), 0.6)
+
+    sig_enhanced = max(0.0, novelty * 0.3 + criticality_dynamic * 0.3 + alignment * 0.2 + interaction_bonus * 0.2 - redundancy)
+
+    # --- 效率项 ---
+    efficiency = max(0.0, 1.0 - turn_number / max_turns)
+
+    # --- 正确性项 ---
+    if is_correct is True:
+        correctness = 1.0
+    elif is_correct is False:
+        correctness = 0.0
+    else:
+        correctness = 0.5  # 诊断尚未确定
+
+    # --- 加权求和 ---
+    alpha, beta, gamma = 0.4, 0.35, 0.25
+    total = round((alpha * correctness + beta * sig_enhanced + gamma * efficiency) * 10, 2)
+
+    return {
+        "total_score": total,
+        "sig_enhanced_score": round(sig_enhanced * 10, 2),
+        "components": {
+            "novelty": round(novelty, 3),
+            "criticality_dynamic": round(criticality_dynamic, 3),
+            "alignment": round(alignment, 3),
+            "interaction_bonus": round(interaction_bonus, 3),
+            "redundancy": round(redundancy, 3),
+            "efficiency": round(efficiency, 3),
+            "correctness": round(correctness, 3),
+        },
+        "weights": {"alpha": alpha, "beta": beta, "gamma": gamma},
+    }
+
+
 QUESTION_STAGE_HINTS = {
     1: ["胸痛", "放射", "大汗", "恶心", "病史", "危险因素", "持续时间"],
     2: ["心电图", "ECG", "导联", "ST", "T波"],
@@ -362,6 +505,18 @@ def analyze_question_information_gain(
             round((novelty_score * 0.35 + criticality_score * 0.4 + step_alignment_score * 0.25 - redundancy_penalty - repeated_question_penalty) * 10, 2),
         )
 
+        # ProMed + Note2Chat 组合奖励（增强版）
+        combined = compute_combined_reward(
+            new_facts=new_facts,
+            existing_fact_ids=set(seen_fact_ids),
+            current_step=round_no,
+            question_stage=question_stage,
+            turn_number=round_no - 1,
+            max_turns=len(rounds),
+            repeated_fact_count=repeated_fact_count,
+            is_repeated_question=bool(question and question in seen_questions),
+        )
+
         if total_score >= 7.0:
             quality_label = "高价值问题"
         elif total_score >= 4.5:
@@ -377,6 +532,8 @@ def analyze_question_information_gain(
                 "question_stage": question_stage,
                 "quality_label": quality_label,
                 "sig_lite_score": total_score,
+                "sig_enhanced_score": combined["total_score"],
+                "sig_enhanced_components": combined["components"],
                 "components": {
                     "novelty_score": round(novelty_score, 3),
                     "criticality_score": round(criticality_score, 3),

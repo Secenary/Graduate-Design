@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -13,7 +13,7 @@
   <div class="page-shell">
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Acute Chest Pain Web Demo</p>
+        <p class="eyebrow">胸痛分诊演示</p>
         <h1>急性胸痛临床决策支持系统</h1>
         <p class="hero-text">
           将当前仓库里的胸痛分诊流程改造成可直接使用的网页。页面支持病历文本分析、结构化决策、流程解释和示例病例演示。
@@ -87,8 +87,8 @@
               <label>
                 <span>分析模式</span>
                 <select id="analysis-mode">
-                  <option value="backend">Python 后端 + 模型 API</option>
-                  <option value="frontend">前端规则兜底</option>
+                  <option value="backend">Python 后端 + 模型接口</option>
+                  <option value="frontend">&#x524d;&#x7aef;&#x79bb;&#x7ebf;&#x89c4;&#x5219;&#x6a21;&#x5f0f;</option>
                 </select>
               </label>
               <label>
@@ -96,12 +96,12 @@
                 <input id="model-input" class="text-like-input" type="text" value="gpt-4o-mini" placeholder="如 gpt-4o-mini">
               </label>
               <label>
-                <span>API Key</span>
-                <input id="api-key-input" class="text-like-input" type="password" placeholder="在这里填写 API Key">
+                <span>接口密钥</span>
+                <input id="api-key-input" class="text-like-input" type="password" placeholder="在这里填写接口密钥">
               </label>
               <label>
-                <span>Base URL</span>
-                <input id="base-url-input" class="text-like-input" type="text" placeholder="可选，如 https://api.openai.com/v1">
+                <span>接口地址</span>
+                <input id="base-url-input" class="text-like-input" type="text" placeholder="可选，例如 https://api.openai.com/v1">
               </label>
               <label>
                 <span>后端方法</span>
@@ -120,11 +120,11 @@
               </div>
             </div>
             <div class="api-action-row">
-              <button id="save-api-settings" class="ghost-button" type="button">保存 API 设置</button>
-              <button id="clear-api-settings" class="secondary-button" type="button">清除 API 设置</button>
+              <button id="save-api-settings" class="ghost-button" type="button">保存接口设置</button>
+              <button id="clear-api-settings" class="secondary-button" type="button">清除接口设置</button>
             </div>
             <p class="mini-note">
-              默认优先调用 Python 后端和模型 API；API Key 与 Base URL 可直接在网页设置，并保存到当前浏览器。
+              &#x9ed8;&#x8ba4;&#x4f18;&#x5148;&#x8c03;&#x7528; Python &#x540e;&#x7aef;&#x548c;&#x6a21;&#x578b;&#x63a5;&#x53e3;&#xff1b;&#x540e;&#x7aef;&#x6a21;&#x5f0f;&#x5931;&#x8d25;&#x65f6;&#x4e0d;&#x4f1a;&#x81ea;&#x52a8;&#x964d;&#x7ea7;&#x5230;&#x524d;&#x7aef;&#x89c4;&#x5219;&#x3002;&#x524d;&#x7aef;&#x79bb;&#x7ebf;&#x89c4;&#x5219;&#x6a21;&#x5f0f;&#x4ecd;&#x53ef;&#x624b;&#x52a8;&#x4f7f;&#x7528;&#xff0c;&#x4f46;&#x9047;&#x5230;&#x5fc3;&#x7535;&#x56fe;&#x6216;&#x5fc3;&#x808c;&#x6807;&#x5fd7;&#x7269;&#x7f3a;&#x5931;&#x65f6;&#x4f1a;&#x4e2d;&#x6b62;&#x8bca;&#x65ad;&#x5e76;&#x63d0;&#x793a;&#x8865;&#x5145;&#x68c0;&#x67e5;&#x3002;
             </p>
           </div>
         </div>
@@ -204,15 +204,15 @@
         </div>
         <div class="graph-builder-grid">
           <article class="subcard">
-            <h3>Note2Chat 风格病例预处理</h3>
-            <p id="preprocess-summary" class="mini-note">完成一次后端分析后，这里会展示 note-style sections、结构化事实和证据覆盖情况。</p>
+            <h3>笔记式病例预处理</h3>
+            <p id="preprocess-summary" class="mini-note">完成一次后端分析后，这里会展示笔记式分段、结构化事实和证据覆盖情况。</p>
             <div id="note-style-sections" class="history-list"></div>
             <div id="structured-facts-list" class="fact-list"></div>
           </article>
 
           <article class="subcard">
-            <h3>ProMed 风格信息增益分析</h3>
-            <p id="trajectory-quality-summary" class="mini-note">这里会显示每轮提问的 SIG-lite 分数、轨迹质量和下一问建议。</p>
+            <h3>主动提问信息增益分析</h3>
+            <p id="trajectory-quality-summary" class="mini-note">这里会显示每轮提问的信息增益评分、轨迹质量和下一问建议。</p>
             <div id="trajectory-quality-list" class="history-list"></div>
             <div id="question-gain-list" class="history-list"></div>
             <div id="next-question-list" class="history-list"></div>
@@ -220,7 +220,7 @@
         </div>
         <article class="subcard reasoning-samples-panel">
           <h3>单轮推理样本</h3>
-          <p class="mini-note">将多轮问诊拆成 single-turn reasoning samples，方便后续做 SFT / 偏好学习 / 轨迹优化。</p>
+          <p class="mini-note">将多轮问诊拆成单轮推理样本，方便后续做监督微调、偏好学习和轨迹优化。</p>
           <div id="single-turn-sample-list" class="sample-list"></div>
         </article>
       </section>
@@ -229,7 +229,7 @@
         <div class="section-head">
           <div>
             <p class="section-kicker">训练中心</p>
-            <h2>SFT / 偏好学习 / RL 数据准备</h2>
+            <h2>监督微调 / 偏好学习 / 强化学习数据准备</h2>
           </div>
         </div>
         <div class="graph-builder-grid">
@@ -242,7 +242,7 @@
                 <strong id="training-patient-count">-</strong>
               </article>
               <article class="stat-card">
-                <span>SFT 样本</span>
+                <span>监督微调样本</span>
                 <strong id="training-sft-count">-</strong>
               </article>
               <article class="stat-card">
@@ -250,7 +250,7 @@
                 <strong id="training-preference-count">-</strong>
               </article>
               <article class="stat-card">
-                <span>RL / Reward</span>
+                <span>强化学习 / 奖励</span>
                 <strong id="training-rl-count">-</strong>
               </article>
             </div>
@@ -323,46 +323,212 @@
         </div>
       </section>
 
-      <section class="card">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">图谱工程化</p>
-            <h2>MinerU 知识图谱生成</h2>
+
+<section class="card">
+  <div class="section-head">
+    <div>
+      <p class="section-kicker">文档增强</p>
+      <h2>MinerU v4 文档解析与图谱导入</h2>
+    </div>
+  </div>
+  <div class="graph-builder-grid">
+    <div class="subcard">
+      <h3>MinerU v4 解析</h3>
+      <p class="mini-note">使用 MinerU 官方 v4 接口解析远程文档或本地文件。后端会调用 <code>/api/v4/extract/task</code> 或 <code>/api/v4/file-urls/batch</code>，并从结果压缩包中读取 <code>full.md</code> 与 JSON 内容后合并到知识图谱。</p>
+
+      <div class="mineru-config-grid">
+        <label>
+          <span>MinerU 令牌</span>
+          <input id="mineru-token-input" class="text-like-input" type="password" placeholder="请输入 MinerU 访问令牌">
+        </label>
+        <label>
+          <span>文档标题</span>
+          <input id="mineru-title-input" class="text-like-input" type="text" value="MinerU 临床文档" placeholder="用于生成任务标题">
+        </label>
+        <label>
+          <span>解析模型</span>
+          <select id="mineru-model-version">
+            <option value="vlm">视觉语言模型</option>
+            <option value="pipeline">流水线模式</option>
+            <option value="MinerU-HTML">HTML 模式</option>
+          </select>
+        </label>
+        <label>
+          <span>语言</span>
+          <input id="mineru-language-input" class="text-like-input" type="text" value="ch" placeholder="例如 ch 或 en">
+        </label>
+        <label>
+          <span>页码范围</span>
+          <input id="mineru-page-ranges-input" class="text-like-input" type="text" placeholder="例如 1-4 或 2,4-6">
+        </label>
+      </div>
+
+      <div class="mineru-checkbox-row">
+        <label class="checkbox-chip"><input id="mineru-enable-formula" type="checkbox" checked>识别公式</label>
+        <label class="checkbox-chip"><input id="mineru-enable-table" type="checkbox" checked>识别表格</label>
+        <label class="checkbox-chip"><input id="mineru-is-ocr" type="checkbox">启用 OCR</label>
+        <label class="checkbox-chip"><input id="mineru-no-cache" type="checkbox">禁用缓存复用</label>
+      </div>
+
+      <label class="field-label" for="mineru-source-url-input">远程文档链接</label>
+      <input id="mineru-source-url-input" class="text-like-input" type="text" placeholder="例如 https://example.com/guideline.pdf">
+      <div class="action-row">
+        <button id="parse-mineru-url" class="primary-button" type="button">使用 MinerU 解析链接</button>
+      </div>
+
+      <label class="field-label" for="mineru-file-input">本地文件上传</label>
+      <input id="mineru-file-input" class="file-input" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg,.html,.htm">
+      <div class="action-row">
+        <button id="parse-mineru-file" class="ghost-button" type="button">上传文件并解析</button>
+      </div>
+
+      <details class="mineru-manual-panel">
+        <summary>手动粘贴 MinerU 结果</summary>
+        <label class="field-label" for="mineru-payload-input">MinerU 返回内容</label>
+        <textarea id="mineru-payload-input" class="text-input mineru-textarea" rows="10" placeholder='可粘贴 MinerU 返回的 Markdown 或 JSON，例如：{"markdown":"# 临床指引&#10;这里是解析结果"}'></textarea>
+      </details>
+
+      <div class="action-row">
+        <button id="build-base-graph" class="primary-button" type="button">生成基础图谱</button>
+        <button id="ingest-mineru-graph" class="ghost-button" type="button">导入解析结果</button>
+      </div>
+      <p id="graph-build-status" class="mini-note">可先生成基础图谱，再通过 MinerU v4 导入指南、论文或病例文档以增强知识图谱。</p>
+      <p id="mineru-result-meta" class="mini-note"></p>
+    </div>
+
+    <div class="subcard">
+      <h3>图谱产物</h3>
+      <div id="graph-artifacts" class="artifact-list"></div>
+      <div class="preview-frame">
+        <img id="graph-preview-image" class="graph-preview-image" alt="知识图谱预览图">
+      </div>
+      <div class="graph-version-panel">
+        <div class="inline-head">
+          <h3>版本历史</h3>
+          <strong id="graph-version-badge" class="status-chip">未加载</strong>
+        </div>
+        <p id="graph-version-meta" class="mini-note">后端在线后会自动读取当前图谱版本、增强历史和导出文件。</p>
+        <div id="graph-history-list" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="card">
+  <div class="section-head">
+    <div>
+      <p class="section-kicker">术语审核</p>
+      <h2>知识图谱增强审核</h2>
+    </div>
+    <div class="action-row action-row-compact">
+      <button id="refresh-kg-enhancement" class="ghost-button" type="button">刷新状态</button>
+      <button id="extract-kg-terms" class="primary-button" type="button">提取术语</button>
+      <button id="merge-kg-terms" class="secondary-button" type="button">合并已通过项</button>
+    </div>
+  </div>
+  <div class="graph-builder-grid kg-enhancement-grid">
+    <div class="subcard">
+      <h3>审核设置与统计</h3>
+      <div class="mineru-config-grid">
+        <label>
+          <span>审核医生</span>
+          <input id="kg-reviewer-name-input" class="text-like-input" type="text" placeholder="请输入审核人姓名">
+        </label>
+        <label>
+          <span>病例目录</span>
+          <input id="kg-case-dir-input" class="text-like-input" type="text" value="data/cardiovascular_files" placeholder="例如 data/cardiovascular_files">
+        </label>
+        <label>
+          <span>类别</span>
+          <select id="kg-filter-category">
+            <option value="all">全部类别</option>
+            <option value="symptom">症状</option>
+            <option value="finding">临床发现</option>
+            <option value="exam">检查</option>
+            <option value="diagnosis">诊断</option>
+          </select>
+        </label>
+        <label>
+          <span>状态</span>
+          <select id="kg-filter-status">
+            <option value="all">全部状态</option>
+            <option value="pending">待审核</option>
+            <option value="approved">已通过</option>
+            <option value="rejected">已拒绝</option>
+          </select>
+        </label>
+        <label>
+          <span>匹配度</span>
+          <select id="kg-filter-confidence">
+            <option value="all">全部匹配度</option>
+            <option value="high">高于 0.8</option>
+            <option value="medium">介于 0.6 - 0.8</option>
+            <option value="low">低于 0.6</option>
+          </select>
+        </label>
+      </div>
+
+      <p id="kg-enhancement-status" class="mini-note">当前可对抽取得到的术语组进行人工审核，并将通过项合并回最新知识图谱。</p>
+
+      <div class="stats-grid kg-stats-grid">
+        <div class="stat-card"><span>已提取术语</span><strong id="kg-stat-terms">0</strong></div>
+        <div class="stat-card"><span>术语组</span><strong id="kg-stat-groups">0</strong></div>
+        <div class="stat-card"><span>已通过组</span><strong id="kg-stat-approved">0</strong></div>
+        <div class="stat-card"><span>图谱实体</span><strong id="kg-stat-entities">0</strong></div>
+      </div>
+
+      <div class="action-row">
+        <button id="kg-batch-approve" class="ghost-button" type="button">批量通过当前筛选</button>
+        <div id="kg-export-link" class="export-link"></div>
+      </div>
+    </div>
+
+    <div class="subcard">
+      <div class="inline-head">
+        <div>
+          <h3>待审核列表</h3>
+          <p class="mini-note">点击术语组或“预览关系”按钮，可在右侧查看它与当前诊断流程的箭头联系。</p>
+        </div>
+        <strong id="kg-review-count" class="status-chip">0 / 0 组</strong>
+      </div>
+      <div id="kg-review-list" class="kg-review-list">
+        <div class="kg-empty-state">术语提取后，这里会显示待审核的术语组。</div>
+      </div>
+    </div>
+
+    <div class="subcard kg-visualization-card">
+      <div class="inline-head">
+        <div>
+          <h3>图谱关系预览</h3>
+          <p id="kg-preview-summary" class="mini-note">这里会显示现有知识图谱总览，以及选中术语与诊断流程节点之间的箭头联系。</p>
+        </div>
+        <strong id="kg-preview-badge" class="status-chip">流程总览</strong>
+      </div>
+
+      <div id="kg-graph-canvas" class="kg-graph-canvas">
+        <div class="kg-empty-state">载入知识图谱后，这里会显示流程图谱和选中术语的挂载位置。</div>
+      </div>
+
+      <div class="kg-preview-details">
+        <div class="kg-detail-card">
+          <h4>选中项概览</h4>
+          <div id="kg-preview-selection" class="kg-detail-list">
+            <div class="kg-empty-state">选中左侧术语组后，这里会显示它的匹配实体、频次、来源文件和关联流程节点。</div>
           </div>
         </div>
-        <div class="graph-builder-grid">
-          <div class="subcard">
-            <h3>图谱输入</h3>
-            <label class="field-label" for="mineru-title-input">文档标题</label>
-            <input id="mineru-title-input" class="text-like-input" type="text" value="MinerU Clinical Document" placeholder="例如：急性胸痛临床指南">
-
-            <label class="field-label" for="mineru-payload-input">MinerU 解析结果</label>
-            <textarea id="mineru-payload-input" class="text-input mineru-textarea" rows="10" placeholder='粘贴 MinerU 导出的 markdown 或 json，例如：{"markdown":"# 急性胸痛\n心电图是关键检查"}'></textarea>
-
-            <div class="action-row">
-              <button id="build-base-graph" class="primary-button" type="button">生成基础图谱</button>
-              <button id="ingest-mineru-graph" class="ghost-button" type="button">合并 MinerU 结果</button>
-            </div>
-            <p id="graph-build-status" class="mini-note">可先生成基础图谱，再导入 MinerU 文档结果做增量更新。</p>
-          </div>
-
-          <div class="subcard">
-            <h3>图谱产物</h3>
-            <div id="graph-artifacts" class="artifact-list"></div>
-            <div class="preview-frame">
-              <img id="graph-preview-image" class="graph-preview-image" alt="知识图谱 SVG 预览">
-            </div>
-            <div class="graph-version-panel">
-              <div class="inline-head">
-                <h3>版本与更新记录</h3>
-                <strong id="graph-version-badge" class="status-chip">未生成</strong>
-              </div>
-              <p id="graph-version-meta" class="mini-note">生成图谱后，这里会显示当前版本、更新时间和最新更新来源。</p>
-              <div id="graph-history-list" class="history-list"></div>
-            </div>
+        <div class="kg-detail-card">
+          <h4>箭头关系与相关值</h4>
+          <div id="kg-preview-relations" class="kg-detail-list">
+            <div class="kg-empty-state">选中术语组后，这里会显示词语命中、图谱关系标签和流程转移条件。</div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       <section class="card" hidden>
         <div class="section-head">
@@ -382,7 +548,7 @@
           </article>
           <article class="mapping-item">
             <h3>下一步可扩展</h3>
-            <p>接入 Flask / FastAPI、调用现有 LLM 方法、保存评估结果、增加病例库检索。</p>
+            <p>接入 Flask / FastAPI、调用现有大模型方法、保存评估结果，并补充病例库检索能力。</p>
           </article>
         </div>
       </section>
@@ -390,5 +556,7 @@
   </div>
 
   <script src="app.js"></script>
+  <script src="kg-enhancement.js"></script>
 </body>
 </html>
+

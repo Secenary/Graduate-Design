@@ -7,7 +7,7 @@ import json
 import re
 import asyncio
 from openai import AsyncOpenAI
-from .prompts import ( 
+from .prompts import (
     DIRECT_DIAGNOSIS_PROMPT,
     DIRECT_GENERATION_PROMPT,
     INTERMEDIATE_STATE_PROMPT,
@@ -16,7 +16,16 @@ from .prompts import (
     STEP1_ISCHEMIC_CHEST_PAIN_PROMPT,
     STEP2_ST_ELEVATION_PROMPT,
     STEP3_BIOMARKER_PROMPT,
+    PROACTIVE_QUESTION_PROMPT,
+    PROACTIVE_DIAGNOSIS_PROMPT,
     get_workflow_description
+)
+from .clinical_reasoning_enhancer import (
+    STAGE_LABELS,
+    extract_structured_facts,
+    compute_combined_reward,
+    build_preprocessed_case,
+    build_next_question_recommendations,
 )
 
 HALT_DIAGNOSIS = "待补充检查"
@@ -763,6 +772,261 @@ async def llm_judge_evaluate(
         "ground_truth": ground_truth,
         "model_prediction": model_prediction
     }
+
+
+# ---------------------------------------------------------------------------
+# 主动问诊方法（融合 ProMed + Note2Chat）
+# ---------------------------------------------------------------------------
+
+STEP_LABELS = {1: "症状与病史", 2: "心电图", 3: "心肌标志物"}
+
+
+def parse_think_block(response: str) -> tuple[dict[str, str], str]:
+    """
+    解析 LLM 响应中的 <think>...</think> 推理块与问题文本。
+
+    Returns:
+        (think_block_dict, question_text)
+    """
+    import re as _re
+
+    think_block: dict[str, str] = {"summary": "", "plan": ""}
+    question_text = response.strip()
+
+    think_match = _re.search(r"<think>(.*?)</think>", response, _re.DOTALL)
+    if think_match:
+        block = think_match.group(1).strip()
+        summary_match = _re.search(r"Summary[:：]\s*(.+?)(?=Plan[:：]|$)", block, _re.DOTALL)
+        plan_match = _re.search(r"Plan[:：]\s*(.+?)$", block, _re.DOTALL)
+        if summary_match:
+            think_block["summary"] = summary_match.group(1).strip()
+        if plan_match:
+            think_block["plan"] = plan_match.group(1).strip()
+        question_text = response[think_match.end():].strip()
+
+    # 提取 "问题：" 后面的内容
+    q_match = _re.search(r"问题[:：]\s*(.+?)$", question_text, _re.DOTALL)
+    if q_match:
+        question_text = q_match.group(1).strip()
+
+    return think_block, question_text
+
+
+def _build_collected_info_text(session) -> str:
+    """从会话历史构建已收集信息的文本摘要。"""
+    parts = [f"患者初始主诉：{session.patient_input}"]
+    turn = 0
+    for entry in session.conversation_history:
+        if entry["role"] == "doctor":
+            parts.append(f"\n医生追问：{entry['content']}")
+        elif entry["role"] == "patient":
+            turn += 1
+            parts.append(f"患者回答（第{turn}轮）：{entry['content']}")
+    return "\n".join(parts)
+
+
+def _build_completed_judgments_text(session) -> str:
+    """构建已完成判断的文本。"""
+    judgments = []
+    states = session.intermediate_states
+    if "ischemic_chest_pain" in states:
+        val = states["ischemic_chest_pain"]
+        judgments.append(f"第1步（缺血性胸痛）：{'是' if val else '否'}")
+    if "st_elevation" in states:
+        val = states["st_elevation"]
+        judgments.append(f"第2步（ST段抬高）：{'是' if val else '否'}")
+    if "biomarker_elevated" in states:
+        val = states["biomarker_elevated"]
+        judgments.append(f"第3步（标志物升高）：{'是' if val else '否'}")
+    return "；".join(judgments) if judgments else "尚未完成任何步骤的判断"
+
+
+def _build_missing_info_text(halt_step: int, missing_items: list[str]) -> str:
+    """构建缺失信息的文本。"""
+    step_label = STEP_LABELS.get(halt_step, f"第{halt_step}步")
+    items = "、".join(missing_items) if missing_items else "相关临床信息"
+    return f"当前第{halt_step}步（{step_label}）需要：{items}"
+
+
+async def generate_proactive_question(
+    session,
+    halt_step: int,
+    missing_items: list[str],
+    model: str = "gpt-4o-mini",
+    client_config: dict | None = None,
+) -> dict:
+    """
+    使用 LLM 生成主动追问，包含 <think> 推理块（Note2Chat 风格）。
+    """
+    collected_info = _build_collected_info_text(session)
+    step_label = STEP_LABELS.get(halt_step, f"第{halt_step}步")
+    completed_judgments = _build_completed_judgments_text(session)
+    missing_info = _build_missing_info_text(halt_step, missing_items)
+
+    # 使用增强 SIG 推荐补充所需事实
+    preprocessed = build_preprocessed_case(
+        {"initial_presentation": session.patient_input, "rounds": [], "full_description": session.build_accumulated_text()},
+        session.diagnosis or "",
+    )
+    recommendations = build_next_question_recommendations(preprocessed, halt_step=halt_step)
+    required_facts_text = "\n".join(
+        f"- {rec['question']}（预计信息增益 {rec['estimated_sig_lite_gain']}）"
+        for rec in recommendations[:3]
+    ) if recommendations else "- 需要补充当前步骤的关键临床证据"
+
+    prompt = PROACTIVE_QUESTION_PROMPT.format(
+        collected_info=collected_info,
+        current_step=halt_step,
+        step_label=step_label,
+        completed_judgments=completed_judgments,
+        missing_info=missing_info,
+        required_facts=required_facts_text,
+    )
+
+    response = await call_llm(prompt, model, client_config=client_config)
+    think_block, question_text = parse_think_block(response)
+
+    # 如果解析失败，使用推荐问题作为兜底
+    if not question_text and recommendations:
+        question_text = recommendations[0]["question"]
+        think_block = {
+            "summary": f"已收集到患者主诉和{session.turn_count}轮追问信息。",
+            "plan": f"当前需补充第{halt_step}步（{step_label}）的关键信息。",
+        }
+
+    # 计算该问题的 SIG 增强评分
+    existing_fact_ids = set(session.collected_facts.keys())
+    sig_result = compute_combined_reward(
+        new_facts=[],  # 问题尚未回答，预估分数
+        existing_fact_ids=existing_fact_ids,
+        current_step=halt_step,
+        question_stage=halt_step,
+        turn_number=session.turn_count,
+        max_turns=session.max_turns,
+    )
+
+    return {
+        "question": question_text,
+        "think_block": think_block,
+        "sig_score": sig_result["total_score"],
+        "sig_components": sig_result["components"],
+        "raw_response": response,
+    }
+
+
+async def proactive_diagnosis(
+    patient_input,
+    model: str = "gpt-4o-mini",
+    client_config: dict | None = None,
+    session=None,
+) -> dict:
+    """
+    主动问诊诊断方法。
+
+    复用三步诊断链，当信息不足时主动生成追问而非停止。
+    融合 ProMed（SIG 奖励引导）与 Note2Chat（<think> 单轮推理）。
+    """
+    from .proactive_session import ProactiveSession
+
+    # 如果有 session，用累积文本作为输入
+    if session is not None:
+        accumulated = session.build_accumulated_text()
+        effective_input = {"description": accumulated, "full_description": accumulated}
+    else:
+        effective_input = patient_input
+
+    # 运行标准三步诊断链
+    result = await run_strict_stepwise_assessment(
+        effective_input,
+        model=model,
+        client_config=client_config,
+        method_name="proactive_diagnosis",
+    )
+
+    # 如果诊断完成，更新 session 并返回
+    if result.get("status") == "completed":
+        if session is not None:
+            session.status = "completed"
+            session.diagnosis = result["diagnosis"]
+            session.diagnosis_detail = result
+            session.steps = result.get("steps", [])
+            session.intermediate_states = result.get("intermediate_states", {})
+        return {
+            "method": "proactive_diagnosis",
+            "status": "completed",
+            "session_id": session.session_id if session else None,
+            "turn": session.turn_count if session else 0,
+            "diagnosis": result["diagnosis"],
+            "steps": result.get("steps", []),
+            "intermediate_states": result.get("intermediate_states", {}),
+            "raw_response": result.get("raw_response", ""),
+        }
+
+    # 需要更多数据 → 生成主动追问
+    if result.get("status") == "needs_more_data" and session is not None:
+        halt_step = result.get("halt_step", 1)
+        missing_items = result.get("missing_items", [])
+
+        # 更新 session 的中间状态
+        session.current_step = halt_step
+        session.steps = result.get("steps", session.steps)
+        session.intermediate_states.update(result.get("intermediate_states", {}))
+
+        # 更新已收集事实
+        accumulated_text = session.build_accumulated_text()
+        facts = extract_structured_facts(accumulated_text)
+        session.collected_facts = {f["id"]: f["evidence"] for f in facts}
+
+        # 检查是否达到最大轮数
+        if session.turn_count >= session.max_turns:
+            session.status = "max_turns_reached"
+            return {
+                "method": "proactive_diagnosis",
+                "status": "max_turns_reached",
+                "session_id": session.session_id,
+                "turn": session.turn_count,
+                "current_step": halt_step,
+                "steps": session.steps,
+                "intermediate_states": session.intermediate_states,
+                "collected_facts": session.collected_facts,
+                "message": f"已达到最大追问轮数（{session.max_turns}轮），但信息仍不足以完成诊断。",
+                "missing_items": missing_items,
+            }
+
+        # 生成主动追问
+        question_result = await generate_proactive_question(
+            session=session,
+            halt_step=halt_step,
+            missing_items=missing_items,
+            model=model,
+            client_config=client_config,
+        )
+
+        # 记录医生追问
+        session.append_doctor_turn(
+            question=question_result["question"],
+            think_block=question_result["think_block"],
+            sig_score=question_result["sig_score"],
+        )
+
+        return {
+            "method": "proactive_diagnosis",
+            "status": "questioning",
+            "session_id": session.session_id,
+            "turn": session.turn_count,
+            "current_step": halt_step,
+            "question": question_result["question"],
+            "think_block": question_result["think_block"],
+            "sig_score": question_result["sig_score"],
+            "sig_components": question_result.get("sig_components", {}),
+            "collected_facts": session.collected_facts,
+            "missing_items": missing_items,
+            "steps": session.steps,
+            "intermediate_states": session.intermediate_states,
+        }
+
+    # 无 session 的兜底：直接返回原始结果
+    return result
 
 
 if __name__ == "__main__":

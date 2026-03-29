@@ -1,0 +1,1543 @@
+{
+  "format": "clinical-knowledge-graph",
+  "version": "1.0",
+  "graph_id": "kg_急性胸痛临床评估与诊断流程",
+  "name": "急性胸痛临床评估与诊断流程",
+  "metadata": {
+    "domain": "clinical_diagnosis",
+    "supports_incremental_update": true,
+    "supports_multi_disease_extension": true,
+    "graph_schema_version": "1.0",
+    "updated_at": "2026-03-28T20:37:08.919409",
+    "graph_version": "v2",
+    "latest_update_type": "case_enhancement",
+    "latest_source_title": "patient_cases"
+  },
+  "documents": [],
+  "entities": [
+    {
+      "id": "workflow_root",
+      "entity_type": "workflow",
+      "name": "急性胸痛临床评估与诊断流程",
+      "description": "临床诊断工作流主图谱",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_01",
+      "entity_type": "workflow_node",
+      "name": "node_01 状态节点",
+      "description": "患者/主体, 临床表现, 急性胸痛/症状",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 急性胸痛/症状"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_患者_主体",
+      "entity_type": "concept",
+      "name": "患者/主体",
+      "description": "从工作流节点 node_01 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "node_02",
+        "node_03",
+        "node_04",
+        "node_05",
+        "node_06",
+        "node_07",
+        "node_08",
+        "node_09",
+        "node_10",
+        "node_11",
+        "node_12",
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_临床表现",
+      "entity_type": "concept",
+      "name": "临床表现",
+      "description": "从工作流节点 node_01 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "node_02",
+        "node_03",
+        "node_04",
+        "node_05",
+        "node_06",
+        "node_07",
+        "node_08",
+        "node_09",
+        "node_10",
+        "node_11",
+        "node_12",
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_急性胸痛_症状",
+      "entity_type": "symptom",
+      "name": "急性胸痛/症状",
+      "description": "从工作流节点 node_01 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_02",
+      "entity_type": "workflow_node",
+      "name": "node_02 判断节点",
+      "description": "患者/主体, 临床表现, 缺血性胸痛症状, 询问症状",
+      "aliases": [],
+      "properties": {
+        "node_type": "判断节点",
+        "content": "患者/主体, 临床表现, 缺血性胸痛症状, 询问症状"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_缺血性胸痛症状",
+      "entity_type": "symptom",
+      "name": "缺血性胸痛症状",
+      "description": "从工作流节点 node_02 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_询问症状",
+      "entity_type": "symptom",
+      "name": "询问症状",
+      "description": "从工作流节点 node_02 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_03",
+      "entity_type": "workflow_node",
+      "name": "node_03 状态节点",
+      "description": "患者/主体, 临床表现, 缺血性胸痛/症状",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 缺血性胸痛/症状"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_缺血性胸痛_症状",
+      "entity_type": "symptom",
+      "name": "缺血性胸痛/症状",
+      "description": "从工作流节点 node_03 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_03",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_04",
+      "entity_type": "workflow_node",
+      "name": "node_04 状态节点",
+      "description": "患者/主体, 临床表现, 非缺血性胸痛/症状",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 非缺血性胸痛/症状"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_非缺血性胸痛_症状",
+      "entity_type": "symptom",
+      "name": "非缺血性胸痛/症状",
+      "description": "从工作流节点 node_04 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_04",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_05",
+      "entity_type": "workflow_node",
+      "name": "node_05 判断节点",
+      "description": "患者/主体, 临床表现, ST段抬高/临床发现, 心电图检查",
+      "aliases": [],
+      "properties": {
+        "node_type": "判断节点",
+        "content": "患者/主体, 临床表现, ST段抬高/临床发现, 心电图检查"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_st段抬高_临床发现",
+      "entity_type": "finding",
+      "name": "ST段抬高/临床发现",
+      "description": "从工作流节点 node_05 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "node_06",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_心电图检查",
+      "entity_type": "exam",
+      "name": "心电图检查",
+      "description": "从工作流节点 node_05 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_06",
+      "entity_type": "workflow_node",
+      "name": "node_06 状态节点",
+      "description": "患者/主体, 临床表现, ST段抬高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, ST段抬高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_07",
+      "entity_type": "workflow_node",
+      "name": "node_07 状态节点",
+      "description": "患者/主体, 临床表现, 非ST段抬高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 非ST段抬高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_非st段抬高_临床发现",
+      "entity_type": "finding",
+      "name": "非ST段抬高/临床发现",
+      "description": "从工作流节点 node_07 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_07",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_08",
+      "entity_type": "workflow_node",
+      "name": "node_08 判断节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测",
+      "aliases": [],
+      "properties": {
+        "node_type": "判断节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_心肌损伤标志物升高_临床发现",
+      "entity_type": "finding",
+      "name": "心肌损伤标志物升高/临床发现",
+      "description": "从工作流节点 node_08 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "node_09",
+        "node_10",
+        "node_12",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_心肌损伤标志物检测",
+      "entity_type": "concept",
+      "name": "心肌损伤标志物检测",
+      "description": "从工作流节点 node_08 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "node_09",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_09",
+      "entity_type": "workflow_node",
+      "name": "node_09 判断节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测",
+      "aliases": [],
+      "properties": {
+        "node_type": "判断节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_10",
+      "entity_type": "workflow_node",
+      "name": "node_10 状态节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_11",
+      "entity_type": "workflow_node",
+      "name": "node_11 状态节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_心肌损伤标志物未升高_临床发现",
+      "entity_type": "finding",
+      "name": "心肌损伤标志物未升高/临床发现",
+      "description": "从工作流节点 node_11 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_11",
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_12",
+      "entity_type": "workflow_node",
+      "name": "node_12 状态节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_13",
+      "entity_type": "workflow_node",
+      "name": "node_13 状态节点",
+      "description": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_14",
+      "entity_type": "workflow_node",
+      "name": "node_14 状态节点",
+      "description": "最终诊断: STEMI: 急性ST段抬高心肌梗死",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "最终诊断: STEMI: 急性ST段抬高心肌梗死"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_最终诊断_stemi_急性st段抬高心肌梗死",
+      "entity_type": "diagnosis",
+      "name": "最终诊断: STEMI: 急性ST段抬高心肌梗死",
+      "description": "从工作流节点 node_14 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_14",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_15",
+      "entity_type": "workflow_node",
+      "name": "node_15 状态节点",
+      "description": "最终诊断: 变异性心绞痛",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "最终诊断: 变异性心绞痛"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_最终诊断_变异性心绞痛",
+      "entity_type": "diagnosis",
+      "name": "最终诊断: 变异性心绞痛",
+      "description": "从工作流节点 node_15 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_15",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_16",
+      "entity_type": "workflow_node",
+      "name": "node_16 状态节点",
+      "description": "最终诊断: NSTEMI: 急性非ST段抬高心肌梗死",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "最终诊断: NSTEMI: 急性非ST段抬高心肌梗死"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_最终诊断_nstemi_急性非st段抬高心肌梗死",
+      "entity_type": "diagnosis",
+      "name": "最终诊断: NSTEMI: 急性非ST段抬高心肌梗死",
+      "description": "从工作流节点 node_16 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_16",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_17",
+      "entity_type": "workflow_node",
+      "name": "node_17 状态节点",
+      "description": "最终诊断: UA: 不稳定型心绞痛",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "最终诊断: UA: 不稳定型心绞痛"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_最终诊断_ua_不稳定型心绞痛",
+      "entity_type": "diagnosis",
+      "name": "最终诊断: UA: 不稳定型心绞痛",
+      "description": "从工作流节点 node_17 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_17",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "node_18",
+      "entity_type": "workflow_node",
+      "name": "node_18 状态节点",
+      "description": "最终诊断: 其他",
+      "aliases": [],
+      "properties": {
+        "node_type": "状态节点",
+        "content": "最终诊断: 其他"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_最终诊断_其他",
+      "entity_type": "diagnosis",
+      "name": "最终诊断: 其他",
+      "description": "从工作流节点 node_18 识别出的临床概念",
+      "aliases": [],
+      "properties": {},
+      "source_refs": [
+        "node_18",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "term_finding_BNP",
+      "entity_type": "finding",
+      "name": "BNP",
+      "description": "从病例文件中提取的临床术语",
+      "aliases": [],
+      "properties": {
+        "extracted_from_cases": true,
+        "total_frequency": 435
+      },
+      "source_refs": [
+        "case_008_20251226_194253.md",
+        "case_056_20251226_204009.md",
+        "case_002_20251226_171724.md",
+        "case_052_20251226_183258.md",
+        "case_028_20251226_180258.md"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_workflow_contains_node_01",
+      "source": "workflow_root",
+      "target": "node_01",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_01_term_患者_主体",
+      "source": "node_01",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_01_term_临床表现",
+      "source": "node_01",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_01_term_急性胸痛_症状",
+      "source": "node_01",
+      "target": "term_急性胸痛_症状",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_01",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_02",
+      "source": "workflow_root",
+      "target": "node_02",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_02_term_患者_主体",
+      "source": "node_02",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_02_term_临床表现",
+      "source": "node_02",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_02_term_缺血性胸痛症状",
+      "source": "node_02",
+      "target": "term_缺血性胸痛症状",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_02_term_询问症状",
+      "source": "node_02",
+      "target": "term_询问症状",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_02",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_03",
+      "source": "workflow_root",
+      "target": "node_03",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_03_term_患者_主体",
+      "source": "node_03",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_03",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_03_term_临床表现",
+      "source": "node_03",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_03",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_03_term_缺血性胸痛_症状",
+      "source": "node_03",
+      "target": "term_缺血性胸痛_症状",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_03",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_04",
+      "source": "workflow_root",
+      "target": "node_04",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_04_term_患者_主体",
+      "source": "node_04",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_04",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_04_term_临床表现",
+      "source": "node_04",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_04",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_04_term_非缺血性胸痛_症状",
+      "source": "node_04",
+      "target": "term_非缺血性胸痛_症状",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_04",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_05",
+      "source": "workflow_root",
+      "target": "node_05",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_05_term_患者_主体",
+      "source": "node_05",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_05_term_临床表现",
+      "source": "node_05",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_05_term_st段抬高_临床发现",
+      "source": "node_05",
+      "target": "term_st段抬高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_05_term_心电图检查",
+      "source": "node_05",
+      "target": "term_心电图检查",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_05",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_06",
+      "source": "workflow_root",
+      "target": "node_06",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_06_term_患者_主体",
+      "source": "node_06",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_06",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_06_term_临床表现",
+      "source": "node_06",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_06",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_06_term_st段抬高_临床发现",
+      "source": "node_06",
+      "target": "term_st段抬高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_06",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_07",
+      "source": "workflow_root",
+      "target": "node_07",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_07_term_患者_主体",
+      "source": "node_07",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_07",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_07_term_临床表现",
+      "source": "node_07",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_07",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_07_term_非st段抬高_临床发现",
+      "source": "node_07",
+      "target": "term_非st段抬高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_07",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_08",
+      "source": "workflow_root",
+      "target": "node_08",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_08_term_患者_主体",
+      "source": "node_08",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_08_term_临床表现",
+      "source": "node_08",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_08_term_心肌损伤标志物升高_临床发现",
+      "source": "node_08",
+      "target": "term_心肌损伤标志物升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_08_term_心肌损伤标志物检测",
+      "source": "node_08",
+      "target": "term_心肌损伤标志物检测",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_08",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_09",
+      "source": "workflow_root",
+      "target": "node_09",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_09_term_患者_主体",
+      "source": "node_09",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_09",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_09_term_临床表现",
+      "source": "node_09",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_09",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_09_term_心肌损伤标志物升高_临床发现",
+      "source": "node_09",
+      "target": "term_心肌损伤标志物升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_09",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_09_term_心肌损伤标志物检测",
+      "source": "node_09",
+      "target": "term_心肌损伤标志物检测",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_09",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_10",
+      "source": "workflow_root",
+      "target": "node_10",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_10_term_患者_主体",
+      "source": "node_10",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_10",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_10_term_临床表现",
+      "source": "node_10",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_10",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_10_term_心肌损伤标志物升高_临床发现",
+      "source": "node_10",
+      "target": "term_心肌损伤标志物升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_10",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_11",
+      "source": "workflow_root",
+      "target": "node_11",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_11_term_患者_主体",
+      "source": "node_11",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_11",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_11_term_临床表现",
+      "source": "node_11",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_11",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_11_term_心肌损伤标志物未升高_临床发现",
+      "source": "node_11",
+      "target": "term_心肌损伤标志物未升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_11",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_12",
+      "source": "workflow_root",
+      "target": "node_12",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_12_term_患者_主体",
+      "source": "node_12",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_12",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_12_term_临床表现",
+      "source": "node_12",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_12",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_12_term_心肌损伤标志物升高_临床发现",
+      "source": "node_12",
+      "target": "term_心肌损伤标志物升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_12",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_13",
+      "source": "workflow_root",
+      "target": "node_13",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_13_term_患者_主体",
+      "source": "node_13",
+      "target": "term_患者_主体",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_13_term_临床表现",
+      "source": "node_13",
+      "target": "term_临床表现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_13_term_心肌损伤标志物未升高_临床发现",
+      "source": "node_13",
+      "target": "term_心肌损伤标志物未升高_临床发现",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_13",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_14",
+      "source": "workflow_root",
+      "target": "node_14",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_14_term_最终诊断_stemi_急性st段抬高心肌梗死",
+      "source": "node_14",
+      "target": "term_最终诊断_stemi_急性st段抬高心肌梗死",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_14",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_15",
+      "source": "workflow_root",
+      "target": "node_15",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_15_term_最终诊断_变异性心绞痛",
+      "source": "node_15",
+      "target": "term_最终诊断_变异性心绞痛",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_15",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_16",
+      "source": "workflow_root",
+      "target": "node_16",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_16_term_最终诊断_nstemi_急性非st段抬高心肌梗死",
+      "source": "node_16",
+      "target": "term_最终诊断_nstemi_急性非st段抬高心肌梗死",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_16",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_17",
+      "source": "workflow_root",
+      "target": "node_17",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_17_term_最终诊断_ua_不稳定型心绞痛",
+      "source": "node_17",
+      "target": "term_最终诊断_ua_不稳定型心绞痛",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_17",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_workflow_contains_node_18",
+      "source": "workflow_root",
+      "target": "node_18",
+      "relation_type": "contains",
+      "label": "包含节点",
+      "properties": {},
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "rel_node_18_term_最终诊断_其他",
+      "source": "node_18",
+      "target": "term_最终诊断_其他",
+      "relation_type": "mentions",
+      "label": "关联概念",
+      "properties": {},
+      "source_refs": [
+        "node_18",
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_1",
+      "source": "node_01",
+      "target": "node_02",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_2",
+      "source": "node_02",
+      "target": "node_03",
+      "relation_type": "transitions_to",
+      "label": "是",
+      "properties": {
+        "condition": "是"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_3",
+      "source": "node_02",
+      "target": "node_04",
+      "relation_type": "transitions_to",
+      "label": "否",
+      "properties": {
+        "condition": "否"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_4",
+      "source": "node_03",
+      "target": "node_05",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_5",
+      "source": "node_04",
+      "target": "node_18",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_6",
+      "source": "node_05",
+      "target": "node_06",
+      "relation_type": "transitions_to",
+      "label": "是",
+      "properties": {
+        "condition": "是"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_7",
+      "source": "node_05",
+      "target": "node_07",
+      "relation_type": "transitions_to",
+      "label": "否",
+      "properties": {
+        "condition": "否"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_8",
+      "source": "node_06",
+      "target": "node_08",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_9",
+      "source": "node_07",
+      "target": "node_09",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_10",
+      "source": "node_08",
+      "target": "node_10",
+      "relation_type": "transitions_to",
+      "label": "是",
+      "properties": {
+        "condition": "是"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_11",
+      "source": "node_08",
+      "target": "node_11",
+      "relation_type": "transitions_to",
+      "label": "否",
+      "properties": {
+        "condition": "否"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_12",
+      "source": "node_09",
+      "target": "node_12",
+      "relation_type": "transitions_to",
+      "label": "是",
+      "properties": {
+        "condition": "是"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_13",
+      "source": "node_09",
+      "target": "node_13",
+      "relation_type": "transitions_to",
+      "label": "否",
+      "properties": {
+        "condition": "否"
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_14",
+      "source": "node_10",
+      "target": "node_14",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_15",
+      "source": "node_11",
+      "target": "node_15",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_16",
+      "source": "node_12",
+      "target": "node_16",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    },
+    {
+      "id": "transition_17",
+      "source": "node_13",
+      "target": "node_17",
+      "relation_type": "transitions_to",
+      "label": "继续",
+      "properties": {
+        "condition": null
+      },
+      "source_refs": [
+        "transitions.json"
+      ]
+    }
+  ]
+}

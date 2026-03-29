@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识图谱增强 - 临床术语审核</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f1e8;
+      --bg-accent: #efe2d1;
+      --surface: rgba(255, 252, 246, 0.88);
+      --surface-strong: #fffaf2;
+      --ink: #2f241d;
+      --muted: #6b5a4f;
+      --line: rgba(77, 54, 38, 0.16);
+      --primary: #9f2f22;
+      --primary-soft: rgba(159, 47, 34, 0.12);
+      --secondary: #1d5c63;
+      --good: #245c3f;
+      --warn: #8f4a16;
+      --shadow: 0 20px 60px rgba(67, 40, 21, 0.12);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Outfit", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(159, 47, 34, 0.15), transparent 28%),
+        radial-gradient(circle at top right, rgba(29, 92, 99, 0.14), transparent 24%),
+        linear-gradient(180deg, #f8f2e8 0%, #efe4d3 100%);
+    }
+    button, input, select, textarea { font: inherit; }
+
+    .page-shell {
+      width: min(1400px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #8b2a1f;
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #164a50;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+    .btn-ghost:hover {
+      background: var(--bg-accent);
+    }
+
+    .btn-success {
+      background: var(--good);
+      color: white;
+    }
+    .btn-success:hover {
+      background: #1e4a33;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .review-item {
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .review-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .term-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .term-badge.symptom { background: #ffe0e0; color: #9f2f22; }
+    .term-badge.finding { background: #ffe8d0; color: #d17d48; }
+    .term-badge.exam { background: #e8d0ff; color: #5f4b8b; }
+    .term-badge.diagnosis { background: #d0ffe0; color: #245c3f; }
+
+    .variations-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .variation-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-accent);
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .variation-tag input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .review-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .reviewer-input {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .reviewer-input input {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      width: 150px;
+    }
+
+    .comment-input {
+      flex: 1;
+    }
+
+    .comment-input input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.pending { background: #fff3cd; color: #856404; }
+    .status-badge.approved { background: #d4edda; color: #155724; }
+    .status-badge.rejected { background: #f8d7da; color: #721c24; }
+
+    .context-box {
+      background: var(--bg);
+      border-left: 3px solid var(--primary);
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--bg-accent);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .alert {
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+    }
+
+    .alert-info {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      color: #004085;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-accent);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="header">
+      <div>
+        <h1>知识图谱增强</h1>
+        <p class="subtitle">从住院病例中提取临床术语变体，经医生审核后完善知识图谱</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost" onclick="checkStatus()">刷新状态</button>
+        <button class="btn btn-primary" onclick="extractTerms()">提取术语</button>
+        <button class="btn btn-success" onclick="mergeTerms()">合并到图谱</button>
+      </div>
+    </header>
+
+    <div id="status-alert"></div>
+
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-terms">-</div>
+          <div class="stat-label">提取术语数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-groups">-</div>
+          <div class="stat-label">待审核组数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-approved">-</div>
+          <div class="stat-label">已审核通过</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-entities">-</div>
+          <div class="stat-label">图谱实体数</div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <select id="filter-category" onchange="filterReviewItems()">
+          <option value="all">全部类别</option>
+          <option value="symptom">症状</option>
+          <option value="finding">临床发现</option>
+          <option value="exam">检查</option>
+          <option value="diagnosis">诊断</option>
+        </select>
+        <select id="filter-status" onchange="filterReviewItems()">
+          <option value="all">全部状态</option>
+          <option value="pending">待审核</option>
+          <option value="approved">已通过</option>
+          <option value="rejected">已拒绝</option>
+        </select>
+        <select id="filter-confidence" onchange="filterReviewItems()">
+          <option value="all">全部匹配置信度</option>
+          <option value="high">高 (≥0.8)</option>
+          <option value="medium">中 (0.6-0.8)</option>
+          <option value="low">< 0.6</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">术语审核</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <label>
+            <input type="checkbox" id="select-all" onchange="toggleSelectAll()"> 全选
+          </label>
+          <button class="btn btn-secondary" onclick="batchApprove()">批量通过</button>
+        </div>
+      </div>
+
+      <div id="review-list-container" class="review-list">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>正在加载审核项目...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let reviewItems = [];
+    let filteredItems = [];
+    let reviewerName = localStorage.getItem('kg_reviewer_name') || '';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      checkStatus();
+      loadReviewItems();
+      
+      // Auto-save reviewer name
+      document.addEventListener('change', (e) => {
+        if (e.target.classList.contains('reviewer-name-input')) {
+          reviewerName = e.target.value;
+          localStorage.setItem('kg_reviewer_name', reviewerName);
+        }
+      });
+    });
+
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/kg-enhancement/status');
+        const data = await res.json();
+        
+        if (data.ok) {
+          document.getElementById('stat-terms').textContent = data.extracted_terms_count || 0;
+          document.getElementById('stat-entities').textContent = data.entity_count || 0;
+          
+          showStatus('服务在线', 'success');
+        } else {
+          showStatus('服务离线：' + data.error, 'error');
+        }
+      } catch (e) {
+        showStatus('无法连接服务器：' + e.message, 'error');
+      }
+    }
+
+    async function extractTerms() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '提取中...';
+      
+      try {
+        const res = await fetch('/api/kg-enhancement/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
+        
+        if (data.ok) {
+          showStatus(data.message, 'success');
+          document.getElementById('stat-terms').textContent = data.terms_count;
+          setTimeout(loadReviewItems, 1000);
+        } else {
+          showStatus('提取失败：' + data.error, 'error');
+        }
+      } catch (e) {
+        showStatus('提取失败：' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '提取术语';
+      }
+    }
+
+    async function loadReviewItems() {
+      try {
+        const res = await fetch('/api/kg-enhancement/review-items');
+        const data = await res.json();
+        
+        if (data.ok) {
+          reviewItems = data.review_items;
+          document.getElementById('stat-groups').textContent = reviewItems.length;
+          filterReviewItems();
+        }
+      } catch (e) {
+        console.error('Load failed:', e);
+      }
+    }
+
+    function filterReviewItems() {
+      const category = document.getElementById('filter-category').value;
+      const status = document.getElementById('filter-status').value;
+      const confidence = document.getElementById('filter-confidence').value;
+
+      filteredItems = reviewItems.filter(item => {
+        if (category !== 'all' && item.category !== category) return false;
+        if (status !== 'all' && item.review_status !== status) return false;
+        
+        if (confidence !== 'all') {
+          const conf = item.match_confidence || 0;
+          if (confidence === 'high' && conf < 0.8) return false;
+          if (confidence === 'medium' && (conf < 0.6 || conf >= 0.8)) return false;
+          if (confidence === 'low' && conf >= 0.6) return false;
+        }
+        
+        return true;
+      });
+
+      renderReviewItems();
+    }
+
+    function renderReviewItems() {
+      const container = document.getElementById('review-list-container');
+      
+      if (filteredItems.length === 0) {
+        container.innerHTML = '<div class="loading"><p>暂无审核项目</p></div>';
+        return;
+      }
+
+      let approvedCount = 0;
+      container.innerHTML = filteredItems.map((item, index) => {
+        if (item.review_status === 'approved') approvedCount++;
+        
+        return `
+          <div class="review-item" data-index="${index}" data-status="${item.review_status}">
+            <div class="review-item-header">
+              <div>
+                <span class="term-badge ${item.category}">${getCategoryName(item.category)}</span>
+                <strong style="margin-left: 12px; font-size: 16px;">${item.representative_term}</strong>
+                ${item.matched_entity_id ? `<span style="margin-left: 8px; color: var(--muted); font-size: 12px;">→ ${item.matched_entity_id}</span>` : ''}
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <span class="status-badge ${item.review_status}">${getStatusName(item.review_status)}</span>
+                <span style="color: var(--muted); font-size: 13px;">频次：${item.total_frequency}</span>
+                ${item.match_confidence ? `<span style="color: var(--muted); font-size: 13px;">匹配度：${(item.match_confidence * 100).toFixed(0)}%</span>` : ''}
+              </div>
+            </div>
+
+            <div class="variations-list">
+              ${item.variations.map((v, i) => `
+                <label class="variation-tag">
+                  <input type="checkbox" ${item.review_status === 'approved' ? 'checked' : ''} 
+                         onchange="toggleVariation('${item.group_key}', ${i})">
+                  ${v}
+                </label>
+              `).join('')}
+            </div>
+
+            ${item.contexts && item.contexts.length > 0 ? `
+              <div class="context-box">
+                <strong>出现上下文：</strong>
+                <p style="margin: 4px 0 0 0;">${item.contexts[0]}</p>
+              </div>
+            ` : ''}
+
+            <div class="review-actions">
+              <div class="reviewer-input">
+                <input type="text" class="reviewer-name-input" 
+                       placeholder="医生姓名" 
+                       value="${reviewerName}"
+                       onchange="updateReviewerName(this.value)">
+              </div>
+              
+              <div class="comment-input">
+                <input type="text" placeholder="审核意见（可选）" 
+                       value="${item.review_comment || ''}"
+                       onchange="updateComment('${item.group_key}', this.value)">
+              </div>
+              
+              <button class="btn btn-success" 
+                      onclick="submitReview('${item.group_key}', 'approve')"
+                      ${item.review_status === 'approved' ? 'disabled' : ''}>
+                通过
+              </button>
+              <button class="btn btn-secondary" 
+                      onclick="submitReview('${item.group_key}', 'reject')"
+                      ${item.review_status === 'rejected' ? 'disabled' : ''}>
+                拒绝
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('stat-approved').textContent = approvedCount;
+    }
+
+    function getCategoryName(cat) {
+      const names = { symptom: '症状', finding: '临床发现', exam: '检查', diagnosis: '诊断' };
+      return names[cat] || cat;
+    }
+
+    function getStatusName(status) {
+      const names = { pending: '待审核', approved: '已通过', rejected: '已拒绝' };
+      return names[status] || status;
+    }
+
+    function toggleSelectAll() {
+      const checked = document.getElementById('select-all').checked;
+      document.querySelectorAll('.variation-tag input[type="checkbox"]').forEach(cb => {
+        cb.checked = checked;
+      });
+    }
+
+    function toggleVariation(groupKey, variationIndex) {
+      // Track individual variation selection
+      const item = reviewItems.find(i => i.group_key === groupKey);
+      if (item) {
+        item.variations_selected = item.variations_selected || [];
+        if (document.event.target.checked) {
+          item.variations_selected.push(variationIndex);
+        } else {
+          item.variations_selected = item.variations_selected.filter(i => i !== variationIndex);
+        }
+      }
+    }
+
+    async function submitReview(groupKey, action) {
+      if (!reviewerName) {
+        alert('请先填写医生姓名');
+        return;
+      }
+
+      const item = reviewItems.find(i => i.group_key === groupKey);
+      const commentEl = document.querySelector(`[onchange="updateComment('${groupKey}', this.value)"]`);
+      const comment = commentEl ? commentEl.value : '';
+
+      try {
+        const res = await fetch('/api/kg-enhancement/review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            group_key: groupKey,
+            action: action,
+            reviewer_name: reviewerName,
+            comment: comment,
+          }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showStatus('审核已提交', 'success');
+          item.review_status = action === 'approve' ? 'approved' : 'rejected';
+          item.review_comment = comment;
+          filterReviewItems();
+        } else {
+          showStatus('提交失败：' + data.error, 'error');
+        }
+      } catch (e) {
+        showStatus('提交失败：' + e.message, 'error');
+      }
+    }
+
+    async function batchApprove() {
+      if (!reviewerName) {
+        alert('请先填写医生姓名');
+        return;
+      }
+
+      const pendingItems = reviewItems.filter(i => i.review_status === 'pending');
+      if (pendingItems.length === 0) {
+        alert('没有待审核的项目');
+        return;
+      }
+
+      if (!confirm(`确定要批量通过 ${pendingItems.length} 个审核项目吗？`)) {
+        return;
+      }
+
+      let success = 0;
+      for (const item of pendingItems) {
+        try {
+          const res = await fetch('/api/kg-enhancement/review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              group_key: item.group_key,
+              action: 'approve',
+              reviewer_name: reviewerName,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            item.review_status = 'approved';
+            success++;
+          }
+        } catch (e) {
+          console.error('Batch approve error:', e);
+        }
+      }
+
+      showStatus(`批量通过完成：${success}/${pendingItems.length}`, 'success');
+      filterReviewItems();
+    }
+
+    async function mergeTerms() {
+      const approvedItems = reviewItems.filter(i => i.review_status === 'approved');
+      if (approvedItems.length === 0) {
+        alert('没有已审核通过的项目');
+        return;
+      }
+
+      if (!confirm(`确定要将 ${approvedItems.length} 个已审核通过的术语合并到知识图谱吗？`)) {
+        return;
+      }
+
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '合并中...';
+
+      try {
+        const res = await fetch('/api/kg-enhancement/merge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          showStatus(data.message, 'success');
+          if (data.stats) {
+            showStatus(`新增实体：${data.stats.entities_added}, 新增别名：${data.stats.aliases_added}`, 'info');
+          }
+          checkStatus();
+        } else {
+          showStatus('合并失败：' + data.error, 'error');
+        }
+      } catch (e) {
+        showStatus('合并失败：' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '合并到图谱';
+      }
+    }
+
+    function updateReviewerName(name) {
+      reviewerName = name;
+      localStorage.setItem('kg_reviewer_name', name);
+    }
+
+    function updateComment(groupKey, comment) {
+      const item = reviewItems.find(i => i.group_key === groupKey);
+      if (item) {
+        item.review_comment = comment;
+      }
+    }
+
+    function showStatus(message, type) {
+      const alertEl = document.getElementById('status-alert');
+      alertEl.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+      setTimeout(() => {
+        alertEl.innerHTML = '';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

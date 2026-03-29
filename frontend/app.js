@@ -250,6 +250,94 @@ function containsAny(text, keywords) {
   return keywords.some((keyword) => text.includes(keyword));
 }
 
+const TROPONIN_MARKER_PATTERN = /(?:(?:\u9ad8\u654f|\u8d85\u654f)\s*)?(?:(?:\u5fc3\u808c)?\u808c\u9499\u86cb\u767d(?:[-\s]?(?:I|T))?|(?:hs-?)?(?:cTn|Tn)(?:I|T)?|troponin(?:[-\s]?(?:I|T))?)/i;
+const CKMB_MARKER_PATTERN = /(?:CK[\s-]?MB|CPK[\s-]?MB|\u808c\u9178(?:\u78f7\u9178)?\u6fc0\u9176(?:[\s-]?MB|\u540c\u5de5\u9176(?:MB)?)|\u808c\u9178\u6fc0\u9176MB)/i;
+function normalizeBiomarkerUnit(unit = "") {
+  return unit
+    .replace(/[\u03bc\u00b5]/g, "u")
+    .replace(/\s+/g, "")
+    .toLowerCase();
+}
+function escapeRegex(value) {
+  return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function getBiomarkerFallbackUpperLimit(markerType, unit) {
+  const normalizedUnit = normalizeBiomarkerUnit(unit);
+  if (markerType === "troponin") {
+    if (["ng/ml", "ug/l", "mcg/l"].includes(normalizedUnit)) return 0.04;
+    if (["ng/l", "pg/ml"].includes(normalizedUnit)) return 14;
+  }
+  if (markerType === "ckmb") {
+    if (["u/l", "iu/l"].includes(normalizedUnit)) return 25;
+    if (["ng/ml", "ug/l", "mcg/l"].includes(normalizedUnit)) return 5;
+  }
+  return null;
+}
+function extractReferenceUpperLimit(fragment, unit) {
+  const escapedUnit = unit ? escapeRegex(unit) : "[A-Za-z/]+";
+  const unitPart = `\\s*(?:${escapedUnit})?`;
+  const normalizedFragment = String(fragment || "");
+  const rangePattern = new RegExp(`(?:\\u53c2\\u8003(?:\\u503c|\\u8303\\u56f4)?|\\u6b63\\u5e38(?:\\u503c|\\u8303\\u56f4)?|\\u4e0a\\u9650|\\u754c\\u503c|cut-?off|URL|ULN)[^\\d]{0,8}(\\d+(?:\\.\\d+)?)\\s*(?:-|~|\\u81f3|\\u2014)\\s*(\\d+(?:\\.\\d+)?)${unitPart}`, "i");
+  const lessThanPattern = new RegExp(`(?:\\u53c2\\u8003(?:\\u503c|\\u8303\\u56f4)?|\\u6b63\\u5e38(?:\\u503c|\\u8303\\u56f4)?|\\u4e0a\\u9650|\\u754c\\u503c|cut-?off|URL|ULN)[^\\d<>\\u2264\\u2265]{0,8}(?:<|<=|\\u2264)?\\s*(\\d+(?:\\.\\d+)?)${unitPart}`, "i");
+  const inlineRangePattern = new RegExp(`(\\d+(?:\\.\\d+)?)\\s*(?:-|~|\\u81f3|\\u2014)\\s*(\\d+(?:\\.\\d+)?)${unitPart}`, "i");
+  const rangeMatch = normalizedFragment.match(rangePattern);
+  if (rangeMatch) return Number(rangeMatch[2]);
+  const lessThanMatch = normalizedFragment.match(lessThanPattern);
+  if (lessThanMatch) return Number(lessThanMatch[1]);
+  if (/(?:\\u53c2\\u8003|\\u6b63\\u5e38)/i.test(normalizedFragment)) {
+    const inlineRangeMatch = normalizedFragment.match(inlineRangePattern);
+    if (inlineRangeMatch) return Number(inlineRangeMatch[2]);
+  }
+  return null;
+}
+function parseBiomarkerMeasurements(text) {
+  const fragments = splitTextFragments(text);
+  const measurements = [];
+  const patterns = [
+    {
+      markerType: "troponin",
+      regex: /((?:(?:\u9ad8\u654f|\u8d85\u654f)\s*)?(?:(?:\u5fc3\u808c)?\u808c\u9499\u86cb\u767d(?:[-\s]?(?:I|T))?|(?:hs-?)?(?:cTn|Tn)(?:I|T)?|troponin(?:[-\s]?(?:I|T))?))[^0-9<>]{0,12}(<=|>=|<|>|=)?\s*(\d+(?:\.\d+)?)\s*(ng\/mL|ng\/L|pg\/mL|ug\/L|\u03bcg\/L|\u00b5g\/L|mcg\/L)/ig,
+    },
+    {
+      markerType: "ckmb",
+      regex: /((?:CK[\s-]?MB|CPK[\s-]?MB|\u808c\u9178(?:\u78f7\u9178)?\u6fc0\u9176(?:[\s-]?MB|\u540c\u5de5\u9176(?:MB)?)|\u808c\u9178\u6fc0\u9176MB))[^0-9<>]{0,12}(<=|>=|<|>|=)?\s*(\d+(?:\.\d+)?)\s*(U\/L|IU\/L|ng\/mL|ug\/L|\u03bcg\/L|\u00b5g\/L|mcg\/L)/ig,
+    },
+  ];
+  fragments.forEach((fragment) => {
+    patterns.forEach(({ markerType, regex }) => {
+      regex.lastIndex = 0;
+      let match = regex.exec(fragment);
+      while (match) {
+        const marker = match[1];
+        const operator = match[2] || "";
+        const value = Number(match[3]);
+        const unit = match[4];
+        const referenceUpper = extractReferenceUpperLimit(fragment, unit);
+        const upperLimit = referenceUpper ?? getBiomarkerFallbackUpperLimit(markerType, unit);
+        let elevated = null;
+        if (operator === ">" || operator === ">=") {
+          elevated = true;
+        } else if (operator === "<" || operator === "<=") {
+          elevated = false;
+        } else if (upperLimit !== null && Number.isFinite(value)) {
+          elevated = value > upperLimit;
+        }
+        measurements.push({
+          markerType,
+          marker,
+          value,
+          unit,
+          referenceUpper,
+          upperLimit,
+          elevated,
+          fragment,
+        });
+        match = regex.exec(fragment);
+      }
+    });
+  });
+  return measurements;
+}
 function hasSufficientSymptomInfo(text) {
   const chestPainKeywords = ["胸痛", "胸闷", "胸骨后", "心前区", "胸部不适"];
   const locationKeywords = ["胸骨后", "心前区", "左肩", "左臂", "背部", "后背", "下颌", "放射"];
@@ -271,17 +359,69 @@ function hasSufficientSymptomInfo(text) {
 }
 
 function hasEcgInfo(text) {
-  if (containsAny(text, ["未查心电图", "未做心电图", "暂无心电图", "无心电图结果", "心电图待完善", "ECG未做"])) {
+  const missingPatterns = [
+    "\u672a\u67e5\u5fc3\u7535\u56fe",
+    "\u672a\u505a\u5fc3\u7535\u56fe",
+    "\u6682\u65e0\u5fc3\u7535\u56fe",
+    "\u65e0\u5fc3\u7535\u56fe\u7ed3\u679c",
+    "\u5fc3\u7535\u56fe\u5f85\u5b8c\u5584",
+    "ECG\u672a\u505a",
+    "\u5f85\u67e5\u5fc3\u7535\u56fe",
+    "\u5fc3\u7535\u56fe\u5f85\u67e5",
+    "\u5fc3\u7535\u56fe\u672a\u56de\u62a5",
+    "\u672a\u63d0\u4f9b\u5fc3\u7535\u56fe",
+    "\u5fc3\u7535\u56fe\u672a\u63d0\u4f9b",
+    "\u5fc3\u7535\u56fe\u7f3a\u5931",
+    "ECG\u5f85\u5b8c\u5584",
+  ];
+  const detailedKeywords = [
+    "\u5bfc\u8054",
+    "ST\u6bb5",
+    "ST \u62ac\u9ad8",
+    "ST\u62ac\u9ad8",
+    "ST\u6bb5\u538b\u4f4e",
+    "ST\u538b\u4f4e",
+    "ST-T",
+    "T\u6ce2",
+    "Q\u6ce2",
+    "\u5f13\u80cc\u5411\u4e0a",
+    "\u5fc3\u7535\u56fe\u6b63\u5e38",
+    "\u672a\u89c1\u660e\u663eST\u6bb5\u62ac\u9ad8",
+    "\u672a\u89c1\u660e\u663e\u5f02\u5e38",
+  ];
+  if (containsAny(text, missingPatterns)) {
     return false;
   }
-  return containsAny(text, ["心电图", "ECG", "导联", "ST段", "T波", "Q波"]);
+  return containsAny(text, detailedKeywords);
 }
 
 function hasBiomarkerInfo(text) {
-  if (containsAny(text, ["未查肌钙蛋白", "未查CK-MB", "未查心肌标志物", "暂无心肌标志物", "无肌钙蛋白结果", "标志物待完善"])) {
+  const missingPatterns = [
+    "\u672a\u67e5\u808c\u9499\u86cb\u767d",
+    "\u672a\u67e5CK-MB",
+    "\u672a\u67e5\u5fc3\u808c\u6807\u5fd7\u7269",
+    "\u6682\u65e0\u5fc3\u808c\u6807\u5fd7\u7269",
+    "\u65e0\u808c\u9499\u86cb\u767d\u7ed3\u679c",
+    "\u6807\u5fd7\u7269\u5f85\u5b8c\u5584",
+    "\u5f85\u67e5\u808c\u9499\u86cb\u767d",
+    "\u5f85\u67e5CK-MB",
+    "\u808c\u9499\u86cb\u767d\u5f85\u67e5",
+    "CK-MB\u5f85\u67e5",
+    "\u672a\u63d0\u4f9b\u808c\u9499\u86cb\u767d",
+    "\u672a\u63d0\u4f9b\u5fc3\u808c\u6807\u5fd7\u7269",
+    "\u6807\u5fd7\u7269\u672a\u56de\u62a5",
+    "\u5fc3\u808c\u6807\u5fd7\u7269\u7f3a\u5931",
+  ];
+  const markerKeywords = ["\u808c\u9499\u86cb\u767d", "cTn", "TnI", "TnT", "hs-cTn", "hsTn", "CK-MB", "CKMB", "CK MB", "\u5fc3\u808c\u6807\u5fd7\u7269", "\u808c\u9178\u6fc0\u9176\u540c\u5de5\u9176", "troponin"];
+  const resultKeywords = ["\u5347\u9ad8", "\u9633\u6027", "\u6b63\u5e38", "\u672a\u5347\u9ad8", "\u9634\u6027", "\u9ad8\u4e8e\u6b63\u5e38", "\u8d85\u8fc7\u6b63\u5e38", "\u7ed3\u679c\u56de\u62a5"];
+  const measurements = parseBiomarkerMeasurements(text);
+  const hasConcreteMeasurement = measurements.length > 0;
+  if (!hasConcreteMeasurement && containsAny(text, missingPatterns)) {
     return false;
   }
-  return containsAny(text, ["肌钙蛋白", "cTn", "CK-MB", "心肌标志物", "troponin"]);
+  const hasMarker = hasConcreteMeasurement || containsAny(text, markerKeywords) || TROPONIN_MARKER_PATTERN.test(text) || CKMB_MARKER_PATTERN.test(text);
+  const hasResult = containsAny(text, resultKeywords) || hasConcreteMeasurement || /\b\d+(?:\.\d+)?\s*(?:ng\/mL|ng\/L|pg\/mL|U\/L|IU\/L|ug\/L|\u03bcg\/L|\u00b5g\/L|mcg\/L)\b/i.test(text);
+  return hasMarker && hasResult;
 }
 
 function makeFrontendHaltResult(haltStep, reason, missingItems, graphPath) {
@@ -336,19 +476,25 @@ function inferIschemic(text) {
 }
 
 function inferStElevation(text) {
-  const positiveKeywords = ["ST段抬高", "ST抬高", "导联ST段抬高"];
-  const negativeKeywords = ["ST段压低", "T波倒置", "心电图正常", "无明显ST段抬高"];
+  const positiveKeywords = ["ST\u6bb5\u62ac\u9ad8", "ST\u62ac\u9ad8", "\u5bfc\u8054ST\u6bb5\u62ac\u9ad8", "\u5f13\u80cc\u5411\u4e0a\u62ac\u9ad8"];
+  const negativeKeywords = ["ST\u6bb5\u538b\u4f4e", "T\u6ce2\u5012\u7f6e", "\u5fc3\u7535\u56fe\u6b63\u5e38", "\u65e0\u660e\u663eST\u6bb5\u62ac\u9ad8", "\u672a\u89c1ST\u6bb5\u62ac\u9ad8", "ST\u6bb5\u672a\u62ac\u9ad8"];
   if (containsAny(text, positiveKeywords)) return true;
   if (containsAny(text, negativeKeywords)) return false;
-  return false;
+  return null;
 }
 
 function inferBiomarker(text) {
-  const positiveKeywords = ["肌钙蛋白", "CK-MB", "升高", "阳性", "高于正常"];
-  const negativeKeywords = ["肌钙蛋白正常", "CK-MB正常", "标志物正常", "未升高"];
-  if (containsAny(text, negativeKeywords)) return false;
-  if (containsAny(text, positiveKeywords) && containsAny(text, ["升高", "阳性", "ng/mL", "U/L"])) return true;
-  return false;
+  const positiveKeywords = ["\u808c\u9499\u86cb\u767d\u5347\u9ad8", "CK-MB\u5347\u9ad8", "\u5fc3\u808c\u6807\u5fd7\u7269\u5347\u9ad8", "\u9633\u6027", "\u9ad8\u4e8e\u6b63\u5e38", "\u8d85\u8fc7\u6b63\u5e38"];
+  const negativeKeywords = ["\u808c\u9499\u86cb\u767d\u6b63\u5e38", "CK-MB\u6b63\u5e38", "\u6807\u5fd7\u7269\u6b63\u5e38", "\u672a\u5347\u9ad8", "\u9634\u6027", "\u6b63\u5e38\u8303\u56f4"];
+  const measurements = parseBiomarkerMeasurements(text);
+  const hasPositiveKeyword = containsAny(text, positiveKeywords);
+  const hasNegativeKeyword = containsAny(text, negativeKeywords);
+
+  if (hasPositiveKeyword) return true;
+  if (measurements.some((item) => item.elevated === true)) return true;
+  if (hasNegativeKeyword) return false;
+  if (measurements.length > 0 && measurements.every((item) => item.elevated === false)) return false;
+  return null;
 }
 
 function boolLabel(value, fallback = "未判定") {
@@ -557,13 +703,14 @@ function buildReasons(text, decisions, result) {
 }
 
 function buildResultPathFromDiagnosis(diagnosis) {
-  if (isHaltDiagnosis(diagnosis)) return `诊断已暂停：${diagnosis}。请补充对应检查后再继续。`;
-  if (diagnosis === "其他") return "急性胸痛 → 非缺血性胸痛 → 其他";
-  if (diagnosis === "STEMI") return "急性胸痛 → 缺血性胸痛 → ST 段抬高 → 心肌标志物升高 → STEMI";
-  if (diagnosis === "变异型心绞痛" || diagnosis === "变异性心绞痛") return "急性胸痛 → 缺血性胸痛 → ST 段抬高 → 心肌标志物未升高 → 变异型心绞痛";
-  if (diagnosis === "NSTEMI") return "急性胸痛 → 缺血性胸痛 → 非 ST 段抬高 → 心肌标志物升高 → NSTEMI";
-  if (diagnosis === "UA") return "急性胸痛 → 缺血性胸痛 → 非 ST 段抬高 → 心肌标志物未升高 → UA";
-  return "请结合模型输出查看诊断路径。";
+  if (diagnosis === "\u6682\u505c\u5224\u8bfb") return "\u540e\u7aef\u6a21\u5f0f\u5df2\u4e2d\u6b62\u672c\u6b21\u81ea\u52a8\u8bca\u65ad\uff0c\u8bf7\u6062\u590d\u540e\u7aef\u670d\u52a1\u540e\u518d\u7ee7\u7eed\u3002";
+  if (isHaltDiagnosis(diagnosis)) return `\u8bca\u65ad\u5df2\u6682\u505c\uff1a${diagnosis}\u3002\u8bf7\u8865\u5145\u5bf9\u5e94\u68c0\u67e5\u540e\u518d\u7ee7\u7eed\u3002`;
+  if (diagnosis === "\u5176\u4ed6") return "\u6025\u6027\u80f8\u75db \u2192 \u975e\u7f3a\u8840\u6027\u80f8\u75db \u2192 \u5176\u4ed6";
+  if (diagnosis === "STEMI") return "\u6025\u6027\u80f8\u75db \u2192 \u7f3a\u8840\u6027\u80f8\u75db \u2192 ST \u6bb5\u62ac\u9ad8 \u2192 \u5fc3\u808c\u6807\u5fd7\u7269\u5347\u9ad8 \u2192 STEMI";
+  if (diagnosis === "\u53d8\u5f02\u578b\u5fc3\u7ede\u75db" || diagnosis === "\u53d8\u5f02\u6027\u5fc3\u7ede\u75db") return "\u6025\u6027\u80f8\u75db \u2192 \u7f3a\u8840\u6027\u80f8\u75db \u2192 ST \u6bb5\u62ac\u9ad8 \u2192 \u5fc3\u808c\u6807\u5fd7\u7269\u672a\u5347\u9ad8 \u2192 \u53d8\u5f02\u578b\u5fc3\u7ede\u75db";
+  if (diagnosis === "NSTEMI") return "\u6025\u6027\u80f8\u75db \u2192 \u7f3a\u8840\u6027\u80f8\u75db \u2192 \u975e ST \u6bb5\u62ac\u9ad8 \u2192 \u5fc3\u808c\u6807\u5fd7\u7269\u5347\u9ad8 \u2192 NSTEMI";
+  if (diagnosis === "UA") return "\u6025\u6027\u80f8\u75db \u2192 \u7f3a\u8840\u6027\u80f8\u75db \u2192 \u975e ST \u6bb5\u62ac\u9ad8 \u2192 \u5fc3\u808c\u6807\u5fd7\u7269\u672a\u5347\u9ad8 \u2192 UA";
+  return "\u8bf7\u7ed3\u5408\u6a21\u578b\u8f93\u51fa\u67e5\u770b\u8bca\u65ad\u8def\u5f84\u3002";
 }
 
 function populateReviewDiagnosisOptions(selectedDiagnosis = "") {
@@ -666,12 +813,12 @@ function renderTrainingStatus(data = null) {
   const recipes = data.recipes || [];
   const stats = data.stats || {};
 
-  trainingSummary.textContent = `当前已整理 ${summary.generated_patients || 0} 条病例、${summary.doctor_reviews || 0} 条医生复核记录，网页可直接展示 SFT / 偏好学习 / RL 数据准备结果。`;
+  trainingSummary.textContent = `当前已整理 ${summary.generated_patients || 0} 条病例、${summary.doctor_reviews || 0} 条医生复核记录，网页可直接展示监督微调、偏好学习和强化学习的数据准备结果。`;
   trainingPatientCount.textContent = summary.generated_patients ?? 0;
   trainingSftCount.textContent = summary.sft_total ?? 0;
   trainingPreferenceCount.textContent = summary.preference_total ?? 0;
   trainingRlCount.textContent = summary.rl_total ?? 0;
-  trainingPrepareStatus.textContent = `SFT ${summary.sft_total ?? 0} / 偏好 ${summary.preference_total ?? 0} / RL ${summary.rl_total ?? 0}，可直接用于论文实验设计。`;
+  trainingPrepareStatus.textContent = `监督微调 ${summary.sft_total ?? 0} / 偏好 ${summary.preference_total ?? 0} / 强化学习 ${summary.rl_total ?? 0}，可直接用于论文实验设计。`;
 
   trainingDatasetList.innerHTML = datasets.length
     ? datasets
@@ -700,7 +847,7 @@ function renderTrainingStatus(data = null) {
                 <strong>${recipe.name}</strong>
                 <span>${recipe.file}</span>
               </div>
-              <p>用于 SFT / 偏好学习 / RL 训练配置示例。</p>
+              <p>用于监督微调、偏好学习和强化学习的训练配置示例。</p>
               <a class="dataset-link" href="${recipe.download_url}" target="_blank" rel="noreferrer">查看配方</a>
             </article>
           `
@@ -717,7 +864,7 @@ function renderReasoningEnhancement(data = null) {
   const singleTurnReasoningSamples = data?.single_turn_reasoning_samples || [];
 
   if (!preprocessing) {
-    preprocessSummary.textContent = "完成一次后端分析后，这里会展示 note-style sections、结构化事实和证据覆盖情况。";
+    preprocessSummary.textContent = "完成一次后端分析后，这里会展示笔记式分段、结构化事实和证据覆盖情况。";
     noteStyleSections.innerHTML = "";
     structuredFactsList.innerHTML = "";
   } else {
@@ -756,7 +903,7 @@ function renderReasoningEnhancement(data = null) {
         <article class="fact-item">
           <strong>${fact.label}</strong>
           <p>${fact.evidence || "-"}</p>
-          <span>Step ${fact.stage}</span>
+          <span>第 ${fact.stage} 步</span>
         </article>
       `
     );
@@ -764,7 +911,7 @@ function renderReasoningEnhancement(data = null) {
   }
 
   if (!questionGainAnalysis || !trajectoryQuality) {
-    trajectoryQualitySummary.textContent = "这里会显示每轮提问的 SIG-lite 分数、轨迹质量和下一问建议。";
+    trajectoryQualitySummary.textContent = "这里会显示每轮提问的信息增益评分、轨迹质量和下一问建议。";
     trajectoryQualityList.innerHTML = "";
     questionGainList.innerHTML = "";
     nextQuestionList.innerHTML = "";
@@ -776,7 +923,7 @@ function renderReasoningEnhancement(data = null) {
         <p>步骤合规：${trajectoryQuality.step_compliance_score || 0}</p>
         <p>证据覆盖：${trajectoryQuality.coverage_score || 0}</p>
         <p>低冗余：${trajectoryQuality.redundancy_score || 0}</p>
-        <p>平均 SIG-lite：${trajectoryQuality.average_sig_lite_score || 0}</p>
+        <p>平均信息增益评分：${trajectoryQuality.average_sig_lite_score || 0}</p>
       </article>
     `;
 
@@ -785,7 +932,7 @@ function renderReasoningEnhancement(data = null) {
         (item) => `
           <article class="history-item">
             <div><strong>第 ${item.round} 轮</strong><span>${item.quality_label || "-"}</span></div>
-            <p>SIG-lite：${item.sig_lite_score || 0}</p>
+            <p>信息增益评分：${item.sig_lite_score || 0}</p>
             <p>${item.explanation || ""}</p>
             <p>新增事实：${(item.new_facts || []).map((fact) => fact.label).join("、") || "无"}</p>
           </article>
@@ -824,7 +971,7 @@ function renderReasoningEnhancement(data = null) {
           <p><strong>可见上下文：</strong>${sample.visible_context || "-"}</p>
           <p><strong>目标问题：</strong>${sample.target_question || "-"}</p>
           <p><strong>预期回答：</strong>${sample.expected_patient_answer || "-"}</p>
-          <p><strong>监督信号：</strong>${sample.supervision_signal?.question_value_label || "-"} / SIG-lite ${sample.supervision_signal?.sig_lite_score || 0}</p>
+          <p><strong>监督信号：</strong>${sample.supervision_signal?.question_value_label || "-"} / 信息增益评分 ${sample.supervision_signal?.sig_lite_score || 0}</p>
         </article>
       `
     )
@@ -950,7 +1097,7 @@ function saveApiSettings() {
   localStorage.setItem(STORAGE_KEYS.apiKey, apiKeyInput.value.trim());
   localStorage.setItem(STORAGE_KEYS.baseUrl, baseUrlInput.value.trim());
   localStorage.setItem(STORAGE_KEYS.model, modelInput.value.trim());
-  setServerStatus("已保存 API 设置，可直接发起后端分析", true);
+  setServerStatus("已保存接口设置，可直接发起后端分析", true);
 }
 
 function clearApiSettings() {
@@ -960,7 +1107,7 @@ function clearApiSettings() {
   apiKeyInput.value = "";
   baseUrlInput.value = "";
   modelInput.value = "gpt-4o-mini";
-  setServerStatus("已清除浏览器中的 API 设置", false);
+  setServerStatus("已清除浏览器中的接口设置", false);
 }
 
 function normalizeArtifactUrl(path) {
@@ -986,7 +1133,7 @@ function renderGraphArtifacts(artifacts) {
   const entries = [
     { key: "graph_json", label: "专有存储格式 .ckg.json" },
     { key: "mermaid", label: "Mermaid 图文件 .mmd" },
-    { key: "svg", label: "SVG 图谱图片" },
+    { key: "svg", label: "矢量图谱预览" },
     { key: "history", label: "图谱版本历史 .history.json" },
   ].filter((item) => artifacts[item.key]);
 
@@ -1073,12 +1220,40 @@ async function ingestMineruKnowledgeGraph() {
   renderGraphVersionInfo(data.version_info, data.history);
 }
 
+function buildBackendSafetyPayload(patientDescription, reason, recommendation) {
+  return {
+    case_id: `frontend_${Date.now()}`,
+    patient_description: patientDescription,
+    diagnosis: "\u6682\u505c\u5224\u8bfb",
+    status: "service_unavailable",
+    primary_method: "backend_required",
+    graph_path: { nodes: [], edges: [] },
+    intermediate_states: {
+      ischemic_chest_pain: null,
+      st_elevation: null,
+      biomarker_elevated: null,
+    },
+    steps: [],
+    halt_step: null,
+    reason,
+    missing_items: [],
+    recommendation,
+    diagnosis_path_text: "\u540e\u7aef\u6a21\u5f0f\u5df2\u4e2d\u6b62\u672c\u6b21\u81ea\u52a8\u8bca\u65ad\uff0c\u8bf7\u6062\u590d\u540e\u7aef\u670d\u52a1\u540e\u518d\u7ee7\u7eed\u3002",
+    confidence_text: "\u540e\u7aef\u5fc5\u9700",
+    activeUntil: "",
+    results: null,
+    case_replay: null,
+  };
+}
+
 function renderAnalysisPayload(data, reasons) {
   const diagnosis = data.diagnosis || "未知";
   const states = data.intermediate_states || {};
   const workflowTarget = data.status === "needs_more_data"
     ? data.halt_step === 1 ? "ischemic" : data.halt_step === 2 ? "st" : "biomarker"
-    : data.activeUntil || "final";
+    : data.status === "service_unavailable"
+      ? ""
+      : data.activeUntil || "final";
 
   diagnosisResult.textContent = diagnosis;
   diagnosisPath.textContent = data.diagnosis_path_text || buildResultPathFromDiagnosis(diagnosis);
@@ -1191,6 +1366,46 @@ function applyFrontendResult() {
 
     const inferredSt = inferStElevation(text);
     decisions.stElevation = normalizeChoice(stSelect.value, inferredSt);
+    if (decisions.stElevation === null) {
+      const haltResult = makeFrontendHaltResult(
+        2,
+        "\u7b2c\u4e8c\u6b65\u867d\u63d0\u5230\u4e86\u5fc3\u7535\u56fe\uff0c\u4f46\u73b0\u6709\u63cf\u8ff0\u4e0d\u8db3\u4ee5\u5224\u65ad\u662f\u5426\u5b58\u5728 ST \u6bb5\u62ac\u9ad8\u3002",
+        ["\u66f4\u660e\u786e\u7684\u5fc3\u7535\u56fe\u7ed3\u679c", "\u5bfc\u8054\u4e0e ST-T \u6539\u53d8\u63cf\u8ff0"],
+        { nodes: ["start", "ischemic_yes"], edges: ["start->ischemic_yes"] }
+      );
+      const payload = {
+        case_id: `frontend_${Date.now()}`,
+        patient_description: text,
+        diagnosis: haltResult.diagnosis,
+        status: "needs_more_data",
+        primary_method: "frontend_rule",
+        graph_path: haltResult.graphPath,
+        intermediate_states: {
+          ischemic_chest_pain: true,
+          st_elevation: null,
+          biomarker_elevated: null,
+        },
+        steps: [
+          { step: 1, question: "\u662f\u5426\u4e3a\u7f3a\u8840\u6027\u80f8\u75db\uff1f", answer: "\u662f" },
+          { step: 2, question: "ST \u6bb5\u662f\u5426\u62ac\u9ad8\uff1f", answer: "\u4fe1\u606f\u4e0d\u8db3" },
+        ],
+        halt_step: 2,
+        reason: haltResult.reason,
+        missing_items: haltResult.missingItems,
+        recommendation: haltResult.recommendation,
+        diagnosis_path_text: haltResult.path,
+        confidence_text: haltResult.confidence,
+        results: null,
+      };
+      payload.case_replay = buildFrontendReplay(text, decisions, {
+        diagnosis: payload.diagnosis,
+        haltStep: payload.halt_step,
+        reason: payload.reason,
+        recommendation: payload.recommendation,
+      });
+      renderAnalysisPayload(payload, [haltResult.reason, haltResult.recommendation]);
+      return;
+    }
 
     const biomarkerReady = biomarkerSelect.value !== "auto" || hasBiomarkerInfo(text);
     if (!biomarkerReady) {
@@ -1241,6 +1456,47 @@ function applyFrontendResult() {
 
     const inferredBiomarker = inferBiomarker(text);
     decisions.biomarkerElevated = normalizeChoice(biomarkerSelect.value, inferredBiomarker);
+    if (decisions.biomarkerElevated === null) {
+      const haltResult = makeFrontendHaltResult(
+        3,
+        "\u7b2c\u4e09\u6b65\u867d\u63d0\u5230\u4e86\u5fc3\u808c\u6807\u5fd7\u7269\uff0c\u4f46\u73b0\u6709\u63cf\u8ff0\u4e0d\u8db3\u4ee5\u5224\u65ad\u662f\u5426\u5347\u9ad8\u3002",
+        ["\u66f4\u5b8c\u6574\u7684\u808c\u9499\u86cb\u767d/CK-MB \u68c0\u67e5\u7ed3\u679c"],
+        getGraphPath({ ischemic: true, stElevation: decisions.stElevation, biomarkerElevated: false }, { diagnosis: "\u5f85\u8865\u5145\u5fc3\u808c\u6807\u5fd7\u7269\u68c0\u67e5", haltStep: 3 })
+      );
+      const payload = {
+        case_id: `frontend_${Date.now()}` ,
+        patient_description: text,
+        diagnosis: haltResult.diagnosis,
+        status: "needs_more_data",
+        primary_method: "frontend_rule",
+        graph_path: haltResult.graphPath,
+        intermediate_states: {
+          ischemic_chest_pain: true,
+          st_elevation: decisions.stElevation,
+          biomarker_elevated: null,
+        },
+        steps: [
+          { step: 1, question: "\u662f\u5426\u4e3a\u7f3a\u8840\u6027\u80f8\u75db\uff1f", answer: "\u662f" },
+          { step: 2, question: "ST \u6bb5\u662f\u5426\u62ac\u9ad8\uff1f", answer: boolLabel(decisions.stElevation) },
+          { step: 3, question: "\u5fc3\u808c\u6807\u5fd7\u7269\u662f\u5426\u5347\u9ad8\uff1f", answer: "\u4fe1\u606f\u4e0d\u8db3" },
+        ],
+        halt_step: 3,
+        reason: haltResult.reason,
+        missing_items: haltResult.missingItems,
+        recommendation: haltResult.recommendation,
+        diagnosis_path_text: haltResult.path,
+        confidence_text: haltResult.confidence,
+        results: null,
+      };
+      payload.case_replay = buildFrontendReplay(text, decisions, {
+        diagnosis: payload.diagnosis,
+        haltStep: payload.halt_step,
+        reason: payload.reason,
+        recommendation: payload.recommendation,
+      });
+      renderAnalysisPayload(payload, [haltResult.reason, haltResult.recommendation]);
+      return;
+    }
   }
 
   const result = deriveDiagnosis(decisions);
@@ -1336,11 +1592,11 @@ async function checkBackendHealth() {
       modelInput.value = data.default_model;
     }
     if (data.api_key_configured) {
-      setServerStatus("后端在线，已检测到服务端默认 API 配置", true);
+      setServerStatus("后端在线，已检测到服务端默认接口配置", true);
     } else if (data.accepts_runtime_api_settings) {
-      setServerStatus("后端在线，请在网页中填写 API Key", true);
+      setServerStatus("后端在线，请在网页中填写接口密钥", true);
     } else {
-      setServerStatus("后端在线，但未配置可用 API", false);
+      setServerStatus("后端在线，但未配置可用接口", false);
     }
     loadRecentReviews();
     loadTrainingStatus();
@@ -1392,7 +1648,7 @@ async function prepareTrainingDataArtifacts() {
     throw new Error("后端未连接，无法生成训练数据。");
   }
 
-  trainingPrepareStatus.textContent = "正在重新生成 SFT / 偏好学习 / RL 数据...";
+  trainingPrepareStatus.textContent = "正在重新生成监督微调、偏好学习和强化学习数据...";
   const response = await fetch("/api/training/prepare", {
     method: "POST",
     headers: {
@@ -1522,15 +1778,36 @@ async function runBackendDiagnosis() {
 
 async function runDiagnosis() {
   const useBackend = analysisModeSelect.value === "backend";
+  const patientDescription = descriptionInput.value.trim();
 
-  if (useBackend && state.backendAvailable) {
+  if (useBackend) {
+    if (!state.backendAvailable) {
+      const payload = buildBackendSafetyPayload(
+        patientDescription,
+        "\u540e\u7aef\u672a\u8fde\u63a5\uff0c\u5df2\u505c\u6b62\u81ea\u52a8\u8bca\u65ad\uff0c\u907f\u514d\u5728\u79bb\u7ebf\u72b6\u6001\u4e0b\u81ea\u52a8\u56de\u9000\u5230\u524d\u7aef\u89c4\u5219\u3002",
+        "\u8bf7\u6062\u590d\u540e\u7aef\u670d\u52a1\u540e\u91cd\u65b0\u53d1\u8d77\u8bca\u65ad\uff1b\u5982\u5fc5\u987b\u79bb\u7ebf\u4f7f\u7528\uff0c\u8bf7\u7531\u533b\u751f\u660e\u786e\u5207\u6362\u5230\u524d\u7aef\u79bb\u7ebf\u89c4\u5219\u6a21\u5f0f\uff0c\u8be5\u6a21\u5f0f\u9047\u5230\u5fc3\u7535\u56fe\u6216\u5fc3\u808c\u6807\u5fd7\u7269\u7f3a\u5931\u65f6\u4f1a\u4e2d\u6b62\u8bca\u65ad\u3002"
+      );
+      setServerStatus("\u540e\u7aef\u672a\u8fde\u63a5\uff0c\u5df2\u963b\u6b62\u81ea\u52a8\u5207\u6362\u5230\u524d\u7aef\u89c4\u5219", false);
+      renderAnalysisPayload(payload, [payload.reason, payload.recommendation]);
+      return;
+    }
+
     try {
-      confidenceChip.textContent = "后端分析中...";
+      confidenceChip.textContent = "\u540e\u7aef\u5206\u6790\u4e2d...";
       const data = await runBackendDiagnosis();
       applyBackendResult(data);
       return;
     } catch (error) {
-      setServerStatus("后端失败，已切换前端规则", false);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error("\u540e\u7aef\u8bca\u65ad\u8c03\u7528\u5931\u8d25\uff1a", error);
+      const payload = buildBackendSafetyPayload(
+        patientDescription,
+        `\u540e\u7aef\u8bca\u65ad\u5931\u8d25\uff1a${errorMessage}` ,
+        "\u5df2\u505c\u6b62\u81ea\u52a8\u56de\u9000\u5230\u524d\u7aef\u89c4\u5219\uff0c\u8bf7\u68c0\u67e5\u540e\u7aef\u670d\u52a1\u3001\u6a21\u578b\u540d\u3001\u7f51\u7edc\u548c\u63a5\u53e3\u914d\u7f6e\u540e\u91cd\u8bd5\u3002\u5982\u9700\u79bb\u7ebf\u5224\u65ad\uff0c\u53ef\u624b\u52a8\u5207\u6362\u5230\u524d\u7aef\u79bb\u7ebf\u89c4\u5219\u6a21\u5f0f\u3002"
+      );
+      setServerStatus(`\u540e\u7aef\u8bca\u65ad\u5931\u8d25\uff0c\u5df2\u505c\u6b62\u81ea\u52a8\u964d\u7ea7\uff1a${errorMessage}`, false);
+      renderAnalysisPayload(payload, [payload.reason, payload.recommendation]);
+      return;
     }
   }
 

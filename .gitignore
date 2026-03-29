@@ -26,3 +26,6 @@ CLAUDE.md
 # OS
 .DS_Store
 Thumbs.db
+
+# Privacy
+/data
