@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
-from methods import (
+from backend.methods import (
     direct_diagnosis,
     direct_generation_diagnosis,
     intermediate_state_diagnosis,
