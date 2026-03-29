@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import hashlib
@@ -13,7 +13,7 @@ from .clinical_reasoning_enhancer import build_reasoning_enhancement_bundle
 DEFAULT_RAW_INPUT = Path("generated_data/patients_before_process.jsonl")
 DEFAULT_PROCESSED_OUTPUT = Path("generated_data/patients.jsonl")
 DEFAULT_PROCESSED_INPUT = Path("generated_data/patients.jsonl")
-DEFAULT_TRANSITIONS_PATH = Path("transitions.json")
+DEFAULT_TRANSITIONS_PATH = Path("config/transitions.json")
 DEFAULT_KNOWLEDGE_GRAPH_DIR = Path("knowledge_graph")
 
 CATEGORY_LABELS = {

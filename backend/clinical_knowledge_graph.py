@@ -1,4 +1,4 @@
-"""
+﻿"""
 临床知识图谱构建与导出模块。
 
 能力：
@@ -666,7 +666,7 @@ def get_exported_graph_status(
 
 if __name__ == "__main__":
     artifacts = build_and_export_graph(
-        transitions_path=Path("transitions.json"),
+        transitions_path=Path("config/transitions.json"),
         output_dir=Path("knowledge_graph"),
     )
     print(json.dumps(artifacts, ensure_ascii=False, indent=2))

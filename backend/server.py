@@ -1,4 +1,4 @@
-"""
+﻿"""
 Flask 后端：提供静态页面、模型诊断 API、病例回放、医生复核、知识图谱版本管理与诊断报告导出。
 """
 
@@ -43,7 +43,7 @@ KNOWLEDGE_GRAPH_DIR = ROOT_DIR / "knowledge_graph"
 RESULTS_DIR = ROOT_DIR / "results"
 REPORTS_DIR = RESULTS_DIR / "reports"
 REVIEWS_PATH = RESULTS_DIR / "doctor_reviews.jsonl"
-TRANSITIONS_PATH = ROOT_DIR / "transitions.json"
+TRANSITIONS_PATH = ROOT_DIR / "config" / "transitions.json"
 GENERATED_DATA_PATH = ROOT_DIR / "generated_data" / "patients.jsonl"
 TRAINING_DATA_DIR = ROOT_DIR / "training_data"
 TRAINING_CONFIGS_DIR = ROOT_DIR / "training_configs"
