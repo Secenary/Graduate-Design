@@ -1,0 +1,44 @@
+﻿### model
+model_name_or_path: Qwen/Qwen2.5-14B-Instruct
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+do_eval: true
+finetuning_type: lora
+lora_target: q_proj,v_proj,k_proj,o_proj,gate_proj,up_proj,down_proj
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.05
+
+### dataset
+dataset_dir: training_data
+dataset: fuwai_term_matching_train
+eval_dataset: fuwai_term_matching_val
+template: qwen
+cutoff_len: 1536
+overwrite_cache: true
+preprocessing_num_workers: 4
+
+### output
+output_dir: checkpoints/qwen25_14b_term_matching_lora
+logging_steps: 10
+save_steps: 50
+eval_steps: 50
+plot_loss: true
+overwrite_output_dir: true
+save_total_limit: 2
+report_to: none
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+learning_rate: 5.0e-5
+num_train_epochs: 5.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+
+### quantization
+quantization_bit: 4

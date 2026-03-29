@@ -1,4 +1,4 @@
-# 项目说明
+﻿# 项目说明
 
 本项目面向急性胸痛/急性冠脉综合征场景，包含网页演示、后端诊断接口、知识图谱构建与增强，以及训练数据准备与评估脚本。
 
@@ -44,6 +44,7 @@ fuwai/
 ```bash
 python -m scripts.generate_data
 python -m scripts.prepare_training_data
+python -m scripts.prepare_term_matching_data
 python -m scripts.process_patient_cases
 python -m scripts.evals
 python -m scripts.eval_cardiovascular
@@ -53,8 +54,19 @@ python -m scripts.eval_cardiovascular
 
 ```bash
 python -m scripts.prepare_training_data --input generated_data/patients.jsonl --output-dir training_data --review-path results/doctor_reviews.jsonl
+python -m scripts.prepare_term_matching_data --case-dir data --state-path results/kg_enhancement_state.json
 python -m scripts.evals --sample 20 --methods direct,direct_generation,intermediate_state,step_by_step,full_workflow
 ```
+
+## 微调入口
+
+术语匹配微调默认走 Qwen2.5-14B-Instruct + LLaMA-Factory：
+
+- 数据构造：`python -m scripts.prepare_term_matching_data`
+- 数据来源：`data/` 原始病例 + 知识图谱实体/同义词 + 审核状态
+- 单卡训练：`bash scripts/run_qwen25_14b_term_matching_single_gpu.sh`
+- Slurm 提交：`sbatch scripts/submit_qwen25_14b_term_matching_a100.slurm`
+- 训练配置：`training_configs/llamafactory_qwen25_14b_term_matching.yaml`
 
 ## 环境变量
 

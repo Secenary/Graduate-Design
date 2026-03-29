@@ -54,5 +54,33 @@
       "assistant_tag": "assistant",
       "system_tag": "system"
     }
+  },
+  "fuwai_term_matching_train": {
+    "file_name": "sft_term_matching_train.jsonl",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "fuwai_term_matching_val": {
+    "file_name": "sft_term_matching_val.jsonl",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
   }
 }

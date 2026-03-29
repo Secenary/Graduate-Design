@@ -1,0 +1,23 @@
+﻿experiment_name: chestpain_sft_term_matching
+stage: sft
+objective: train_term_to_entity_matcher
+input_file: training_data/sft_term_matching_train.jsonl
+validation_file: training_data/sft_term_matching_val.jsonl
+base_model: Qwen2.5-14B-Instruct
+target_capability:
+  - candidate_based_term_matching
+  - no_match_rejection
+  - review_list_reranking
+suggested_hyperparameters:
+  learning_rate: 5.0e-5
+  num_train_epochs: 5
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  max_seq_length: 1536
+  lora_rank: 16
+  quantization_bit: 4
+output_dir: checkpoints/qwen25_14b_term_matching_lora
+notes:
+  - 先运行 python -m scripts.prepare_term_matching_data 生成数据。
+  - 该任务更像候选实体选择，不建议直接训练自由生成诊断。
+  - 当前人工审核样本很少，主要依赖 KG 别名、同义词组和少量审核记录构造第一版数据。

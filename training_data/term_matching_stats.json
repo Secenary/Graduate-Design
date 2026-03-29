@@ -1,0 +1,25 @@
+{
+  "kg_path": "F:\\fuwai\\knowledge_graph\\kg_急性胸痛临床评估与诊断流程_enhanced.ckg.json",
+  "state_path": "results\\kg_enhancement_state.json",
+  "case_dir": "F:\\fuwai\\data",
+  "entity_count": 16,
+  "review_term_count": 66,
+  "example_count": 487,
+  "train_count": 439,
+  "val_count": 48,
+  "max_candidates": 6,
+  "max_case_positive_per_entity": 40,
+  "case_negative_limit": 80,
+  "label_source_counts": {
+    "case_auto_negative": 80,
+    "case_weak_positive": 308,
+    "kg_surface_form": 73,
+    "review_pending_negative": 24,
+    "reviewed_negative": 1,
+    "reviewed_positive": 1
+  },
+  "output_files": {
+    "train": "F:\\fuwai\\training_data\\sft_term_matching_train.jsonl",
+    "val": "F:\\fuwai\\training_data\\sft_term_matching_val.jsonl"
+  }
+}
