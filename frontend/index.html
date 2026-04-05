@@ -1,13 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>急性胸痛临床决策支持系统</title>
+  <title>深圳阜外医院临床决策工作台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shell.css">
 </head>
 <body>
   <div class="page-shell">
@@ -106,8 +107,8 @@
               <label>
                 <span>后端方法</span>
                 <select id="backend-method">
-                  <option value="all_methods">全部方法并行</option>
-                  <option value="step_by_step">逐步引导</option>
+                  <option value="step_by_step">逐步引导（推荐）</option>
+                  <option value="all_methods">全部方法并行（较慢）</option>
                   <option value="direct">直接诊断</option>
                   <option value="direct_generation">直接生成</option>
                   <option value="intermediate_state">中间状态</option>
@@ -557,6 +558,8 @@
 
   <script src="app.js"></script>
   <script src="kg-enhancement.js"></script>
+  <script src="shell.js"></script>
 </body>
 </html>
+
 

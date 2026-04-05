@@ -1,0 +1,102 @@
+{
+  "workflow_name": "脑卒中急诊分诊流程",
+  "nodes": [
+    {
+      "id": "stroke_01",
+      "type": "状态节点",
+      "content": "患者主体, 神经系统症状, 脑卒中绿色通道入口, 待编辑知识图谱"
+    },
+    {
+      "id": "stroke_02",
+      "type": "判断节点",
+      "content": "是否存在 FAST 阳性、偏瘫、失语或其他局灶神经功能缺损？"
+    },
+    {
+      "id": "stroke_03",
+      "type": "状态节点",
+      "content": "疑似脑卒中表现, 待补充 NIHSS 与神经查体节点"
+    },
+    {
+      "id": "stroke_04",
+      "type": "状态节点",
+      "content": "非典型卒中表现, 等待编辑鉴别诊断分支"
+    },
+    {
+      "id": "stroke_05",
+      "type": "判断节点",
+      "content": "是否明确发病时间窗或最后正常时间？"
+    },
+    {
+      "id": "stroke_06",
+      "type": "判断节点",
+      "content": "是否已完成头颅 CT / CTA 或 MRI 结果判读？"
+    },
+    {
+      "id": "stroke_07",
+      "type": "状态节点",
+      "content": "待补充发病时间信息, 等待编辑时间窗判断逻辑"
+    },
+    {
+      "id": "stroke_08",
+      "type": "状态节点",
+      "content": "待补充神经影像检查, 等待编辑出血与闭塞分支"
+    },
+    {
+      "id": "stroke_09",
+      "type": "状态节点",
+      "content": "静脉溶栓评估通道, 待编辑禁忌证与评分节点"
+    },
+    {
+      "id": "stroke_10",
+      "type": "状态节点",
+      "content": "机械取栓 / 综合救治待编辑, 可继续补入 LVO 与术后监护分支"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "stroke_01",
+      "to": "stroke_02",
+      "condition": null
+    },
+    {
+      "from": "stroke_02",
+      "to": "stroke_03",
+      "condition": "是"
+    },
+    {
+      "from": "stroke_02",
+      "to": "stroke_04",
+      "condition": "否"
+    },
+    {
+      "from": "stroke_03",
+      "to": "stroke_05",
+      "condition": null
+    },
+    {
+      "from": "stroke_05",
+      "to": "stroke_06",
+      "condition": "已明确"
+    },
+    {
+      "from": "stroke_05",
+      "to": "stroke_07",
+      "condition": "待补充"
+    },
+    {
+      "from": "stroke_06",
+      "to": "stroke_09",
+      "condition": "符合溶栓评估"
+    },
+    {
+      "from": "stroke_06",
+      "to": "stroke_10",
+      "condition": "需取栓/综合救治"
+    },
+    {
+      "from": "stroke_06",
+      "to": "stroke_08",
+      "condition": "影像未完成"
+    }
+  ]
+}

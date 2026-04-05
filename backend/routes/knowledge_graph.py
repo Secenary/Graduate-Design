@@ -3,14 +3,14 @@ from pathlib import Path
 from flask import Blueprint, jsonify, request
 
 from ..server import (
+    DEFAULT_WORKFLOW_ID,
     KNOWLEDGE_GRAPH_DIR,
     ROOT_DIR,
-    TRANSITIONS_PATH,
     _collect_mineru_options,
-    _merge_mineru_graph_payload,
     _resolve_mineru_token,
     build_and_export_graph,
     get_exported_graph_status,
+    get_workflow_definition,
     normalize_graph_response,
     parse_uploaded_file,
     parse_url_document,
@@ -20,16 +20,57 @@ from ..server import (
 
 bp = Blueprint("knowledge_graph_routes", __name__)
 
+
+def serialize_workflow_definition(definition):
+    config_path = Path(definition["config_path"])
+    return {
+        "workflow_id": definition["workflow_id"],
+        "name": definition["name"],
+        "specialty": definition.get("specialty", ""),
+        "status": definition.get("status", "draft"),
+        "relative_config_path": definition.get("relative_config_path", str(config_path)),
+    }
+
+
+def resolve_workflow_definition(payload=None):
+    workflow_id = None
+    if isinstance(payload, dict):
+        workflow_id = payload.get("workflow_id")
+    workflow_id = workflow_id or request.args.get("workflow_id") or request.form.get("workflow_id")
+    try:
+        return get_workflow_definition(workflow_id)
+    except KeyError as exc:
+        raise ValueError(f"未知 workflow_id: {workflow_id or DEFAULT_WORKFLOW_ID}") from exc
+
+
+def with_workflow_metadata(response_payload, workflow):
+    return {**response_payload, "workflow": serialize_workflow_definition(workflow)}
+
+
+def build_graph_payload(workflow, mineru_payload=None, mineru_title="MinerU Clinical Document"):
+    return normalize_graph_response(
+        build_and_export_graph(
+            transitions_path=workflow["config_path"],
+            output_dir=KNOWLEDGE_GRAPH_DIR,
+            mineru_payload=mineru_payload,
+            mineru_title=mineru_title,
+        )
+    )
+
+
 @bp.get("/api/knowledge-graph/status")
 def knowledge_graph_status():
     try:
-        status = get_exported_graph_status(TRANSITIONS_PATH, KNOWLEDGE_GRAPH_DIR)
+        workflow = resolve_workflow_definition()
+        status = get_exported_graph_status(workflow["config_path"], KNOWLEDGE_GRAPH_DIR)
         if status.get("artifacts"):
             status["artifacts"] = {
                 key: to_web_path(value) if value else ""
                 for key, value in status["artifacts"].items()
             }
-        return jsonify({"ok": True, **status})
+        return jsonify(with_workflow_metadata({"ok": True, **status}, workflow))
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
     except Exception as exc:
         return jsonify({"ok": False, "error": f"知识图谱状态读取失败: {exc}"}), 500
 
@@ -37,19 +78,15 @@ def knowledge_graph_status():
 @bp.get("/api/knowledge-graph/build")
 def build_knowledge_graph():
     try:
-        graph_payload = normalize_graph_response(
-            build_and_export_graph(
-                transitions_path=TRANSITIONS_PATH,
-                output_dir=KNOWLEDGE_GRAPH_DIR,
-            )
-        )
-        return jsonify(
-            {
-                "ok": True,
-                "message": "已根据当前临床流程生成基础知识图谱。",
-                **graph_payload,
-            }
-        )
+        workflow = resolve_workflow_definition()
+        graph_payload = build_graph_payload(workflow)
+        return jsonify(with_workflow_metadata({
+            "ok": True,
+            "message": f"已根据 {workflow['name']} 生成基础知识图谱。",
+            **graph_payload,
+        }, workflow))
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
     except Exception as exc:
         return jsonify({"ok": False, "error": f"知识图谱生成失败: {exc}"}), 500
 
@@ -64,28 +101,22 @@ def ingest_mineru_knowledge_graph():
         return jsonify({"ok": False, "error": "mineru_payload 不能为空"}), 400
 
     try:
-        graph_payload = normalize_graph_response(
-            build_and_export_graph(
-                transitions_path=TRANSITIONS_PATH,
-                output_dir=KNOWLEDGE_GRAPH_DIR,
-                mineru_payload=mineru_payload,
-                mineru_title=title,
-            )
-        )
-        return jsonify(
-            {
-                "ok": True,
-                "message": "已将 MinerU 文档解析结果合并进知识图谱。",
-                **graph_payload,
-            }
-        )
+        workflow = resolve_workflow_definition(payload)
+        graph_payload = build_graph_payload(workflow, mineru_payload=mineru_payload, mineru_title=title)
+        return jsonify(with_workflow_metadata({
+            "ok": True,
+            "message": f"已将 MinerU 结果合并到 {workflow['name']} 知识图谱。",
+            **graph_payload,
+        }, workflow))
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
     except Exception as exc:
         return jsonify({"ok": False, "error": f"MinerU 图谱更新失败: {exc}"}), 500
+
 
 @bp.post("/api/knowledge-graph/mineru-url")
 @bp.post("/api/knowledge-graph/mineru-agent-url")
 def ingest_mineru_url():
-    """通过 MinerU v4 URL 解析文档并合并到知识图谱。"""
     payload = request.get_json(silent=True) or {}
     source_url = str(payload.get("url", "")).strip()
     title = str(payload.get("title", "")).strip() or "MinerU URL Document"
@@ -97,27 +128,28 @@ def ingest_mineru_url():
         return jsonify({"ok": False, "error": "未提供 MinerU token，且服务端未配置 MINERU_API_TOKEN"}), 400
 
     try:
+        workflow = resolve_workflow_definition(payload)
         import_result = parse_url_document(
             token,
             source_url,
             options=_collect_mineru_options(payload),
         )
-        graph_payload = _merge_mineru_graph_payload(import_result["payload"], title)
-        return jsonify(
-            {
-                "ok": True,
-                "message": "已按 MinerU v4 文档解析远程文档并合并到知识图谱。",
-                "mineru_job": {
-                    "mode": "url",
-                    "task_id": import_result["task_id"],
-                    "state": import_result["task_result"].get("state"),
-                    "source_url": source_url,
-                    "full_zip_url": import_result["full_zip_url"],
-                },
-                "mineru_payload_summary": import_result["payload_summary"],
-                **graph_payload,
-            }
-        )
+        graph_payload = build_graph_payload(workflow, mineru_payload=import_result["payload"], mineru_title=title)
+        return jsonify(with_workflow_metadata({
+            "ok": True,
+            "message": f"已按 MinerU v4 远程文档解析并更新 {workflow['name']} 图谱。",
+            "mineru_job": {
+                "mode": "url",
+                "task_id": import_result["task_id"],
+                "state": import_result["task_result"].get("state"),
+                "source_url": source_url,
+                "full_zip_url": import_result["full_zip_url"],
+            },
+            "mineru_payload_summary": import_result["payload_summary"],
+            **graph_payload,
+        }, workflow))
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
     except MinerUError as exc:
         return jsonify({"ok": False, "error": f"MinerU URL 解析失败: {exc}"}), 500
     except Exception as exc:
@@ -127,7 +159,6 @@ def ingest_mineru_url():
 @bp.post("/api/knowledge-graph/mineru-file")
 @bp.post("/api/knowledge-graph/mineru-agent-file")
 def ingest_mineru_file():
-    """通过 MinerU v4 文件上传解析文档并合并到知识图谱。"""
     form_payload = request.form.to_dict() if request.form else {}
     json_payload = request.get_json(silent=True) or {}
     payload = {**json_payload, **form_payload}
@@ -161,28 +192,29 @@ def ingest_mineru_file():
     title = str(payload.get("title", "")).strip() or file_name or "MinerU Upload Document"
 
     try:
+        workflow = resolve_workflow_definition(payload)
         import_result = parse_uploaded_file(
             token,
             file_name,
             file_bytes,
             options=_collect_mineru_options(payload),
         )
-        graph_payload = _merge_mineru_graph_payload(import_result["payload"], title)
-        return jsonify(
-            {
-                "ok": True,
-                "message": "已按 MinerU v4 文档上传文件、完成解析并合并到知识图谱。",
-                "mineru_job": {
-                    "mode": "file",
-                    "batch_id": import_result["batch_id"],
-                    "state": import_result["task_result"].get("state"),
-                    "file_name": file_name,
-                    "full_zip_url": import_result["full_zip_url"],
-                },
-                "mineru_payload_summary": import_result["payload_summary"],
-                **graph_payload,
-            }
-        )
+        graph_payload = build_graph_payload(workflow, mineru_payload=import_result["payload"], mineru_title=title)
+        return jsonify(with_workflow_metadata({
+            "ok": True,
+            "message": f"已按 MinerU v4 上传文档并更新 {workflow['name']} 图谱。",
+            "mineru_job": {
+                "mode": "file",
+                "batch_id": import_result["batch_id"],
+                "state": import_result["task_result"].get("state"),
+                "file_name": file_name,
+                "full_zip_url": import_result["full_zip_url"],
+            },
+            "mineru_payload_summary": import_result["payload_summary"],
+            **graph_payload,
+        }, workflow))
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
     except MinerUError as exc:
         return jsonify({"ok": False, "error": f"MinerU 文件解析失败: {exc}"}), 500
     except Exception as exc:

@@ -1,114 +1,187 @@
 {
-  "workflow_name": "急性胸痛临床评估与诊断流程",
   "nodes": [
     {
+      "content": "患者/主体, 临床表现, 急性胸痛/症状",
       "id": "node_01",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 急性胸痛/症状"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 缺血性胸痛症状, 询问症状",
       "id": "node_02",
-      "type": "判断节点",
-      "content": "患者/主体, 临床表现, 缺血性胸痛症状, 询问症状"
+      "type": "判断节点"
     },
     {
+      "content": "患者/主体, 临床表现, 缺血性胸痛/症状",
       "id": "node_03",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 缺血性胸痛/症状"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 非缺血性胸痛/症状",
       "id": "node_04",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 非缺血性胸痛/症状"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, ST段抬高/临床发现, 心电图检查",
       "id": "node_05",
-      "type": "判断节点",
-      "content": "患者/主体, 临床表现, ST段抬高/临床发现, 心电图检查"
+      "type": "判断节点"
     },
     {
+      "content": "患者/主体, 临床表现, ST段抬高/临床发现",
       "id": "node_06",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, ST段抬高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 非ST段抬高/临床发现",
       "id": "node_07",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 非ST段抬高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测",
       "id": "node_08",
-      "type": "判断节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测"
+      "type": "判断节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测",
       "id": "node_09",
-      "type": "判断节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现, 心肌损伤标志物检测"
+      "type": "判断节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现",
       "id": "node_10",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现",
       "id": "node_11",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现",
       "id": "node_12",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物升高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现",
       "id": "node_13",
-      "type": "状态节点",
-      "content": "患者/主体, 临床表现, 心肌损伤标志物未升高/临床发现"
+      "type": "状态节点"
     },
     {
+      "content": "最终诊断: STEMI: 急性ST段抬高心肌梗死",
       "id": "node_14",
-      "type": "状态节点",
-      "content": "最终诊断: STEMI: 急性ST段抬高心肌梗死"
+      "type": "状态节点"
     },
     {
+      "content": "最终诊断: 变异性心绞痛",
       "id": "node_15",
-      "type": "状态节点",
-      "content": "最终诊断: 变异性心绞痛"
+      "type": "状态节点"
     },
     {
+      "content": "最终诊断: NSTEMI: 急性非ST段抬高心肌梗死",
       "id": "node_16",
-      "type": "状态节点",
-      "content": "最终诊断: NSTEMI: 急性非ST段抬高心肌梗死"
+      "type": "状态节点"
     },
     {
+      "content": "最终诊断: UA: 不稳定型心绞痛",
       "id": "node_17",
-      "type": "状态节点",
-      "content": "最终诊断: UA: 不稳定型心绞痛"
+      "type": "状态节点"
     },
     {
+      "content": "最终诊断: 其他",
       "id": "node_18",
+      "type": "状态节点"
+    },
+    {
+      "id": "node_1775115832306",
       "type": "状态节点",
-      "content": "最终诊断: 其他"
+      "content": "新节点"
     }
   ],
   "transitions": [
-    { "from": "node_01", "to": "node_02", "condition": null },
-    { "from": "node_02", "to": "node_03", "condition": "是" },
-    { "from": "node_02", "to": "node_04", "condition": "否" },
-    { "from": "node_03", "to": "node_05", "condition": null },
-    { "from": "node_04", "to": "node_18", "condition": null },
-    { "from": "node_05", "to": "node_06", "condition": "是" },
-    { "from": "node_05", "to": "node_07", "condition": "否" },
-    { "from": "node_06", "to": "node_08", "condition": null },
-    { "from": "node_07", "to": "node_09", "condition": null },
-    { "from": "node_08", "to": "node_10", "condition": "是" },
-    { "from": "node_08", "to": "node_11", "condition": "否" },
-    { "from": "node_09", "to": "node_12", "condition": "是" },
-    { "from": "node_09", "to": "node_13", "condition": "否" },
-    { "from": "node_10", "to": "node_14", "condition": null },
-    { "from": "node_11", "to": "node_15", "condition": null },
-    { "from": "node_12", "to": "node_16", "condition": null },
-    { "from": "node_13", "to": "node_17", "condition": null }
-  ]
+    {
+      "condition": null,
+      "from": "node_01",
+      "to": "node_02"
+    },
+    {
+      "condition": "是",
+      "from": "node_02",
+      "to": "node_03"
+    },
+    {
+      "condition": "否",
+      "from": "node_02",
+      "to": "node_04"
+    },
+    {
+      "condition": null,
+      "from": "node_03",
+      "to": "node_05"
+    },
+    {
+      "condition": null,
+      "from": "node_04",
+      "to": "node_18"
+    },
+    {
+      "condition": "是",
+      "from": "node_05",
+      "to": "node_06"
+    },
+    {
+      "condition": "否",
+      "from": "node_05",
+      "to": "node_07"
+    },
+    {
+      "condition": null,
+      "from": "node_06",
+      "to": "node_08"
+    },
+    {
+      "condition": null,
+      "from": "node_07",
+      "to": "node_09"
+    },
+    {
+      "condition": "是",
+      "from": "node_08",
+      "to": "node_10"
+    },
+    {
+      "condition": "否",
+      "from": "node_08",
+      "to": "node_11"
+    },
+    {
+      "condition": "是",
+      "from": "node_09",
+      "to": "node_12"
+    },
+    {
+      "condition": "否",
+      "from": "node_09",
+      "to": "node_13"
+    },
+    {
+      "condition": null,
+      "from": "node_10",
+      "to": "node_14"
+    },
+    {
+      "condition": null,
+      "from": "node_11",
+      "to": "node_15"
+    },
+    {
+      "condition": null,
+      "from": "node_12",
+      "to": "node_16"
+    },
+    {
+      "condition": null,
+      "from": "node_13",
+      "to": "node_17"
+    }
+  ],
+  "workflow_name": "急性胸痛临床评估与诊断流程"
 }

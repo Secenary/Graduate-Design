@@ -1,0 +1,107 @@
+{
+  "workflow_name": "急性腹痛临床分诊流程",
+  "nodes": [
+    {
+      "id": "abd_01",
+      "type": "状态节点",
+      "content": "患者主体, 临床表现, 急性腹痛主诉, 待编辑知识图谱入口"
+    },
+    {
+      "id": "abd_02",
+      "type": "判断节点",
+      "content": "是否存在腹膜刺激征、持续加重腹痛或休克征象？"
+    },
+    {
+      "id": "abd_03",
+      "type": "状态节点",
+      "content": "高危外科急腹症表现, 待补充手术与会诊路径"
+    },
+    {
+      "id": "abd_04",
+      "type": "状态节点",
+      "content": "相对稳定腹痛表现, 待补充内外科联合分诊路径"
+    },
+    {
+      "id": "abd_05",
+      "type": "判断节点",
+      "content": "是否已有血常规、CRP、淀粉酶或肝胆胰基础化验结果？"
+    },
+    {
+      "id": "abd_06",
+      "type": "判断节点",
+      "content": "是否已有腹部超声、CT 或增强影像结果？"
+    },
+    {
+      "id": "abd_07",
+      "type": "状态节点",
+      "content": "待补充腹痛实验室检查, 等待编辑具体指标节点"
+    },
+    {
+      "id": "abd_08",
+      "type": "状态节点",
+      "content": "待补充腹部影像检查, 等待编辑超声与 CT 结果分支"
+    },
+    {
+      "id": "abd_09",
+      "type": "状态节点",
+      "content": "外科会诊 / 手术评估通道, 等待编辑围术期节点"
+    },
+    {
+      "id": "abd_10",
+      "type": "状态节点",
+      "content": "腹痛综合诊断待编辑, 可继续补入胆道、胰腺、肠棗阻等分支"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "abd_01",
+      "to": "abd_02",
+      "condition": null
+    },
+    {
+      "from": "abd_02",
+      "to": "abd_03",
+      "condition": "是"
+    },
+    {
+      "from": "abd_02",
+      "to": "abd_04",
+      "condition": "否"
+    },
+    {
+      "from": "abd_03",
+      "to": "abd_05",
+      "condition": null
+    },
+    {
+      "from": "abd_04",
+      "to": "abd_05",
+      "condition": null
+    },
+    {
+      "from": "abd_05",
+      "to": "abd_06",
+      "condition": "已完善"
+    },
+    {
+      "from": "abd_05",
+      "to": "abd_07",
+      "condition": "未完善"
+    },
+    {
+      "from": "abd_06",
+      "to": "abd_09",
+      "condition": "提示外科急腹症"
+    },
+    {
+      "from": "abd_06",
+      "to": "abd_10",
+      "condition": "需继续综合判断"
+    },
+    {
+      "from": "abd_06",
+      "to": "abd_08",
+      "condition": "影像未完成"
+    }
+  ]
+}

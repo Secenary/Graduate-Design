@@ -108,6 +108,13 @@ def contains_any(text: str, keywords: list[str]) -> bool:
     return any(keyword in text for keyword in keywords)
 
 
+def has_explicit_missing_info(text: str, missing_patterns: list[str]) -> bool:
+    """
+    仅在病例文本明确说明“未查/未做/暂无结果”时，才提前判定为信息缺失。
+    避免因为关键词覆盖不全，错误拦截本应交给模型判断的病例。
+    """
+    return contains_any(text, missing_patterns)
+
 def has_sufficient_symptom_info(text: str) -> bool:
     """
     判断第一步是否有足够症状学信息支持缺血性胸痛评估。
@@ -257,7 +264,7 @@ def parse_diagnosis(response: str) -> str:
     return "未知"
 
 
-async def direct_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None) -> dict:
+async def direct_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None, strict_result: dict | None = None) -> dict:
     """
     直接诊断方法（带选项）
 
@@ -270,7 +277,7 @@ async def direct_diagnosis(patient_input, model: str = "gpt-4o-mini", client_con
     Returns:
         包含诊断结果和原始响应的字典
     """
-    strict_result = await run_strict_stepwise_assessment(
+    strict_result = strict_result or await run_strict_stepwise_assessment(
         patient_input,
         model=model,
         client_config=client_config,
@@ -292,7 +299,7 @@ async def direct_diagnosis(patient_input, model: str = "gpt-4o-mini", client_con
     }
 
 
-async def direct_generation_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None) -> dict:
+async def direct_generation_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None, strict_result: dict | None = None) -> dict:
     """
     直接生成方法（不提供选项）
 
@@ -305,7 +312,7 @@ async def direct_generation_diagnosis(patient_input, model: str = "gpt-4o-mini",
     Returns:
         包含诊断结果和原始响应的字典
     """
-    strict_result = await run_strict_stepwise_assessment(
+    strict_result = strict_result or await run_strict_stepwise_assessment(
         patient_input,
         model=model,
         client_config=client_config,
@@ -327,7 +334,7 @@ async def direct_generation_diagnosis(patient_input, model: str = "gpt-4o-mini",
     }
 
 
-async def intermediate_state_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None) -> dict:
+async def intermediate_state_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None, strict_result: dict | None = None) -> dict:
     """
     中间状态方法
 
@@ -340,7 +347,7 @@ async def intermediate_state_diagnosis(patient_input, model: str = "gpt-4o-mini"
     Returns:
         包含诊断结果、中间状态和原始响应的字典
     """
-    strict_result = await run_strict_stepwise_assessment(
+    strict_result = strict_result or await run_strict_stepwise_assessment(
         patient_input,
         model=model,
         client_config=client_config,
@@ -380,7 +387,7 @@ async def intermediate_state_diagnosis(patient_input, model: str = "gpt-4o-mini"
     }
 
 
-async def full_workflow_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None) -> dict:
+async def full_workflow_diagnosis(patient_input, model: str = "gpt-4o-mini", client_config: dict | None = None, strict_result: dict | None = None) -> dict:
     """
     全流程方法
 
@@ -393,7 +400,7 @@ async def full_workflow_diagnosis(patient_input, model: str = "gpt-4o-mini", cli
     Returns:
         包含诊断结果和原始响应的字典
     """
-    strict_result = await run_strict_stepwise_assessment(
+    strict_result = strict_result or await run_strict_stepwise_assessment(
         patient_input,
         model=model,
         client_config=client_config,
@@ -520,15 +527,6 @@ async def run_strict_stepwise_assessment(
     steps = []
     intermediate_states = {}
 
-    if not has_sufficient_symptom_info(contexts["step1"]):
-        return make_halt_result(
-            method=method_name,
-            halt_step=1,
-            reason="第一步缺少足够的胸痛症状学信息，无法判断是否为缺血性胸痛。",
-            missing_items=["胸痛部位/性质/持续时间等症状学信息"],
-            interaction_trace=contexts["step1"],
-        )
-
     step1_prompt = STEP1_ISCHEMIC_CHEST_PAIN_PROMPT.format(patient_description=contexts["step1"])
     step1_response = await call_llm(step1_prompt, model, client_config=client_config)
     is_ischemic = parse_step_result(step1_response, "ischemic")
@@ -563,7 +561,7 @@ async def run_strict_stepwise_assessment(
             "raw_response": step1_response,
         }
 
-    if not has_ecg_info(contexts["step2"]):
+    if has_explicit_missing_info(contexts["step2"], ECG_MISSING_PATTERNS):
         return make_halt_result(
             method=method_name,
             halt_step=2,
@@ -597,7 +595,7 @@ async def run_strict_stepwise_assessment(
             raw_response=step2_response,
         )
 
-    if not has_biomarker_info(contexts["step3"]):
+    if has_explicit_missing_info(contexts["step3"], BIOMARKER_MISSING_PATTERNS):
         return make_halt_result(
             method=method_name,
             halt_step=3,
@@ -707,10 +705,10 @@ async def run_all_methods(patient_input, model: str = "gpt-4o-mini", client_conf
 
     # 并发运行其余四种方法，逐步法复用 strict_result
     results = await asyncio.gather(
-        direct_diagnosis(patient_input, model, client_config=client_config),
-        direct_generation_diagnosis(patient_input, model, client_config=client_config),
-        intermediate_state_diagnosis(patient_input, model, client_config=client_config),
-        full_workflow_diagnosis(patient_input, model, client_config=client_config)
+        direct_diagnosis(patient_input, model, client_config=client_config, strict_result=strict_result),
+        direct_generation_diagnosis(patient_input, model, client_config=client_config, strict_result=strict_result),
+        intermediate_state_diagnosis(patient_input, model, client_config=client_config, strict_result=strict_result),
+        full_workflow_diagnosis(patient_input, model, client_config=client_config, strict_result=strict_result)
     )
 
     return {

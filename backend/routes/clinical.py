@@ -158,7 +158,10 @@ def diagnose():
             }
         )
     except Exception as exc:
-        return jsonify({"error": f"诊断失败: {exc}"}), 500
+        message = f"诊断失败: {exc}"
+        if method == "all_methods":
+            message += "；当前方法 all_methods 会触发多次模型调用，超时时建议改用 step_by_step 或 direct。"
+        return jsonify({"error": message}), 500
 
 @bp.post("/api/review")
 def save_review():
@@ -257,24 +260,36 @@ def prepare_training():
         return jsonify({"ok": False, "error": f"训练数据生成失败: {exc}"}), 500
 
 
+@bp.get("/api/report/download/<path:filename>")
+def download_report(filename: str):
+    return send_from_directory(REPORTS_DIR, filename)
+
+
+@bp.get("/results/reports/<path:filename>")
+def download_report_legacy(filename: str):
+    return send_from_directory(REPORTS_DIR, filename)
+
+
 @bp.post("/api/report/export")
 def export_report():
     payload = request.get_json(silent=True) or {}
     case_id = str(payload.get("case_id", "")).strip()
 
     if not case_id:
-        return jsonify({"ok": False, "error": "case_id 不能为空"}), 400
+        return jsonify({"ok": False, "error": "case_id \u4e0d\u80fd\u4e3a\u7a7a"}), 400
 
     report_markdown = build_markdown_report(payload)
-    report_path = REPORTS_DIR / f"{case_id}_diagnosis_report.md"
+    report_filename = f"{case_id}_diagnosis_report.md"
+    report_path = REPORTS_DIR / report_filename
     report_path.write_text(report_markdown, encoding="utf-8")
 
     return jsonify(
         {
             "ok": True,
-            "message": "诊断报告已导出。",
+            "message": "\u8bca\u65ad\u62a5\u544a\u5df2\u5bfc\u51fa\u3002",
             "report_path": str(report_path),
-            "download_url": to_web_path(report_path),
+            "download_url": f"/api/report/download/{report_filename}",
+            "legacy_download_url": to_web_path(report_path),
         }
     )
 

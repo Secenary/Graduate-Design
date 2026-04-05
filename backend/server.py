@@ -44,16 +44,57 @@ RESULTS_DIR = ROOT_DIR / "results"
 REPORTS_DIR = RESULTS_DIR / "reports"
 REVIEWS_PATH = RESULTS_DIR / "doctor_reviews.jsonl"
 TRANSITIONS_PATH = ROOT_DIR / "config" / "transitions.json"
+WORKFLOW_CONFIGS_DIR = ROOT_DIR / "config" / "workflows"
 GENERATED_DATA_PATH = ROOT_DIR / "generated_data" / "patients.jsonl"
 TRAINING_DATA_DIR = ROOT_DIR / "training_data"
 TRAINING_CONFIGS_DIR = ROOT_DIR / "training_configs"
 API_KEYS_DIR = RESULTS_DIR / "api_keys"
 
-for directory in (KNOWLEDGE_GRAPH_DIR, RESULTS_DIR, REPORTS_DIR, TRAINING_DATA_DIR, TRAINING_CONFIGS_DIR, API_KEYS_DIR):
+for directory in (KNOWLEDGE_GRAPH_DIR, RESULTS_DIR, REPORTS_DIR, TRAINING_DATA_DIR, TRAINING_CONFIGS_DIR, API_KEYS_DIR, WORKFLOW_CONFIGS_DIR):
     directory.mkdir(parents=True, exist_ok=True)
 
 API_APPLICATIONS_PATH = API_KEYS_DIR / "applications.jsonl"
 API_KEYS_PATH = API_KEYS_DIR / "keys.jsonl"
+
+DEFAULT_WORKFLOW_ID = "acute-chest-pain"
+WORKFLOW_DEFINITIONS = {
+    DEFAULT_WORKFLOW_ID: {
+        "workflow_id": DEFAULT_WORKFLOW_ID,
+        "name": "\u6025\u6027\u80f8\u75db\u4e34\u5e8a\u8bc4\u4f30\u4e0e\u8bca\u65ad\u6d41\u7a0b",
+        "specialty": "\u5fc3\u8840\u7ba1\u5185\u79d1",
+        "status": "live",
+        "relative_config_path": "config/transitions.json",
+        "config_path": TRANSITIONS_PATH,
+    },
+    "acute-abdominal-pain": {
+        "workflow_id": "acute-abdominal-pain",
+        "name": "\u6025\u6027\u8179\u75db\u4e34\u5e8a\u5206\u8bca\u6d41\u7a0b",
+        "specialty": "\u666e\u901a\u5916\u79d1",
+        "status": "draft",
+        "relative_config_path": "config/workflows/acute_abdominal_pain.json",
+        "config_path": WORKFLOW_CONFIGS_DIR / "acute_abdominal_pain.json",
+    },
+    "stroke": {
+        "workflow_id": "stroke",
+        "name": "\u8111\u5352\u4e2d\u6025\u8bca\u5206\u8bca\u6d41\u7a0b",
+        "specialty": "\u795e\u7ecf\u5185\u79d1",
+        "status": "draft",
+        "relative_config_path": "config/workflows/stroke.json",
+        "config_path": WORKFLOW_CONFIGS_DIR / "stroke.json",
+    },
+}
+
+
+def get_workflow_definition(workflow_id: str | None = None) -> dict[str, Any]:
+    normalized = str(workflow_id or DEFAULT_WORKFLOW_ID).strip() or DEFAULT_WORKFLOW_ID
+    definition = WORKFLOW_DEFINITIONS.get(normalized)
+    if definition is None:
+        raise KeyError(normalized)
+    return dict(definition)
+
+
+def list_workflow_definitions() -> list[dict[str, Any]]:
+    return [dict(definition) for definition in WORKFLOW_DEFINITIONS.values()]
 
 # KG Enhancement manager (lazy initialization)
 _KG_ENHANCEMENT_MANAGER: KGEnhancementManager | None = None
